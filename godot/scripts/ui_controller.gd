@@ -108,6 +108,7 @@ func _build_joint_sliders() -> void:
 	if not joint_container:
 		return
 
+	updating_from_telemetry = true
 	for j_name in JOINT_DEFS:
 		var def = JOINT_DEFS[j_name]
 		var row = VBoxContainer.new()
@@ -136,7 +137,7 @@ func _build_joint_sliders() -> void:
 		var current_joint = j_name
 		slider.value_changed.connect(func(new_val):
 			val_lbl.text = str(round(new_val)) + "°"
-			if not updating_from_telemetry and network_client:
+			if not updating_from_telemetry and network_client and slider.has_focus():
 				network_client.send_joint_command(current_joint, new_val)
 		)
 
@@ -147,6 +148,7 @@ func _build_joint_sliders() -> void:
 			"slider": slider,
 			"val_lbl": val_lbl,
 		}
+	updating_from_telemetry = false
 
 func _on_network_connected() -> void:
 	if status_connection:

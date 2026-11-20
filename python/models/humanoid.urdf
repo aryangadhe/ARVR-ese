@@ -250,8 +250,8 @@
     <child link="left_thigh"/>
     <origin xyz="0 0 0" rpy="0 0 0"/>
     <axis xyz="0 1 0"/>
-    <limit lower="-1.2" upper="1.2" effort="150" velocity="4.0"/>
-    <dynamics damping="1.0" friction="0.2"/>
+    <limit lower="-1.2" upper="1.2" effort="300" velocity="5.0"/>
+    <dynamics damping="1.5" friction="0.2"/>
   </joint>
 
   <!-- Left Shin -->
@@ -281,28 +281,28 @@
     <child link="left_shin"/>
     <origin xyz="0 0 -0.30" rpy="0 0 0"/>
     <axis xyz="0 1 0"/>
-    <limit lower="0.0" upper="2.2" effort="150" velocity="4.0"/>
-    <dynamics damping="1.0" friction="0.2"/>
+    <limit lower="0.0" upper="2.2" effort="300" velocity="5.0"/>
+    <dynamics damping="1.5" friction="0.2"/>
   </joint>
 
   <!-- Left Foot -->
   <link name="left_foot">
     <inertial>
       <origin xyz="0.03 0 -0.02" rpy="0 0 0"/>
-      <mass value="1.2"/>
-      <inertia ixx="0.003" ixy="0" ixz="0" iyy="0.005" iyz="0" izz="0.006"/>
+      <mass value="1.5"/>
+      <inertia ixx="0.005" ixy="0" ixz="0" iyy="0.008" iyz="0" izz="0.009"/>
     </inertial>
     <visual>
       <origin xyz="0.03 0 -0.02" rpy="0 0 0"/>
       <geometry>
-        <box size="0.20 0.11 0.04"/>
+        <box size="0.24 0.14 0.04"/>
       </geometry>
       <material name="foot_mat"/>
     </visual>
     <collision>
       <origin xyz="0.03 0 -0.02" rpy="0 0 0"/>
       <geometry>
-        <box size="0.20 0.11 0.04"/>
+        <box size="0.24 0.14 0.04"/>
       </geometry>
     </collision>
   </link>
@@ -312,8 +312,8 @@
     <child link="left_foot"/>
     <origin xyz="0 0 -0.28" rpy="0 0 0"/>
     <axis xyz="0 1 0"/>
-    <limit lower="-0.7" upper="0.7" effort="100" velocity="4.0"/>
-    <dynamics damping="1.0" friction="0.2"/>
+    <limit lower="-0.7" upper="0.7" effort="250" velocity="5.0"/>
+    <dynamics damping="1.5" friction="0.2"/>
   </joint>
 
   <!-- Right Hip Intermediate (Roll) -->
@@ -368,8 +368,8 @@
     <child link="right_thigh"/>
     <origin xyz="0 0 0" rpy="0 0 0"/>
     <axis xyz="0 1 0"/>
-    <limit lower="-1.2" upper="1.2" effort="150" velocity="4.0"/>
-    <dynamics damping="1.0" friction="0.2"/>
+    <limit lower="-1.2" upper="1.2" effort="300" velocity="5.0"/>
+    <dynamics damping="1.5" friction="0.2"/>
   </joint>
 
   <!-- Right Shin -->
@@ -399,28 +399,28 @@
     <child link="right_shin"/>
     <origin xyz="0 0 -0.30" rpy="0 0 0"/>
     <axis xyz="0 1 0"/>
-    <limit lower="0.0" upper="2.2" effort="150" velocity="4.0"/>
-    <dynamics damping="1.0" friction="0.2"/>
+    <limit lower="0.0" upper="2.2" effort="300" velocity="5.0"/>
+    <dynamics damping="1.5" friction="0.2"/>
   </joint>
 
   <!-- Right Foot -->
   <link name="right_foot">
     <inertial>
       <origin xyz="0.03 0 -0.02" rpy="0 0 0"/>
-      <mass value="1.2"/>
-      <inertia ixx="0.003" ixy="0" ixz="0" iyy="0.005" iyz="0" izz="0.006"/>
+      <mass value="1.5"/>
+      <inertia ixx="0.005" ixy="0" ixz="0" iyy="0.008" iyz="0" izz="0.009"/>
     </inertial>
     <visual>
       <origin xyz="0.03 0 -0.02" rpy="0 0 0"/>
       <geometry>
-        <box size="0.20 0.11 0.04"/>
+        <box size="0.24 0.14 0.04"/>
       </geometry>
       <material name="foot_mat"/>
     </visual>
     <collision>
       <origin xyz="0.03 0 -0.02" rpy="0 0 0"/>
       <geometry>
-        <box size="0.20 0.11 0.04"/>
+        <box size="0.24 0.14 0.04"/>
       </geometry>
     </collision>
   </link>
@@ -430,8 +430,8 @@
     <child link="right_foot"/>
     <origin xyz="0 0 -0.28" rpy="0 0 0"/>
     <axis xyz="0 1 0"/>
-    <limit lower="-0.7" upper="0.7" effort="100" velocity="4.0"/>
-    <dynamics damping="1.0" friction="0.2"/>
+    <limit lower="-0.7" upper="0.7" effort="250" velocity="5.0"/>
+    <dynamics damping="1.5" friction="0.2"/>
   </joint>
 
 </robot>

@@ -79,8 +79,8 @@ class JointController:
                 targetPosition=j["target_angle"],
                 maxVelocity=j["max_velocity"],
                 force=j["max_force"],
-                positionGain=0.15,
-                velocityGain=0.9,
+                positionGain=0.45,
+                velocityGain=1.2,
             )
 
     def update_states(self) -> Dict[str, Any]:

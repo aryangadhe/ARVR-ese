@@ -88,10 +88,10 @@ bottom_radius = 0.045
 height = 0.28
 
 [sub_resource type="BoxMesh" id="BoxMesh_pibwh"]
-size = Vector3(0.11, 0.04, 0.2)
+size = Vector3(0.14, 0.04, 0.24)
 
 [sub_resource type="BoxMesh" id="BoxMesh_c6pm6"]
-size = Vector3(0.11, 0.04, 0.2)
+size = Vector3(0.14, 0.04, 0.24)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5he1u"]
 bg_color = Color(0.08, 0.1, 0.14, 0.95)
@@ -110,131 +110,131 @@ corner_radius_top_right = 6
 corner_radius_bottom_right = 6
 corner_radius_bottom_left = 6
 
-[node name="Main" type="Node3D" unique_id=1918705448]
+[node name="Main" type="Node3D" unique_id=980131114]
 script = ExtResource("1_ya4ey")
 
-[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=410453862]
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1577568816]
 environment = SubResource("Environment_jscy8")
 
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=244375770]
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=129585466]
 transform = Transform3D(0.76604444, -0.45451945, 0.45451945, 0, 0.70710677, 0.70710677, -0.6427876, -0.5416752, 0.5416752, 4, 8, 4)
 light_color = Color(0.96, 0.98, 1, 1)
 light_energy = 1.1
 shadow_enabled = true
 
-[node name="LabOverheadLight" type="OmniLight3D" parent="." unique_id=1838343546]
+[node name="LabOverheadLight" type="OmniLight3D" parent="." unique_id=550883990]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.5, 0)
 light_color = Color(0.3, 0.8, 1, 1)
 light_energy = 1.6
 omni_range = 16.0
 
-[node name="LaboratoryEnvironment" type="Node3D" parent="." unique_id=276849248]
+[node name="LaboratoryEnvironment" type="Node3D" parent="." unique_id=430537516]
 
-[node name="FloorGrid" type="MeshInstance3D" parent="LaboratoryEnvironment" unique_id=1211471762]
+[node name="FloorGrid" type="MeshInstance3D" parent="LaboratoryEnvironment" unique_id=1038109143]
 material_override = ExtResource("2_eb6dy")
 mesh = SubResource("PlaneMesh_pm3ni")
 
-[node name="CenterPlatform" type="MeshInstance3D" parent="LaboratoryEnvironment" unique_id=136965061]
+[node name="CenterPlatform" type="MeshInstance3D" parent="LaboratoryEnvironment" unique_id=1691585763]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.015, 0)
 material_override = ExtResource("3_trceg")
 mesh = SubResource("CylinderMesh_y6deb")
 
-[node name="WallNorth" type="MeshInstance3D" parent="LaboratoryEnvironment" unique_id=671493925]
+[node name="WallNorth" type="MeshInstance3D" parent="LaboratoryEnvironment" unique_id=90188819]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, -15)
 material_override = SubResource("StandardMaterial3D_og1vs")
 mesh = SubResource("BoxMesh_2wyq8")
 
-[node name="CameraController" type="Node3D" parent="." unique_id=1214857031]
+[node name="CameraController" type="Node3D" parent="." unique_id=979380582]
 script = ExtResource("4_a8y0u")
 
-[node name="Camera3D" type="Camera3D" parent="CameraController" unique_id=201132600]
+[node name="Camera3D" type="Camera3D" parent="CameraController" unique_id=622335580]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 3.2)
 current = true
 fov = 60.0
 
-[node name="XROrigin3D" type="Node3D" parent="." unique_id=1095289171 node_paths=PackedStringArray("xr_origin", "desktop_camera")]
+[node name="XROrigin3D" type="Node3D" parent="." unique_id=871551577 node_paths=PackedStringArray("xr_origin", "desktop_camera")]
 script = ExtResource("5_jkv2x")
 xr_origin = NodePath(".")
 desktop_camera = NodePath("../CameraController/Camera3D")
 
-[node name="XRCamera3D" type="XRCamera3D" parent="XROrigin3D" unique_id=1450310698]
+[node name="XRCamera3D" type="XRCamera3D" parent="XROrigin3D" unique_id=836079336]
 
-[node name="LeftController" type="XRController3D" parent="XROrigin3D" unique_id=1898952162]
+[node name="LeftController" type="XRController3D" parent="XROrigin3D" unique_id=175508406]
 tracker = &"left_hand"
 
-[node name="RightController" type="XRController3D" parent="XROrigin3D" unique_id=5968298]
+[node name="RightController" type="XRController3D" parent="XROrigin3D" unique_id=720218284]
 tracker = &"right_hand"
 
-[node name="ObstacleManager" type="Node3D" parent="." unique_id=534422007]
+[node name="ObstacleManager" type="Node3D" parent="." unique_id=49689968]
 script = ExtResource("6_jbj1t")
 
-[node name="RobotVisualizer" type="Node3D" parent="." unique_id=1508425873]
+[node name="RobotVisualizer" type="Node3D" parent="." unique_id=811668254]
 script = ExtResource("7_muem4")
 
-[node name="SensorRays" type="Node3D" parent="RobotVisualizer" unique_id=1303687519]
+[node name="SensorRays" type="Node3D" parent="RobotVisualizer" unique_id=1611612371]
 
-[node name="Links" type="Node3D" parent="RobotVisualizer" unique_id=455180248]
+[node name="Links" type="Node3D" parent="RobotVisualizer" unique_id=744068006]
 
-[node name="torso" type="MeshInstance3D" parent="RobotVisualizer/Links" unique_id=212941752]
+[node name="torso" type="MeshInstance3D" parent="RobotVisualizer/Links" unique_id=1802846021]
 material_override = ExtResource("3_trceg")
 mesh = SubResource("BoxMesh_vxglm")
 
-[node name="head" type="Node3D" parent="RobotVisualizer/Links" unique_id=973558844]
+[node name="head" type="Node3D" parent="RobotVisualizer/Links" unique_id=585477303]
 
-[node name="HeadMesh" type="MeshInstance3D" parent="RobotVisualizer/Links/head" unique_id=296659117]
+[node name="HeadMesh" type="MeshInstance3D" parent="RobotVisualizer/Links/head" unique_id=1863286672]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.08, 0)
 material_override = ExtResource("8_dp3eg")
 mesh = SubResource("SphereMesh_2f3dj")
 
-[node name="VisorMesh" type="MeshInstance3D" parent="RobotVisualizer/Links/head" unique_id=65529859]
+[node name="VisorMesh" type="MeshInstance3D" parent="RobotVisualizer/Links/head" unique_id=544720860]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.09, -0.09)
 material_override = ExtResource("9_0ld40")
 mesh = SubResource("BoxMesh_yq6so")
 
-[node name="left_upper_arm" type="MeshInstance3D" parent="RobotVisualizer/Links" unique_id=753668490]
+[node name="left_upper_arm" type="MeshInstance3D" parent="RobotVisualizer/Links" unique_id=536230000]
 material_override = ExtResource("8_dp3eg")
 mesh = SubResource("CylinderMesh_fv21b")
 
-[node name="left_forearm" type="MeshInstance3D" parent="RobotVisualizer/Links" unique_id=1607903474]
+[node name="left_forearm" type="MeshInstance3D" parent="RobotVisualizer/Links" unique_id=1920835679]
 material_override = ExtResource("8_dp3eg")
 mesh = SubResource("CylinderMesh_tel4y")
 
-[node name="right_upper_arm" type="MeshInstance3D" parent="RobotVisualizer/Links" unique_id=801917584]
+[node name="right_upper_arm" type="MeshInstance3D" parent="RobotVisualizer/Links" unique_id=381352928]
 material_override = ExtResource("8_dp3eg")
 mesh = SubResource("CylinderMesh_qkpxi")
 
-[node name="right_forearm" type="MeshInstance3D" parent="RobotVisualizer/Links" unique_id=773196886]
+[node name="right_forearm" type="MeshInstance3D" parent="RobotVisualizer/Links" unique_id=1322004745]
 material_override = ExtResource("8_dp3eg")
 mesh = SubResource("CylinderMesh_5q0nq")
 
-[node name="left_thigh" type="MeshInstance3D" parent="RobotVisualizer/Links" unique_id=2012418051]
+[node name="left_thigh" type="MeshInstance3D" parent="RobotVisualizer/Links" unique_id=1939448731]
 material_override = ExtResource("8_dp3eg")
 mesh = SubResource("CylinderMesh_dgi5k")
 
-[node name="left_shin" type="MeshInstance3D" parent="RobotVisualizer/Links" unique_id=1562226080]
+[node name="left_shin" type="MeshInstance3D" parent="RobotVisualizer/Links" unique_id=693094502]
 material_override = ExtResource("8_dp3eg")
 mesh = SubResource("CylinderMesh_j8jky")
 
-[node name="right_thigh" type="MeshInstance3D" parent="RobotVisualizer/Links" unique_id=1699624655]
+[node name="right_thigh" type="MeshInstance3D" parent="RobotVisualizer/Links" unique_id=1563977485]
 material_override = ExtResource("8_dp3eg")
 mesh = SubResource("CylinderMesh_kmb1v")
 
-[node name="right_shin" type="MeshInstance3D" parent="RobotVisualizer/Links" unique_id=191288896]
+[node name="right_shin" type="MeshInstance3D" parent="RobotVisualizer/Links" unique_id=1022174044]
 material_override = ExtResource("8_dp3eg")
 mesh = SubResource("CylinderMesh_fuf3a")
 
-[node name="left_foot" type="MeshInstance3D" parent="RobotVisualizer/Links" unique_id=1950509769]
+[node name="left_foot" type="MeshInstance3D" parent="RobotVisualizer/Links" unique_id=1907852540]
 material_override = ExtResource("3_trceg")
 mesh = SubResource("BoxMesh_pibwh")
 
-[node name="right_foot" type="MeshInstance3D" parent="RobotVisualizer/Links" unique_id=1477975603]
+[node name="right_foot" type="MeshInstance3D" parent="RobotVisualizer/Links" unique_id=132848959]
 material_override = ExtResource("3_trceg")
 mesh = SubResource("BoxMesh_c6pm6")
 
-[node name="NetworkClient" type="Node" parent="." unique_id=1590452918]
+[node name="NetworkClient" type="Node" parent="." unique_id=1074047146]
 script = ExtResource("10_gqmmt")
 
-[node name="UI" type="Control" parent="." unique_id=434248486 node_paths=PackedStringArray("network_client", "camera_controller")]
+[node name="UI" type="Control" parent="." unique_id=1835925759 node_paths=PackedStringArray("network_client", "camera_controller")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -243,43 +243,43 @@ script = ExtResource("11_yc10j")
 network_client = NodePath("../NetworkClient")
 camera_controller = NodePath("../CameraController")
 
-[node name="Header" type="PanelContainer" parent="UI" unique_id=212523106]
+[node name="Header" type="PanelContainer" parent="UI" unique_id=1293392367]
 layout_mode = 0
 anchor_right = 1.0
 offset_bottom = 48.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_5he1u")
 
-[node name="HBox" type="HBoxContainer" parent="UI/Header" unique_id=798023554]
+[node name="HBox" type="HBoxContainer" parent="UI/Header" unique_id=1468537370]
 layout_mode = 2
 theme_override_constants/separation = 20
 
-[node name="@Label@2" type="Label" parent="UI/Header/HBox" unique_id=120157593]
+[node name="@Label@2" type="Label" parent="UI/Header/HBox" unique_id=269396073]
 layout_mode = 2
 theme_override_font_sizes/font_size = 16
 theme_override_colors/font_color = Color(0, 0.85, 1, 1)
 text = "  VR HUMANOID ROBOT SIMULATOR"
 
-[node name="LblConnection" type="Label" parent="UI/Header/HBox" unique_id=340616457]
+[node name="LblConnection" type="Label" parent="UI/Header/HBox" unique_id=101243919]
 layout_mode = 2
 theme_override_font_sizes/font_size = 13
 theme_override_colors/font_color = Color(0.9, 0.6, 0.2, 1)
 text = "○ CONNECTING TO SIMULATION..."
 
-[node name="LblXR" type="Label" parent="UI/Header/HBox" unique_id=592252957]
+[node name="LblXR" type="Label" parent="UI/Header/HBox" unique_id=1730197159]
 layout_mode = 2
 theme_override_font_sizes/font_size = 13
 theme_override_colors/font_color = Color(0.7, 0.8, 0.9, 1)
 text = "XR: Desktop Mode (Ready)"
 
-[node name="@Control@3" type="Control" parent="UI/Header/HBox" unique_id=114621225]
+[node name="@Control@3" type="Control" parent="UI/Header/HBox" unique_id=2051477405]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="BtnResetCam" type="Button" parent="UI/Header/HBox" unique_id=280386854]
+[node name="BtnResetCam" type="Button" parent="UI/Header/HBox" unique_id=1500231266]
 layout_mode = 2
 text = " Reset Camera "
 
-[node name="LeftPanel" type="PanelContainer" parent="UI" unique_id=704225061]
+[node name="LeftPanel" type="PanelContainer" parent="UI" unique_id=1438120985]
 layout_mode = 0
 anchor_bottom = 1.0
 offset_left = 15.0
@@ -288,161 +288,161 @@ offset_right = 360.0
 offset_bottom = -15.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_5poiv")
 
-[node name="@ScrollContainer@6" type="ScrollContainer" parent="UI/LeftPanel" unique_id=247525453]
+[node name="@ScrollContainer@6" type="ScrollContainer" parent="UI/LeftPanel" unique_id=1011192178]
 layout_mode = 2
 
-[node name="VBox" type="VBoxContainer" parent="UI/LeftPanel/@ScrollContainer@6" unique_id=504083243]
+[node name="VBox" type="VBoxContainer" parent="UI/LeftPanel/@ScrollContainer@6" unique_id=163460848]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 14
 
-[node name="StatusCard" type="VBoxContainer" parent="UI/LeftPanel/@ScrollContainer@6/VBox" unique_id=1927538009]
+[node name="StatusCard" type="VBoxContainer" parent="UI/LeftPanel/@ScrollContainer@6/VBox" unique_id=1372277488]
 layout_mode = 2
 
-[node name="@Label@7" type="Label" parent="UI/LeftPanel/@ScrollContainer@6/VBox/StatusCard" unique_id=1917591198]
+[node name="@Label@7" type="Label" parent="UI/LeftPanel/@ScrollContainer@6/VBox/StatusCard" unique_id=2069756767]
 layout_mode = 2
 theme_override_font_sizes/font_size = 14
 theme_override_colors/font_color = Color(0, 0.85, 1, 1)
 text = "ROBOT STATUS DASHBOARD"
 
-[node name="Grid" type="VBoxContainer" parent="UI/LeftPanel/@ScrollContainer@6/VBox/StatusCard" unique_id=2145241390]
+[node name="Grid" type="VBoxContainer" parent="UI/LeftPanel/@ScrollContainer@6/VBox/StatusCard" unique_id=1488333619]
 layout_mode = 2
 theme_override_constants/separation = 4
 
-[node name="LblState" type="Label" parent="UI/LeftPanel/@ScrollContainer@6/VBox/StatusCard/Grid" unique_id=2008289872]
+[node name="LblState" type="Label" parent="UI/LeftPanel/@ScrollContainer@6/VBox/StatusCard/Grid" unique_id=1276537935]
 layout_mode = 2
 theme_override_font_sizes/font_size = 12
 text = "State: STANDING"
 
-[node name="LblBalance" type="Label" parent="UI/LeftPanel/@ScrollContainer@6/VBox/StatusCard/Grid" unique_id=1091763315]
+[node name="LblBalance" type="Label" parent="UI/LeftPanel/@ScrollContainer@6/VBox/StatusCard/Grid" unique_id=1050919758]
 layout_mode = 2
 theme_override_font_sizes/font_size = 12
 text = "Balance: STABLE"
 
-[node name="LblFallCount" type="Label" parent="UI/LeftPanel/@ScrollContainer@6/VBox/StatusCard/Grid" unique_id=1901500182]
+[node name="LblFallCount" type="Label" parent="UI/LeftPanel/@ScrollContainer@6/VBox/StatusCard/Grid" unique_id=1107680823]
 layout_mode = 2
 theme_override_font_sizes/font_size = 12
 text = "Fall Count: 0"
 
-[node name="LblRPY" type="Label" parent="UI/LeftPanel/@ScrollContainer@6/VBox/StatusCard/Grid" unique_id=1474054735]
+[node name="LblRPY" type="Label" parent="UI/LeftPanel/@ScrollContainer@6/VBox/StatusCard/Grid" unique_id=1860297753]
 layout_mode = 2
 theme_override_font_sizes/font_size = 12
 text = "R: +0.0° | P: +0.0° | Y: +0.0°"
 
-[node name="LblPos" type="Label" parent="UI/LeftPanel/@ScrollContainer@6/VBox/StatusCard/Grid" unique_id=1688747885]
+[node name="LblPos" type="Label" parent="UI/LeftPanel/@ScrollContainer@6/VBox/StatusCard/Grid" unique_id=1807724162]
 layout_mode = 2
 theme_override_font_sizes/font_size = 12
 text = "Pos: (0.00, 0.00, 0.85)m"
 
-[node name="LblWalkPhase" type="Label" parent="UI/LeftPanel/@ScrollContainer@6/VBox/StatusCard/Grid" unique_id=1023675856]
+[node name="LblWalkPhase" type="Label" parent="UI/LeftPanel/@ScrollContainer@6/VBox/StatusCard/Grid" unique_id=63217944]
 layout_mode = 2
 theme_override_font_sizes/font_size = 12
 text = "Gait: STAND / IDLE"
 
-[node name="LblSensors" type="Label" parent="UI/LeftPanel/@ScrollContainer@6/VBox/StatusCard/Grid" unique_id=945020223]
+[node name="LblSensors" type="Label" parent="UI/LeftPanel/@ScrollContainer@6/VBox/StatusCard/Grid" unique_id=621675689]
 layout_mode = 2
 theme_override_font_sizes/font_size = 12
 text = "Sensors: F: 3.50m | L: 3.50m | R: 3.50m"
 
-[node name="LblAvoidance" type="Label" parent="UI/LeftPanel/@ScrollContainer@6/VBox/StatusCard/Grid" unique_id=1374394358]
+[node name="LblAvoidance" type="Label" parent="UI/LeftPanel/@ScrollContainer@6/VBox/StatusCard/Grid" unique_id=1440859668]
 layout_mode = 2
 theme_override_font_sizes/font_size = 12
 text = "Avoidance: CLEAR"
 
-[node name="ControlsCard" type="VBoxContainer" parent="UI/LeftPanel/@ScrollContainer@6/VBox" unique_id=1928605759]
+[node name="ControlsCard" type="VBoxContainer" parent="UI/LeftPanel/@ScrollContainer@6/VBox" unique_id=1143175336]
 layout_mode = 2
 theme_override_constants/separation = 6
 
-[node name="@Label@8" type="Label" parent="UI/LeftPanel/@ScrollContainer@6/VBox/ControlsCard" unique_id=1435828927]
+[node name="@Label@8" type="Label" parent="UI/LeftPanel/@ScrollContainer@6/VBox/ControlsCard" unique_id=763010896]
 layout_mode = 2
 theme_override_font_sizes/font_size = 14
 theme_override_colors/font_color = Color(0, 0.85, 1, 1)
 text = "ROBOT CONTROL"
 
-[node name="BtnWalk" type="Button" parent="UI/LeftPanel/@ScrollContainer@6/VBox/ControlsCard" unique_id=363650565]
+[node name="BtnWalk" type="Button" parent="UI/LeftPanel/@ScrollContainer@6/VBox/ControlsCard" unique_id=1827725780]
 layout_mode = 2
 text = "▶ START WALKING"
 
-[node name="BtnStop" type="Button" parent="UI/LeftPanel/@ScrollContainer@6/VBox/ControlsCard" unique_id=1334526603]
+[node name="BtnStop" type="Button" parent="UI/LeftPanel/@ScrollContainer@6/VBox/ControlsCard" unique_id=2143667156]
 layout_mode = 2
 text = "⏹ STOP WALKING"
 
-[node name="BtnStand" type="Button" parent="UI/LeftPanel/@ScrollContainer@6/VBox/ControlsCard" unique_id=1832476900]
+[node name="BtnStand" type="Button" parent="UI/LeftPanel/@ScrollContainer@6/VBox/ControlsCard" unique_id=637741441]
 layout_mode = 2
 text = "⚖ RETURN TO STAND"
 
-[node name="BtnReset" type="Button" parent="UI/LeftPanel/@ScrollContainer@6/VBox/ControlsCard" unique_id=634214455]
+[node name="BtnReset" type="Button" parent="UI/LeftPanel/@ScrollContainer@6/VBox/ControlsCard" unique_id=1800099963]
 layout_mode = 2
 text = "↺ RESET SIMULATION"
 
-[node name="DisturbanceCard" type="VBoxContainer" parent="UI/LeftPanel/@ScrollContainer@6/VBox" unique_id=1400449305]
+[node name="DisturbanceCard" type="VBoxContainer" parent="UI/LeftPanel/@ScrollContainer@6/VBox" unique_id=2116403432]
 layout_mode = 2
 theme_override_constants/separation = 6
 
-[node name="@Label@9" type="Label" parent="UI/LeftPanel/@ScrollContainer@6/VBox/DisturbanceCard" unique_id=1404618644]
+[node name="@Label@9" type="Label" parent="UI/LeftPanel/@ScrollContainer@6/VBox/DisturbanceCard" unique_id=1243151156]
 layout_mode = 2
 theme_override_font_sizes/font_size = 14
 theme_override_colors/font_color = Color(0, 0.85, 1, 1)
 text = "EXTERNAL DISTURBANCE"
 
-[node name="HBoxPush" type="HBoxContainer" parent="UI/LeftPanel/@ScrollContainer@6/VBox/DisturbanceCard" unique_id=48525739]
+[node name="HBoxPush" type="HBoxContainer" parent="UI/LeftPanel/@ScrollContainer@6/VBox/DisturbanceCard" unique_id=1970869268]
 layout_mode = 2
 theme_override_constants/separation = 6
 
-[node name="BtnSmallPush" type="Button" parent="UI/LeftPanel/@ScrollContainer@6/VBox/DisturbanceCard/HBoxPush" unique_id=1904919669]
+[node name="BtnSmallPush" type="Button" parent="UI/LeftPanel/@ScrollContainer@6/VBox/DisturbanceCard/HBoxPush" unique_id=270671893]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Small (60N)"
 
-[node name="BtnMedPush" type="Button" parent="UI/LeftPanel/@ScrollContainer@6/VBox/DisturbanceCard/HBoxPush" unique_id=364885014]
+[node name="BtnMedPush" type="Button" parent="UI/LeftPanel/@ScrollContainer@6/VBox/DisturbanceCard/HBoxPush" unique_id=189943380]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Med (160N)"
 
-[node name="BtnStrongPush" type="Button" parent="UI/LeftPanel/@ScrollContainer@6/VBox/DisturbanceCard/HBoxPush" unique_id=1544858944]
+[node name="BtnStrongPush" type="Button" parent="UI/LeftPanel/@ScrollContainer@6/VBox/DisturbanceCard/HBoxPush" unique_id=1215631706]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Fall (350N)"
 
-[node name="ObstaclesCard" type="VBoxContainer" parent="UI/LeftPanel/@ScrollContainer@6/VBox" unique_id=1739106162]
+[node name="ObstaclesCard" type="VBoxContainer" parent="UI/LeftPanel/@ScrollContainer@6/VBox" unique_id=1686759438]
 layout_mode = 2
 theme_override_constants/separation = 6
 
-[node name="@Label@10" type="Label" parent="UI/LeftPanel/@ScrollContainer@6/VBox/ObstaclesCard" unique_id=1895737187]
+[node name="@Label@10" type="Label" parent="UI/LeftPanel/@ScrollContainer@6/VBox/ObstaclesCard" unique_id=1375395634]
 layout_mode = 2
 theme_override_font_sizes/font_size = 14
 theme_override_colors/font_color = Color(0, 0.85, 1, 1)
 text = "ENVIRONMENT OBSTACLES"
 
-[node name="HBoxObs" type="HBoxContainer" parent="UI/LeftPanel/@ScrollContainer@6/VBox/ObstaclesCard" unique_id=237609492]
+[node name="HBoxObs" type="HBoxContainer" parent="UI/LeftPanel/@ScrollContainer@6/VBox/ObstaclesCard" unique_id=269193767]
 layout_mode = 2
 theme_override_constants/separation = 6
 
-[node name="BtnSpawnCube" type="Button" parent="UI/LeftPanel/@ScrollContainer@6/VBox/ObstaclesCard/HBoxObs" unique_id=1320780714]
+[node name="BtnSpawnCube" type="Button" parent="UI/LeftPanel/@ScrollContainer@6/VBox/ObstaclesCard/HBoxObs" unique_id=655715802]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "+ Cube"
 
-[node name="BtnSpawnCyl" type="Button" parent="UI/LeftPanel/@ScrollContainer@6/VBox/ObstaclesCard/HBoxObs" unique_id=1019084455]
+[node name="BtnSpawnCyl" type="Button" parent="UI/LeftPanel/@ScrollContainer@6/VBox/ObstaclesCard/HBoxObs" unique_id=1949727662]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "+ Cylinder"
 
-[node name="BtnSpawnWall" type="Button" parent="UI/LeftPanel/@ScrollContainer@6/VBox/ObstaclesCard/HBoxObs" unique_id=1124168738]
+[node name="BtnSpawnWall" type="Button" parent="UI/LeftPanel/@ScrollContainer@6/VBox/ObstaclesCard/HBoxObs" unique_id=694936016]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "+ Wall"
 
-[node name="BtnClearObs" type="Button" parent="UI/LeftPanel/@ScrollContainer@6/VBox/ObstaclesCard" unique_id=771798811]
+[node name="BtnClearObs" type="Button" parent="UI/LeftPanel/@ScrollContainer@6/VBox/ObstaclesCard" unique_id=1440255510]
 layout_mode = 2
 text = "Clear All Obstacles"
 
-[node name="ChkAvoidance" type="CheckBox" parent="UI/LeftPanel/@ScrollContainer@6/VBox/ObstaclesCard" unique_id=1769526081]
+[node name="ChkAvoidance" type="CheckBox" parent="UI/LeftPanel/@ScrollContainer@6/VBox/ObstaclesCard" unique_id=1755081966]
 layout_mode = 2
 button_pressed = true
 text = "Reactive Obstacle Avoidance"
 
-[node name="RightPanel" type="PanelContainer" parent="UI" unique_id=477276913]
+[node name="RightPanel" type="PanelContainer" parent="UI" unique_id=1622492069]
 layout_mode = 0
 anchor_left = 1.0
 anchor_right = 1.0
@@ -453,43 +453,43 @@ offset_right = -15.0
 offset_bottom = -15.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_5poiv")
 
-[node name="TabContainer" type="TabContainer" parent="UI/RightPanel" unique_id=789842827]
+[node name="TabContainer" type="TabContainer" parent="UI/RightPanel" unique_id=55916791]
 layout_mode = 2
 current_tab = 0
 
-[node name="Joints" type="VBoxContainer" parent="UI/RightPanel/TabContainer" unique_id=818913362]
+[node name="Joints" type="VBoxContainer" parent="UI/RightPanel/TabContainer" unique_id=1410478656]
 visible = false
 layout_mode = 2
 theme_override_constants/separation = 6
 metadata/_tab_index = 0
 
-[node name="BtnResetAllJoints" type="Button" parent="UI/RightPanel/TabContainer/Joints" unique_id=1495390378]
+[node name="BtnResetAllJoints" type="Button" parent="UI/RightPanel/TabContainer/Joints" unique_id=250327415]
 layout_mode = 2
 text = "Release Manual Joint Overrides"
 
-[node name="Scroll" type="ScrollContainer" parent="UI/RightPanel/TabContainer/Joints" unique_id=1075386053]
+[node name="Scroll" type="ScrollContainer" parent="UI/RightPanel/TabContainer/Joints" unique_id=587241015]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="JointsVBox" type="VBoxContainer" parent="UI/RightPanel/TabContainer/Joints/Scroll" unique_id=762019817]
+[node name="JointsVBox" type="VBoxContainer" parent="UI/RightPanel/TabContainer/Joints/Scroll" unique_id=1714770337]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 8
 
-[node name="Tuning" type="VBoxContainer" parent="UI/RightPanel/TabContainer" unique_id=398931343]
+[node name="Tuning" type="VBoxContainer" parent="UI/RightPanel/TabContainer" unique_id=2080334227]
 visible = false
 layout_mode = 2
 theme_override_constants/separation = 10
 metadata/_tab_index = 1
 
-[node name="VBox" type="VBoxContainer" parent="UI/RightPanel/TabContainer/Tuning" unique_id=1095705888]
+[node name="VBox" type="VBoxContainer" parent="UI/RightPanel/TabContainer/Tuning" unique_id=599104323]
 layout_mode = 2
 
-[node name="@Label@16" type="Label" parent="UI/RightPanel/TabContainer/Tuning/VBox" unique_id=2140634471]
+[node name="@Label@16" type="Label" parent="UI/RightPanel/TabContainer/Tuning/VBox" unique_id=796466199]
 layout_mode = 2
 text = "Gait Frequency / Walking Speed"
 
-[node name="SldWalkSpeed" type="HSlider" parent="UI/RightPanel/TabContainer/Tuning/VBox" unique_id=125509098]
+[node name="SldWalkSpeed" type="HSlider" parent="UI/RightPanel/TabContainer/Tuning/VBox" unique_id=880491648]
 layout_mode = 2
 min_value = 0.2
 max_value = 1.5

@@ -237,7 +237,7 @@ func _init() -> void:
 		var f_node = MeshInstance3D.new()
 		f_node.name = foot_name
 		var f_mesh = BoxMesh.new()
-		f_mesh.size = Vector3(0.11, 0.04, 0.20)
+		f_mesh.size = Vector3(0.14, 0.04, 0.24)
 		f_node.mesh = f_mesh
 		f_node.material_override = mat_torso
 		links_container.add_child(f_node)

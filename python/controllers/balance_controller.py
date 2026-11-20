@@ -22,27 +22,27 @@ class BalanceController:
         self.robot_id = robot_id
         self.enabled = True
 
-        # Desired torso orientation in radians (upright posture: roll=0, pitch=0)
+        # Desired torso orientation in radians (strictly upright vertical)
         self.desired_roll = 0.0
-        self.desired_pitch = 0.03  # slight natural 1.7 deg forward lean for stability
+        self.desired_pitch = 0.0
 
-        # Pitch PID controller: corrects forward/backward tilt using ankle and hip pitch
+        # Pitch PID controller: corrects forward/backward tilt
         self.pitch_pid = PIDController(
-            kp=1.2,
-            ki=0.05,
-            kd=0.25,
-            min_output=-0.40,
-            max_output=0.40,
+            kp=1.5,
+            ki=0.06,
+            kd=0.35,
+            min_output=-0.45,
+            max_output=0.45,
             integral_limit=0.15,
         )
 
-        # Roll PID controller: corrects lateral tilt using hip roll
+        # Roll PID controller: corrects lateral tilt
         self.roll_pid = PIDController(
-            kp=0.9,
-            ki=0.03,
-            kd=0.20,
-            min_output=-0.25,
-            max_output=0.25,
+            kp=1.1,
+            ki=0.04,
+            kd=0.25,
+            min_output=-0.30,
+            max_output=0.30,
             integral_limit=0.10,
         )
 
@@ -57,7 +57,6 @@ class BalanceController:
 
     def _init_link_properties(self):
         """Retrieve masses of base link (torso) and all child links."""
-        # Base link mass
         base_dyn = p.getDynamicsInfo(self.robot_id, -1)
         self._link_masses.append(base_dyn[0])
         self._link_indices.append(-1)
@@ -86,12 +85,11 @@ class BalanceController:
     ) -> Dict[str, Any]:
         """
         Calculate corrective joint angle offsets to maintain balance.
-        Returns corrective joint command offsets and balance diagnostics.
         """
         roll = imu_data["roll"]
         pitch = imu_data["pitch"]
 
-        # Calculate errors
+        # Calculate errors (desired - current)
         pitch_error = self.desired_pitch - pitch
         roll_error = self.desired_roll - roll
 
@@ -99,10 +97,8 @@ class BalanceController:
         corrective_roll = 0.0
 
         if self.enabled:
-            # Scale down balance reaction during active walking swing phase to avoid fighting the gait
-            gain_scale = 0.6 if walking_active else 1.0
-            corrective_pitch = self.pitch_pid.update(pitch_error, dt) * gain_scale
-            corrective_roll = self.roll_pid.update(roll_error, dt) * gain_scale
+            corrective_pitch = self.pitch_pid.update(pitch_error, dt)
+            corrective_roll = self.roll_pid.update(roll_error, dt)
 
         # Compute Center of Mass (COM)
         positions = []
@@ -116,14 +112,13 @@ class BalanceController:
             link_state = p.getLinkState(self.robot_id, i)
             link_pos = link_state[0]
             positions.append(link_pos)
-            # Joint 8 is left ankle / foot, Joint 12 is right ankle / foot
             if i == 8:
                 left_foot_pos = link_pos
             elif i == 12:
                 right_foot_pos = link_pos
 
         self.com = compute_center_of_mass(self._link_masses, positions)
-        self.support_polygon = compute_support_polygon(left_foot_pos, right_foot_pos)
+        self.support_polygon = compute_support_polygon(left_foot_pos, right_foot_pos, foot_length=0.24, foot_width=0.14)
         com_in_support = is_point_in_polygon_2d(self.com[0], self.com[1], self.support_polygon)
 
         # Determine balance condition
@@ -131,7 +126,7 @@ class BalanceController:
         abs_pitch_deg = abs(rad_to_deg(pitch))
         max_tilt = max(abs_roll_deg, abs_pitch_deg)
 
-        if max_tilt > 45.0 or base_pos[2] < 0.45:
+        if max_tilt > 45.0 or base_pos[2] < 0.40:
             self.last_status = "FALLEN"
         elif max_tilt > 25.0:
             self.last_status = "FALLING"
@@ -142,15 +137,16 @@ class BalanceController:
         else:
             self.last_status = "STABLE"
 
-        # Corrective joint offsets (to be added to nominal standing or walking joint targets)
-        # Pitch correction: forward tilt (positive pitch error) -> lean back: ankle pitch down, hip pitch forward
+        # Negative feedback corrective joint commands:
+        # Pitch: push body back when tilted forward
+        # Roll: left and right hip roll are mirrored across X-axis, so opposite signs!
         offsets = {
-            "left_ankle_pitch": corrective_pitch * 0.8,
-            "right_ankle_pitch": corrective_pitch * 0.8,
-            "left_hip_pitch": -corrective_pitch * 0.5,
-            "right_hip_pitch": -corrective_pitch * 0.5,
-            "left_hip_roll": corrective_roll * 0.6,
-            "right_hip_roll": corrective_roll * 0.6,
+            "left_ankle_pitch": -corrective_pitch * 0.70,
+            "right_ankle_pitch": -corrective_pitch * 0.70,
+            "left_hip_pitch": corrective_pitch * 0.50,
+            "right_hip_pitch": corrective_pitch * 0.50,
+            "left_hip_roll": corrective_roll * 0.50,
+            "right_hip_roll": -corrective_roll * 0.50,
         }
 
         return {
@@ -169,4 +165,3 @@ class BalanceController:
         self.pitch_pid.reset()
         self.roll_pid.reset()
         self.last_status = "STABLE"
-

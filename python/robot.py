@@ -115,6 +115,10 @@ class HumanoidRobot:
             balance_status=balance["balance_status"],
         )
 
+        # If fallen, halt walking controller
+        if fall["state"] == FallController.STATE_FALLEN:
+            self.walking_ctrl.stop_walking()
+
         # 7. Synthesize joint targets
         # Start with walking or standing nominal targets
         combined_targets = dict(gait["targets"])
