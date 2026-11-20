@@ -1,4 +1,5 @@
 @echo off
 echo Starting Python Humanoid Physics Backend...
-python python\main.py %*
+python -m python.main %*
+pause
 

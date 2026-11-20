@@ -15,7 +15,7 @@ if not exist "%GODOT_BIN%" (
 :found_godot
 
 echo Starting Python Physics Simulation Backend on port 9099...
-start "Humanoid Physics Backend" cmd /k "python python\main.py"
+start "Humanoid Physics Backend" cmd /k "python -m python.main"
 
 echo Waiting for backend server initialization...
 timeout /t 2 /nobreak >nul
