@@ -10,3 +10,4 @@ if not exist "%GODOT_BIN%" (
 
 echo Launching Godot 4.x Desktop Application...
 "%GODOT_BIN%" --path godot %*
+

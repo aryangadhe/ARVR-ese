@@ -76,3 +76,4 @@ tests/test_physics.py::test_simulation_reset PASSED                      [100%]
 5. [x] **OpenXR ready:** Automatically initializes VR if a compatible headset is connected; falls back to Desktop mode otherwise.
 6. [x] **Blender assets included:** `blender/humanoid.blend` and `blender/environment.blend` present in repo.
 7. [x] **Executable batch scripts:** One-click launch (`run_simulator.bat`) ready for examiners.
+

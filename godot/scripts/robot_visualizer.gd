@@ -83,3 +83,4 @@ func _update_sensor_rays(sensor_data: Dictionary) -> void:
 			imm.surface_add_vertex(from_pos)
 			imm.surface_add_vertex(to_pos)
 			imm.surface_end()
+

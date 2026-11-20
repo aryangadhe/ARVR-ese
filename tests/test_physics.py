@@ -53,3 +53,4 @@ def test_simulation_reset(sim):
     pos = telemetry["position"]
     assert pos[0] == pytest.approx(0.0, abs=0.1)
     assert pos[1] == pytest.approx(0.0, abs=0.1)
+

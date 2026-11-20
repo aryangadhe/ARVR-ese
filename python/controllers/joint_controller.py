@@ -118,3 +118,4 @@ class JointController:
                 j["target_angle"] = clamped
                 j["target_angle_deg"] = rad_to_deg(clamped)
                 p.resetJointState(self.robot_id, j["index"], targetValue=clamped, targetVelocity=0.0)
+

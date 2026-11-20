@@ -141,3 +141,4 @@ if __name__ == "__main__":
 
     build_humanoid(humanoid_blend, humanoid_glb)
     build_environment(env_blend, env_glb)
+

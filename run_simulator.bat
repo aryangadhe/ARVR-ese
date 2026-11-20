@@ -29,3 +29,4 @@ if exist "%GODOT_BIN%" (
 )
 
 echo Simulation running.
+

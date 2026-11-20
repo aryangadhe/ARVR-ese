@@ -66,3 +66,4 @@ def test_obstacle_avoidance_decision_logic():
     dec4 = oa.evaluate(trapped)
     assert dec4["action"] == ObstacleAvoidanceController.ACTION_STOP
     assert dec4["speed_factor"] == 0.0
+

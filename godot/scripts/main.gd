@@ -20,3 +20,4 @@ func _on_telemetry_received(data: Dictionary) -> void:
 		var pos_arr = data.get("position", [0, 0, 0.85])
 		var g_pos = robot_visualizer.pb_to_godot_pos(pos_arr)
 		camera_controller.set_target_position(g_pos)
+

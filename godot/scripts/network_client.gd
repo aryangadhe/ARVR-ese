@@ -78,7 +78,7 @@ func send_json(dict: Dictionary) -> void:
 	if tcp.get_status() != StreamPeerTCP.STATUS_CONNECTED:
 		return
 	var line = JSON.stringify(dict) + "\n"
-	tcp.put_utf8_string(line)
+	tcp.put_data(line.to_utf8_buffer())
 
 func send_command(action: String, extra_params: Dictionary = {}) -> void:
 	var payload = {"type": "command", "action": action}
@@ -151,3 +151,4 @@ func toggle_avoidance(enabled: bool) -> void:
 		"type": "toggle_avoidance",
 		"enabled": enabled
 	})
+

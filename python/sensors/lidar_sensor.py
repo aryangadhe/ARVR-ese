@@ -74,3 +74,4 @@ class LidarSensor:
             "fov_deg": math.degrees(self.fov_rad),
             "max_range": self.max_range,
         }
+

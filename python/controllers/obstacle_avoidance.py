@@ -87,3 +87,4 @@ class ObstacleAvoidanceController:
         self.current_action = self.ACTION_CLEAR
         self.turn_rate = 0.0
         self.speed_factor = 1.0
+

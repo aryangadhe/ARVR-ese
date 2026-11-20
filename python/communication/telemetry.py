@@ -34,3 +34,4 @@ class TelemetryBuilder:
             "obstacles": simulation_data.get("obstacles", []),
         }
         return payload
+

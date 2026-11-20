@@ -116,3 +116,4 @@ The simulated distance sensor casts 3 rays forward from the upper torso into the
 | $0.7\ \text{m} \le d_F < 1.4\ \text{m}$ | $d_L > d_R$ and $d_L > 0.7\ \text{m}$ | **AVOIDING_LEFT** | $-0.75$ | $0.2 + 0.8\frac{d_F - 0.7}{0.7}$ |
 | $0.7\ \text{m} \le d_F < 1.4\ \text{m}$ | $d_R > d_L$ and $d_R > 0.7\ \text{m}$ | **AVOIDING_RIGHT** | $+0.75$ | $0.2 + 0.8\frac{d_F - 0.7}{0.7}$ |
 | $d_F < 0.7\ \text{m}$ (All blocked) | Both $< 0.7\ \text{m}$ | **EMERGENCY_STOP** | $0.0$ | $0.0$ (Stop) |
+

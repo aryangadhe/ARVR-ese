@@ -50,3 +50,4 @@ def test_telemetry_builder():
     assert b.endswith(b"\n")
     decoded = json.loads(b.decode("utf-8"))
     assert decoded["balance"] == "STABLE"
+

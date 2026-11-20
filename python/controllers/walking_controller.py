@@ -157,3 +157,4 @@ class WalkingController:
         self.is_walking = False
         self.phase_time = 0.0
         self.turn_rate = 0.0
+

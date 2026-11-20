@@ -68,3 +68,4 @@ func _create_obstacle_node(obs_type: String, size_array: Array) -> Node3D:
 
 	mesh_inst.material_override = mat
 	return mesh_inst
+

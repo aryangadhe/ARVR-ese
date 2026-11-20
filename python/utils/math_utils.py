@@ -116,3 +116,4 @@ class LowPassFilter:
     def reset(self, val: float = 0.0):
         self.value = val
         self.initialized = False
+

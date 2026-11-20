@@ -147,3 +147,4 @@ Communication occurs over a loopback TCP socket (`127.0.0.1:9099`). Messages are
   $$x_{\text{godot}} = -y_{\text{pb}}, \quad y_{\text{godot}} = z_{\text{pb}}, \quad z_{\text{godot}} = -x_{\text{pb}}$$
 - **Visual Synchronization:** Each link mesh transform is updated directly from PyBullet's world link pose telemetry, eliminating animation discrepancies.
 - **OpenXR Support:** If an OpenXR headset is detected at startup, VR mode is enabled automatically. If no headset is connected, it gracefully falls back to the Desktop keyboard/mouse interface.
+

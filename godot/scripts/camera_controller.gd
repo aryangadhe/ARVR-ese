@@ -74,3 +74,4 @@ func _update_transform() -> void:
 
 	global_position = cam_pos
 	look_at(target_offset, Vector3.UP)
+

@@ -188,3 +188,4 @@ class PhysicsSimulation:
         if self.physics_client_id >= 0:
             p.disconnect(self.physics_client_id)
             self.physics_client_id = -1
+

@@ -97,3 +97,4 @@ class DistanceSensor:
             readings["front_distance"], readings["left_distance"], readings["right_distance"]
         )
         return readings
+

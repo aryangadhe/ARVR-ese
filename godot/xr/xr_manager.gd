@@ -45,3 +45,4 @@ func _fallback_desktop(reason: String) -> void:
 		xr_origin.visible = false
 	emit_signal("xr_mode_changed", false, "Desktop Mode: " + reason)
 	print("[XRManager] " + reason)
+

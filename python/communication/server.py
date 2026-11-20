@@ -88,7 +88,10 @@ class SimulationServer:
             self.rx_buffer += chunk.decode("utf-8", errors="ignore")
             while "\n" in self.rx_buffer:
                 line, self.rx_buffer = self.rx_buffer.split("\n", 1)
-                success, msg, err = parse_message(line)
+                line_stripped = line.strip()
+                if not line_stripped:
+                    continue
+                success, msg, err = parse_message(line_stripped)
                 if success and msg is not None:
                     self.command_queue.put(msg)
                 elif err:
@@ -252,3 +255,4 @@ class SimulationServer:
                 pass
             self.server_socket = None
         print("[Server] Server stopped.")
+

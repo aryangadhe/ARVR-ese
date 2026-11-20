@@ -102,3 +102,4 @@ Or launch Godot, click **Import**, select `godot/project.godot`, and press **Run
 ### Optional VR Mode (OpenXR)
 - If an OpenXR headset is active and connected before launching the Godot application, the simulator will automatically detect the headset, enable OpenXR, and route views to the HMD.
 - If no headset is detected, the simulator automatically uses Desktop Mode without crashing.
+

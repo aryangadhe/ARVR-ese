@@ -62,3 +62,4 @@ def test_individual_joint_actuation(sim):
     states = sim.robot.joint_ctrl.update_states()
     curr_deg = states["left_elbow_pitch"]["current_deg"]
     assert curr_deg > 20.0  # Joint has moved toward target
+
