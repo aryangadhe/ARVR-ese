@@ -59,11 +59,11 @@ class WalkingController:
         }
 
         # Gait trajectory parameters (adjustable)
-        self.step_amp = 0.08  # forward swing reach (step length)
-        self.push_amp = 0.08  # stance push propulsion (symmetric with step length)
-        self.knee_pitch_amp = 0.20  # knee lift clearance
+        self.step_amp = 0.10  # forward swing reach (step length)
+        self.push_amp = 0.10  # stance push propulsion (symmetric with step length)
+        self.knee_pitch_amp = 0.42  # knee lift clearance (~2.5cm ground clearance to prevent scuffing)
         self.arm_swing_amp = 0.15  # counterbalance arm swing
-        self.lateral_roll_amp = 0.030  # weight shift roll towards stance foot
+        self.lateral_roll_amp = 0.035  # weight shift roll towards stance foot
 
         # Odometry tracking
         self.walking_distance = 0.0

@@ -123,8 +123,8 @@ class SimulationServer:
                 if msg_type == MessageType.COMMAND:
                     action = cmd.get("action", "").lower()
                     if action == "walk":
-                        # If robot is fallen, reset upright first before starting gait
-                        if self.sim.robot.fall_ctrl.state == self.sim.robot.fall_ctrl.STATE_FALLEN:
+                        # If robot is fallen or falling, reset upright first before starting gait
+                        if self.sim.robot.fall_ctrl.state in (self.sim.robot.fall_ctrl.STATE_FALLEN, self.sim.robot.fall_ctrl.STATE_FALLING):
                             self.sim.reset_robot()
                         self.sim.robot.clear_all_manual_joints()
                         speed = float(cmd.get("speed", 0.4))
@@ -136,7 +136,7 @@ class SimulationServer:
                     elif action == "stand":
                         self.sim.robot.walking_ctrl.stop_walking()
                         self.sim.robot.clear_all_manual_joints()
-                        if self.sim.robot.fall_ctrl.state == self.sim.robot.fall_ctrl.STATE_FALLEN:
+                        if self.sim.robot.fall_ctrl.state in (self.sim.robot.fall_ctrl.STATE_FALLEN, self.sim.robot.fall_ctrl.STATE_FALLING):
                             self.sim.reset_robot()
                         print("[Command] Returned to standing")
                     elif action == "reset":
