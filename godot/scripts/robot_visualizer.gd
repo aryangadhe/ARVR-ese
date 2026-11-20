@@ -18,6 +18,7 @@ var highlighted_node: Node3D = null
 
 func _ready() -> void:
 	_register_links()
+	print("[RobotVisualizer] _ready completed. Registered links (", link_nodes.size(), "): ", link_nodes.keys())
 	_setup_ray_visualizers()
 	_setup_com_visualizers()
 
@@ -83,11 +84,14 @@ func highlight_link(link_name: String) -> void:
 			(target as MeshInstance3D).material_override = highlight_mat
 
 func _register_links() -> void:
-	var links_group = $Links
+	link_nodes.clear()
+	var links_group = get_node_or_null("Links")
 	if links_group:
 		for child in links_group.get_children():
 			if child is Node3D:
 				link_nodes[child.name] = child
+				if child is MeshInstance3D:
+					original_materials[child.name] = (child as MeshInstance3D).material_override
 
 func _setup_ray_visualizers() -> void:
 	if not rays_container:
@@ -117,6 +121,9 @@ func pb_to_godot_basis(pb_quat: Array) -> Basis:
 	return Basis(gx, gy, gz)
 
 func update_from_telemetry(data: Dictionary) -> void:
+	if link_nodes.is_empty():
+		_register_links()
+
 	var links_data = data.get("links", {})
 	for link_name in links_data:
 		if link_name in link_nodes:
@@ -125,8 +132,9 @@ func update_from_telemetry(data: Dictionary) -> void:
 			var pos_array = info.get("position", [0, 0, 0])
 			var quat_array = info.get("orientation", [0, 0, 0, 1])
 
-			node.global_position = pb_to_godot_pos(pos_array)
-			node.global_transform.basis = pb_to_godot_basis(quat_array)
+			var g_pos = pb_to_godot_pos(pos_array)
+			var g_basis = pb_to_godot_basis(quat_array)
+			node.global_transform = Transform3D(g_basis, g_pos)
 
 	_update_sensor_rays(data.get("sensors", {}))
 	_update_balance_geometry(data)

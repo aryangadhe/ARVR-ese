@@ -36,6 +36,12 @@ func _init() -> void:
 	mat_track.albedo_color = Color(0.12, 0.16, 0.22)
 	mat_track.roughness = 0.5
 
+	# Platform surface material (Distinct high-tech laboratory test pad)
+	var mat_platform = StandardMaterial3D.new()
+	mat_platform.albedo_color = Color(0.18, 0.22, 0.28)
+	mat_platform.metallic = 0.35
+	mat_platform.roughness = 0.45
+
 	# 1. WorldEnvironment
 	var env_node = WorldEnvironment.new()
 	env_node.name = "WorldEnvironment"
@@ -142,7 +148,7 @@ func _init() -> void:
 	cyl_plat.height = 0.02
 	platform.mesh = cyl_plat
 	platform.position = Vector3(0, 0.01, 0)
-	platform.material_override = mat_torso
+	platform.material_override = mat_platform
 	lab_env.add_child(platform)
 	platform.owner = root
 
@@ -223,7 +229,7 @@ func _init() -> void:
 	cam3d.name = "Camera3D"
 	cam3d.current = true
 	cam3d.fov = 60.0
-	cam3d.position = Vector3(0, 1.2, 3.2)
+	cam3d.position = Vector3.ZERO
 	cam_ctrl.add_child(cam3d)
 	cam3d.owner = root
 
@@ -283,6 +289,7 @@ func _init() -> void:
 	torso_mesh.size = Vector3(0.24, 0.42, 0.26)
 	torso_node.mesh = torso_mesh
 	torso_node.material_override = mat_torso
+	torso_node.position = Vector3(0, 0.83, 0)
 	links_container.add_child(torso_node)
 	torso_node.owner = root
 
@@ -300,6 +307,7 @@ func _init() -> void:
 	# 2. Head with Visor
 	var head_node = Node3D.new()
 	head_node.name = "head"
+	head_node.position = Vector3(0, 1.11, 0)
 	links_container.add_child(head_node)
 	head_node.owner = root
 
@@ -310,7 +318,7 @@ func _init() -> void:
 	head_mesh.height = 0.22
 	head_mesh_inst.mesh = head_mesh
 	head_mesh_inst.material_override = mat_limbs
-	head_mesh_inst.position = Vector3(0, 0.08, 0)
+	head_mesh_inst.position = Vector3.ZERO
 	head_node.add_child(head_mesh_inst)
 	head_mesh_inst.owner = root
 
@@ -320,20 +328,20 @@ func _init() -> void:
 	visor_mesh.size = Vector3(0.13, 0.045, 0.035)
 	visor_mesh_inst.mesh = visor_mesh
 	visor_mesh_inst.material_override = mat_visor
-	visor_mesh_inst.position = Vector3(0, 0.09, -0.10)
+	visor_mesh_inst.position = Vector3(0, 0.01, -0.10)
 	head_node.add_child(visor_mesh_inst)
 	visor_mesh_inst.owner = root
 
-	# Limb definitions: [name, radius, height, material]
+	# Limb definitions: [name, radius, height, material, initial_pos]
 	var limb_defs = [
-		["left_upper_arm", 0.045, 0.24, mat_limbs],
-		["left_forearm", 0.04, 0.22, mat_limbs],
-		["right_upper_arm", 0.045, 0.24, mat_limbs],
-		["right_forearm", 0.04, 0.22, mat_limbs],
-		["left_thigh", 0.055, 0.32, mat_limbs],
-		["left_shin", 0.05, 0.30, mat_limbs],
-		["right_thigh", 0.055, 0.32, mat_limbs],
-		["right_shin", 0.05, 0.30, mat_limbs],
+		["left_upper_arm", 0.045, 0.24, mat_limbs, Vector3(-0.17, 0.86, 0)],
+		["left_forearm", 0.04, 0.22, mat_limbs, Vector3(-0.17, 0.65, 0)],
+		["right_upper_arm", 0.045, 0.24, mat_limbs, Vector3(0.17, 0.86, 0)],
+		["right_forearm", 0.04, 0.22, mat_limbs, Vector3(0.17, 0.65, 0)],
+		["left_thigh", 0.055, 0.32, mat_limbs, Vector3(-0.10, 0.48, 0)],
+		["left_shin", 0.05, 0.30, mat_limbs, Vector3(-0.10, 0.19, 0)],
+		["right_thigh", 0.055, 0.32, mat_limbs, Vector3(0.10, 0.48, 0)],
+		["right_shin", 0.05, 0.30, mat_limbs, Vector3(0.10, 0.19, 0)],
 	]
 
 	for l_def in limb_defs:
@@ -345,10 +353,15 @@ func _init() -> void:
 		c_mesh.height = l_def[2]
 		l_node.mesh = c_mesh
 		l_node.material_override = l_def[3]
+		l_node.position = l_def[4]
 		links_container.add_child(l_node)
 		l_node.owner = root
 
 	# Feet (BoxMeshes with distinct sole contact pads)
+	var foot_positions = {
+		"left_foot": Vector3(-0.10, 0.03, -0.03),
+		"right_foot": Vector3(0.10, 0.03, -0.03)
+	}
 	for foot_name in ["left_foot", "right_foot"]:
 		var f_node = MeshInstance3D.new()
 		f_node.name = foot_name
@@ -356,6 +369,7 @@ func _init() -> void:
 		f_mesh.size = Vector3(0.15, 0.045, 0.26)
 		f_node.mesh = f_mesh
 		f_node.material_override = mat_torso
+		f_node.position = foot_positions[foot_name]
 		links_container.add_child(f_node)
 		f_node.owner = root
 

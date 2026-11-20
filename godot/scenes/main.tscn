@@ -2,12 +2,12 @@
 
 [ext_resource type="Script" path="res://scripts/main.gd" id="1_eb6dy"]
 [ext_resource type="Material" path="res://materials/floor.tres" id="2_trceg"]
-[ext_resource type="Material" path="res://materials/torso.tres" id="3_a8y0u"]
-[ext_resource type="Material" path="res://materials/visor.tres" id="4_jkv2x"]
-[ext_resource type="Script" path="res://scripts/camera_controller.gd" id="5_jbj1t"]
-[ext_resource type="Script" path="res://xr/xr_manager.gd" id="6_muem4"]
-[ext_resource type="Script" path="res://scripts/obstacle_manager.gd" id="7_dp3eg"]
-[ext_resource type="Script" path="res://scripts/robot_visualizer.gd" id="8_0ld40"]
+[ext_resource type="Material" path="res://materials/visor.tres" id="3_a8y0u"]
+[ext_resource type="Script" path="res://scripts/camera_controller.gd" id="4_jkv2x"]
+[ext_resource type="Script" path="res://xr/xr_manager.gd" id="5_jbj1t"]
+[ext_resource type="Script" path="res://scripts/obstacle_manager.gd" id="6_muem4"]
+[ext_resource type="Script" path="res://scripts/robot_visualizer.gd" id="7_dp3eg"]
+[ext_resource type="Material" path="res://materials/torso.tres" id="8_0ld40"]
 [ext_resource type="Material" path="res://materials/limbs.tres" id="9_gqmmt"]
 [ext_resource type="Script" path="res://scripts/network_client.gd" id="10_yc10j"]
 [ext_resource type="Script" path="res://scripts/ui_controller.gd" id="11_jscy8"]
@@ -77,107 +77,112 @@ albedo_color = Color(0.85, 0.9, 1, 0.6)
 [sub_resource type="PlaneMesh" id="PlaneMesh_5poiv"]
 size = Vector2(2.6, 0.08)
 
-[sub_resource type="CylinderMesh" id="CylinderMesh_2cjbq"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2cjbq"]
+albedo_color = Color(0.18, 0.22, 0.28, 1)
+metallic = 0.35
+roughness = 0.45
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_chjal"]
 top_radius = 1.3
 bottom_radius = 1.3
 height = 0.02
 
-[sub_resource type="TorusMesh" id="TorusMesh_chjal"]
+[sub_resource type="TorusMesh" id="TorusMesh_cjqg0"]
 inner_radius = 1.25
 outer_radius = 1.32
 rings = 32
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_cjqg0"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vchkt"]
 albedo_color = Color(0.08, 0.11, 0.15, 1)
 metallic = 0.2
 roughness = 0.8
 
-[sub_resource type="BoxMesh" id="BoxMesh_vchkt"]
+[sub_resource type="BoxMesh" id="BoxMesh_txyw0"]
 size = Vector3(36, 7, 0.5)
 
-[sub_resource type="BoxMesh" id="BoxMesh_txyw0"]
+[sub_resource type="BoxMesh" id="BoxMesh_vc5cj"]
 size = Vector3(32, 0.08, 0.1)
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vc5cj"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_nvyfr"]
 albedo_color = Color(0.2, 0.5, 0.7, 1)
 roughness = 0.5
 
-[sub_resource type="BoxMesh" id="BoxMesh_nvyfr"]
+[sub_resource type="BoxMesh" id="BoxMesh_ty1g6"]
 size = Vector3(1.2, 0.25, 2.4)
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ty1g6"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_j2jfr"]
 albedo_color = Color(0.95, 0.65, 0.1, 1)
 metallic = 0.5
 roughness = 0.3
 
-[sub_resource type="BoxMesh" id="BoxMesh_j2jfr"]
+[sub_resource type="BoxMesh" id="BoxMesh_bjg73"]
 size = Vector3(0.3, 0.6, 2)
 
-[sub_resource type="BoxMesh" id="BoxMesh_bjg73"]
+[sub_resource type="BoxMesh" id="BoxMesh_bu4jf"]
 size = Vector3(0.24, 0.42, 0.26)
 
-[sub_resource type="BoxMesh" id="BoxMesh_bu4jf"]
+[sub_resource type="BoxMesh" id="BoxMesh_o7ddy"]
 size = Vector3(0.12, 0.03, 0.01)
 
-[sub_resource type="SphereMesh" id="SphereMesh_o7ddy"]
+[sub_resource type="SphereMesh" id="SphereMesh_0loja"]
 radius = 0.11
 height = 0.22
 
-[sub_resource type="BoxMesh" id="BoxMesh_0loja"]
+[sub_resource type="BoxMesh" id="BoxMesh_ids8r"]
 size = Vector3(0.13, 0.045, 0.035)
 
-[sub_resource type="CylinderMesh" id="CylinderMesh_ids8r"]
+[sub_resource type="CylinderMesh" id="CylinderMesh_dnhof"]
 top_radius = 0.045
 bottom_radius = 0.045
 height = 0.24
-
-[sub_resource type="CylinderMesh" id="CylinderMesh_dnhof"]
-top_radius = 0.04
-bottom_radius = 0.04
-height = 0.22
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_1v6qk"]
-top_radius = 0.045
-bottom_radius = 0.045
-height = 0.24
-
-[sub_resource type="CylinderMesh" id="CylinderMesh_augu2"]
 top_radius = 0.04
 bottom_radius = 0.04
 height = 0.22
 
+[sub_resource type="CylinderMesh" id="CylinderMesh_augu2"]
+top_radius = 0.045
+bottom_radius = 0.045
+height = 0.24
+
 [sub_resource type="CylinderMesh" id="CylinderMesh_tm6hj"]
-top_radius = 0.055
-bottom_radius = 0.055
-height = 0.32
+top_radius = 0.04
+bottom_radius = 0.04
+height = 0.22
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_kf5aa"]
-top_radius = 0.05
-bottom_radius = 0.05
-height = 0.3
-
-[sub_resource type="CylinderMesh" id="CylinderMesh_t5ykj"]
 top_radius = 0.055
 bottom_radius = 0.055
 height = 0.32
 
-[sub_resource type="CylinderMesh" id="CylinderMesh_e755i"]
+[sub_resource type="CylinderMesh" id="CylinderMesh_t5ykj"]
 top_radius = 0.05
 bottom_radius = 0.05
 height = 0.3
 
-[sub_resource type="BoxMesh" id="BoxMesh_ro3en"]
-size = Vector3(0.15, 0.045, 0.26)
+[sub_resource type="CylinderMesh" id="CylinderMesh_e755i"]
+top_radius = 0.055
+bottom_radius = 0.055
+height = 0.32
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_ro3en"]
+top_radius = 0.05
+bottom_radius = 0.05
+height = 0.3
 
 [sub_resource type="BoxMesh" id="BoxMesh_od4ux"]
 size = Vector3(0.15, 0.045, 0.26)
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xhfw6"]
+[sub_resource type="BoxMesh" id="BoxMesh_xhfw6"]
+size = Vector3(0.15, 0.045, 0.26)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1epgm"]
 bg_color = Color(0.06, 0.08, 0.12, 0.98)
 border_width_bottom = 2
 border_color = Color(0, 0.75, 1, 0.5)
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1epgm"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_152kg"]
 bg_color = Color(0.08, 0.1, 0.14, 0.94)
 border_width_left = 1
 border_width_top = 1
@@ -189,7 +194,7 @@ corner_radius_top_right = 6
 corner_radius_bottom_right = 6
 corner_radius_bottom_left = 6
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_152kg"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_r4e17"]
 bg_color = Color(0.11, 0.14, 0.2, 0.9)
 border_width_left = 1
 border_width_top = 1
@@ -201,196 +206,206 @@ corner_radius_top_right = 4
 corner_radius_bottom_right = 4
 corner_radius_bottom_left = 4
 
-[node name="Main" type="Node3D" unique_id=571896]
+[node name="Main" type="Node3D" unique_id=2014166015]
 script = ExtResource("1_eb6dy")
 
-[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1485010584]
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1836615725]
 environment = SubResource("Environment_y6deb")
 
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1681073102]
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=753561881]
 transform = Transform3D(0.81915206, -0.4055798, 0.4055798, 0, 0.70710677, 0.70710677, -0.57357645, -0.579228, 0.579228, 5, 10, 6)
 light_color = Color(0.96, 0.98, 1, 1)
 light_energy = 1.2
 shadow_enabled = true
 
-[node name="SpotCenterPlatform" type="SpotLight3D" parent="." unique_id=457389336]
+[node name="SpotCenterPlatform" type="SpotLight3D" parent="." unique_id=1856989816]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 5.5, 0)
 light_color = Color(0.6, 0.9, 1, 1)
 light_energy = 2.0
 spot_range = 10.0
 
-[node name="LaboratoryEnvironment" type="Node3D" parent="." unique_id=1085881391]
+[node name="LaboratoryEnvironment" type="Node3D" parent="." unique_id=1480899446]
 
-[node name="FloorGrid" type="MeshInstance3D" parent="LaboratoryEnvironment" unique_id=1026379069]
+[node name="FloorGrid" type="MeshInstance3D" parent="LaboratoryEnvironment" unique_id=1170833714]
 material_override = ExtResource("2_trceg")
 mesh = SubResource("PlaneMesh_og1vs")
 
-[node name="WalkingTrack" type="MeshInstance3D" parent="LaboratoryEnvironment" unique_id=1875490723]
+[node name="WalkingTrack" type="MeshInstance3D" parent="LaboratoryEnvironment" unique_id=1949852784]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.005, -4)
 material_override = SubResource("StandardMaterial3D_2wyq8")
 mesh = SubResource("PlaneMesh_vxglm")
 
-[node name="TrackCenterLine" type="MeshInstance3D" parent="LaboratoryEnvironment" unique_id=1771921856]
+[node name="TrackCenterLine" type="MeshInstance3D" parent="LaboratoryEnvironment" unique_id=741178339]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.008, -4)
 material_override = SubResource("StandardMaterial3D_2f3dj")
 mesh = SubResource("PlaneMesh_yq6so")
 
-[node name="MetricTick_0m" type="MeshInstance3D" parent="LaboratoryEnvironment" unique_id=8910952]
+[node name="MetricTick_0m" type="MeshInstance3D" parent="LaboratoryEnvironment" unique_id=1824488123]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.009, 0)
 material_override = SubResource("StandardMaterial3D_fv21b")
 mesh = SubResource("PlaneMesh_tel4y")
 
-[node name="MetricTick_2m" type="MeshInstance3D" parent="LaboratoryEnvironment" unique_id=915257914]
+[node name="MetricTick_2m" type="MeshInstance3D" parent="LaboratoryEnvironment" unique_id=1256617074]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.009, -2)
 material_override = SubResource("StandardMaterial3D_qkpxi")
 mesh = SubResource("PlaneMesh_5q0nq")
 
-[node name="MetricTick_4m" type="MeshInstance3D" parent="LaboratoryEnvironment" unique_id=396917479]
+[node name="MetricTick_4m" type="MeshInstance3D" parent="LaboratoryEnvironment" unique_id=835508210]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.009, -4)
 material_override = SubResource("StandardMaterial3D_dgi5k")
 mesh = SubResource("PlaneMesh_j8jky")
 
-[node name="MetricTick_6m" type="MeshInstance3D" parent="LaboratoryEnvironment" unique_id=1724199442]
+[node name="MetricTick_6m" type="MeshInstance3D" parent="LaboratoryEnvironment" unique_id=208445933]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.009, -6)
 material_override = SubResource("StandardMaterial3D_kmb1v")
 mesh = SubResource("PlaneMesh_fuf3a")
 
-[node name="MetricTick_8m" type="MeshInstance3D" parent="LaboratoryEnvironment" unique_id=1186132838]
+[node name="MetricTick_8m" type="MeshInstance3D" parent="LaboratoryEnvironment" unique_id=598706514]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.009, -8)
 material_override = SubResource("StandardMaterial3D_pibwh")
 mesh = SubResource("PlaneMesh_c6pm6")
 
-[node name="MetricTick_10m" type="MeshInstance3D" parent="LaboratoryEnvironment" unique_id=1994532450]
+[node name="MetricTick_10m" type="MeshInstance3D" parent="LaboratoryEnvironment" unique_id=109099058]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.009, -10)
 material_override = SubResource("StandardMaterial3D_5he1u")
 mesh = SubResource("PlaneMesh_5poiv")
 
-[node name="StartingPlatform" type="MeshInstance3D" parent="LaboratoryEnvironment" unique_id=1715949467]
+[node name="StartingPlatform" type="MeshInstance3D" parent="LaboratoryEnvironment" unique_id=225750660]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.01, 0)
-material_override = ExtResource("3_a8y0u")
-mesh = SubResource("CylinderMesh_2cjbq")
+material_override = SubResource("StandardMaterial3D_2cjbq")
+mesh = SubResource("CylinderMesh_chjal")
 
-[node name="PlatformRimRing" type="MeshInstance3D" parent="LaboratoryEnvironment" unique_id=47943512]
+[node name="PlatformRimRing" type="MeshInstance3D" parent="LaboratoryEnvironment" unique_id=255750097]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.015, 0)
-material_override = ExtResource("4_jkv2x")
-mesh = SubResource("TorusMesh_chjal")
+material_override = ExtResource("3_a8y0u")
+mesh = SubResource("TorusMesh_cjqg0")
 
-[node name="WallNorth" type="MeshInstance3D" parent="LaboratoryEnvironment" unique_id=1185448678]
+[node name="WallNorth" type="MeshInstance3D" parent="LaboratoryEnvironment" unique_id=1549992796]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.5, -18)
-material_override = SubResource("StandardMaterial3D_cjqg0")
-mesh = SubResource("BoxMesh_vchkt")
-
-[node name="WallLightStrip" type="MeshInstance3D" parent="LaboratoryEnvironment" unique_id=300256283]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4, -17.7)
-material_override = ExtResource("4_jkv2x")
+material_override = SubResource("StandardMaterial3D_vchkt")
 mesh = SubResource("BoxMesh_txyw0")
 
-[node name="ZoneC_StaticRamp" type="MeshInstance3D" parent="LaboratoryEnvironment" unique_id=1895398592]
+[node name="WallLightStrip" type="MeshInstance3D" parent="LaboratoryEnvironment" unique_id=1444495456]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4, -17.7)
+material_override = ExtResource("3_a8y0u")
+mesh = SubResource("BoxMesh_vc5cj")
+
+[node name="ZoneC_StaticRamp" type="MeshInstance3D" parent="LaboratoryEnvironment" unique_id=374946066]
 transform = Transform3D(1, 0, 0, 0, 0.99026805, -0.1391731, 0, 0.1391731, 0.99026805, -4.5, 0.12, -4)
-material_override = SubResource("StandardMaterial3D_vc5cj")
-mesh = SubResource("BoxMesh_nvyfr")
+material_override = SubResource("StandardMaterial3D_nvyfr")
+mesh = SubResource("BoxMesh_ty1g6")
 
-[node name="ZoneB_Barrier" type="MeshInstance3D" parent="LaboratoryEnvironment" unique_id=1389622492]
+[node name="ZoneB_Barrier" type="MeshInstance3D" parent="LaboratoryEnvironment" unique_id=77148020]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5, 0.3, -4)
-material_override = SubResource("StandardMaterial3D_ty1g6")
-mesh = SubResource("BoxMesh_j2jfr")
+material_override = SubResource("StandardMaterial3D_j2jfr")
+mesh = SubResource("BoxMesh_bjg73")
 
-[node name="CameraController" type="Node3D" parent="." unique_id=2017328393]
-script = ExtResource("5_jbj1t")
+[node name="CameraController" type="Node3D" parent="." unique_id=598571132]
+script = ExtResource("4_jkv2x")
 
-[node name="Camera3D" type="Camera3D" parent="CameraController" unique_id=1886265978]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 3.2)
+[node name="Camera3D" type="Camera3D" parent="CameraController" unique_id=322935151]
 current = true
 fov = 60.0
 
-[node name="XROrigin3D" type="Node3D" parent="." unique_id=177190751 node_paths=PackedStringArray("xr_origin", "desktop_camera")]
-script = ExtResource("6_muem4")
+[node name="XROrigin3D" type="Node3D" parent="." unique_id=1556018082 node_paths=PackedStringArray("xr_origin", "desktop_camera")]
+script = ExtResource("5_jbj1t")
 xr_origin = NodePath(".")
 desktop_camera = NodePath("../CameraController/Camera3D")
 
-[node name="XRCamera3D" type="XRCamera3D" parent="XROrigin3D" unique_id=1741493651]
+[node name="XRCamera3D" type="XRCamera3D" parent="XROrigin3D" unique_id=1663675281]
 
-[node name="LeftController" type="XRController3D" parent="XROrigin3D" unique_id=2146239020]
+[node name="LeftController" type="XRController3D" parent="XROrigin3D" unique_id=301609966]
 tracker = &"left_hand"
 
-[node name="RightController" type="XRController3D" parent="XROrigin3D" unique_id=1304667384]
+[node name="RightController" type="XRController3D" parent="XROrigin3D" unique_id=820203936]
 tracker = &"right_hand"
 
-[node name="ObstacleManager" type="Node3D" parent="." unique_id=1268462313]
+[node name="ObstacleManager" type="Node3D" parent="." unique_id=1589360880]
+script = ExtResource("6_muem4")
+
+[node name="RobotVisualizer" type="Node3D" parent="." unique_id=1725827291]
 script = ExtResource("7_dp3eg")
 
-[node name="RobotVisualizer" type="Node3D" parent="." unique_id=1171912537]
-script = ExtResource("8_0ld40")
+[node name="SensorRays" type="Node3D" parent="RobotVisualizer" unique_id=564270860]
 
-[node name="SensorRays" type="Node3D" parent="RobotVisualizer" unique_id=1250609495]
+[node name="Links" type="Node3D" parent="RobotVisualizer" unique_id=700739784]
 
-[node name="Links" type="Node3D" parent="RobotVisualizer" unique_id=273317358]
-
-[node name="torso" type="MeshInstance3D" parent="RobotVisualizer/Links" unique_id=2007416943]
-material_override = ExtResource("3_a8y0u")
-mesh = SubResource("BoxMesh_bjg73")
-
-[node name="ChestAccent" type="MeshInstance3D" parent="RobotVisualizer/Links/torso" unique_id=252258311]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.08, -0.135)
-material_override = ExtResource("4_jkv2x")
+[node name="torso" type="MeshInstance3D" parent="RobotVisualizer/Links" unique_id=592423202]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.83, 0)
+material_override = ExtResource("8_0ld40")
 mesh = SubResource("BoxMesh_bu4jf")
 
-[node name="head" type="Node3D" parent="RobotVisualizer/Links" unique_id=749757827]
+[node name="ChestAccent" type="MeshInstance3D" parent="RobotVisualizer/Links/torso" unique_id=594156650]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.08, -0.135)
+material_override = ExtResource("3_a8y0u")
+mesh = SubResource("BoxMesh_o7ddy")
 
-[node name="HeadMesh" type="MeshInstance3D" parent="RobotVisualizer/Links/head" unique_id=288057248]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.08, 0)
+[node name="head" type="Node3D" parent="RobotVisualizer/Links" unique_id=1691472234]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.11, 0)
+
+[node name="HeadMesh" type="MeshInstance3D" parent="RobotVisualizer/Links/head" unique_id=1776547165]
 material_override = ExtResource("9_gqmmt")
-mesh = SubResource("SphereMesh_o7ddy")
+mesh = SubResource("SphereMesh_0loja")
 
-[node name="VisorMesh" type="MeshInstance3D" parent="RobotVisualizer/Links/head" unique_id=1013478958]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.09, -0.1)
-material_override = ExtResource("4_jkv2x")
-mesh = SubResource("BoxMesh_0loja")
+[node name="VisorMesh" type="MeshInstance3D" parent="RobotVisualizer/Links/head" unique_id=854090380]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.01, -0.1)
+material_override = ExtResource("3_a8y0u")
+mesh = SubResource("BoxMesh_ids8r")
 
-[node name="left_upper_arm" type="MeshInstance3D" parent="RobotVisualizer/Links" unique_id=2006180671]
-material_override = ExtResource("9_gqmmt")
-mesh = SubResource("CylinderMesh_ids8r")
-
-[node name="left_forearm" type="MeshInstance3D" parent="RobotVisualizer/Links" unique_id=915402904]
+[node name="left_upper_arm" type="MeshInstance3D" parent="RobotVisualizer/Links" unique_id=1168866360]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.17, 0.86, 0)
 material_override = ExtResource("9_gqmmt")
 mesh = SubResource("CylinderMesh_dnhof")
 
-[node name="right_upper_arm" type="MeshInstance3D" parent="RobotVisualizer/Links" unique_id=160574377]
+[node name="left_forearm" type="MeshInstance3D" parent="RobotVisualizer/Links" unique_id=1927869534]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.17, 0.65, 0)
 material_override = ExtResource("9_gqmmt")
 mesh = SubResource("CylinderMesh_1v6qk")
 
-[node name="right_forearm" type="MeshInstance3D" parent="RobotVisualizer/Links" unique_id=290115222]
+[node name="right_upper_arm" type="MeshInstance3D" parent="RobotVisualizer/Links" unique_id=448551025]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.17, 0.86, 0)
 material_override = ExtResource("9_gqmmt")
 mesh = SubResource("CylinderMesh_augu2")
 
-[node name="left_thigh" type="MeshInstance3D" parent="RobotVisualizer/Links" unique_id=1552211136]
+[node name="right_forearm" type="MeshInstance3D" parent="RobotVisualizer/Links" unique_id=1396561171]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.17, 0.65, 0)
 material_override = ExtResource("9_gqmmt")
 mesh = SubResource("CylinderMesh_tm6hj")
 
-[node name="left_shin" type="MeshInstance3D" parent="RobotVisualizer/Links" unique_id=35414821]
+[node name="left_thigh" type="MeshInstance3D" parent="RobotVisualizer/Links" unique_id=893828801]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.1, 0.48, 0)
 material_override = ExtResource("9_gqmmt")
 mesh = SubResource("CylinderMesh_kf5aa")
 
-[node name="right_thigh" type="MeshInstance3D" parent="RobotVisualizer/Links" unique_id=921677349]
+[node name="left_shin" type="MeshInstance3D" parent="RobotVisualizer/Links" unique_id=675679672]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.1, 0.19, 0)
 material_override = ExtResource("9_gqmmt")
 mesh = SubResource("CylinderMesh_t5ykj")
 
-[node name="right_shin" type="MeshInstance3D" parent="RobotVisualizer/Links" unique_id=1420518038]
+[node name="right_thigh" type="MeshInstance3D" parent="RobotVisualizer/Links" unique_id=1696588487]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.1, 0.48, 0)
 material_override = ExtResource("9_gqmmt")
 mesh = SubResource("CylinderMesh_e755i")
 
-[node name="left_foot" type="MeshInstance3D" parent="RobotVisualizer/Links" unique_id=1583548336]
-material_override = ExtResource("3_a8y0u")
-mesh = SubResource("BoxMesh_ro3en")
+[node name="right_shin" type="MeshInstance3D" parent="RobotVisualizer/Links" unique_id=389956450]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.1, 0.19, 0)
+material_override = ExtResource("9_gqmmt")
+mesh = SubResource("CylinderMesh_ro3en")
 
-[node name="right_foot" type="MeshInstance3D" parent="RobotVisualizer/Links" unique_id=1643326525]
-material_override = ExtResource("3_a8y0u")
+[node name="left_foot" type="MeshInstance3D" parent="RobotVisualizer/Links" unique_id=694166375]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.1, 0.03, -0.03)
+material_override = ExtResource("8_0ld40")
 mesh = SubResource("BoxMesh_od4ux")
 
-[node name="NetworkClient" type="Node" parent="." unique_id=303614915]
+[node name="right_foot" type="MeshInstance3D" parent="RobotVisualizer/Links" unique_id=1910872879]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.1, 0.03, -0.03)
+material_override = ExtResource("8_0ld40")
+mesh = SubResource("BoxMesh_xhfw6")
+
+[node name="NetworkClient" type="Node" parent="." unique_id=663858986]
 script = ExtResource("10_yc10j")
 
-[node name="UI" type="Control" parent="." unique_id=16133144 node_paths=PackedStringArray("network_client", "camera_controller", "robot_visualizer")]
+[node name="UI" type="Control" parent="." unique_id=672856745 node_paths=PackedStringArray("network_client", "camera_controller", "robot_visualizer")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -400,94 +415,94 @@ network_client = NodePath("../NetworkClient")
 camera_controller = NodePath("../CameraController")
 robot_visualizer = NodePath("../RobotVisualizer")
 
-[node name="TopBar" type="PanelContainer" parent="UI" unique_id=1171885853]
+[node name="TopBar" type="PanelContainer" parent="UI" unique_id=1918980455]
 layout_mode = 0
 anchor_right = 1.0
 offset_bottom = 48.0
-theme_override_styles/panel = SubResource("StyleBoxFlat_xhfw6")
+theme_override_styles/panel = SubResource("StyleBoxFlat_1epgm")
 
-[node name="TopHBox" type="HBoxContainer" parent="UI/TopBar" unique_id=713043539]
+[node name="TopHBox" type="HBoxContainer" parent="UI/TopBar" unique_id=153794411]
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="@Label@2" type="Label" parent="UI/TopBar/TopHBox" unique_id=1254676110]
+[node name="@Label@2" type="Label" parent="UI/TopBar/TopHBox" unique_id=1911667094]
 layout_mode = 2
 theme_override_font_sizes/font_size = 15
 theme_override_colors/font_color = Color(0, 0.9, 1, 1)
 text = " 🤖 VR HUMANOID "
 
-[node name="BtnTabSim" type="Button" parent="UI/TopBar/TopHBox" unique_id=481612228]
+[node name="BtnTabSim" type="Button" parent="UI/TopBar/TopHBox" unique_id=1886552725]
 layout_mode = 2
 text = "Simulation"
 
-[node name="BtnTabControl" type="Button" parent="UI/TopBar/TopHBox" unique_id=718124186]
+[node name="BtnTabControl" type="Button" parent="UI/TopBar/TopHBox" unique_id=80123068]
 layout_mode = 2
 text = "Robot Control"
 
-[node name="BtnTabBalance" type="Button" parent="UI/TopBar/TopHBox" unique_id=1770157882]
+[node name="BtnTabBalance" type="Button" parent="UI/TopBar/TopHBox" unique_id=137593192]
 layout_mode = 2
 text = "Balance"
 
-[node name="BtnTabSensors" type="Button" parent="UI/TopBar/TopHBox" unique_id=736440355]
+[node name="BtnTabSensors" type="Button" parent="UI/TopBar/TopHBox" unique_id=1298485555]
 layout_mode = 2
 text = "Sensors"
 
-[node name="BtnTabAnalytics" type="Button" parent="UI/TopBar/TopHBox" unique_id=1646461730]
+[node name="BtnTabAnalytics" type="Button" parent="UI/TopBar/TopHBox" unique_id=295639076]
 layout_mode = 2
 text = "Analytics"
 
-[node name="BtnTabExperiments" type="Button" parent="UI/TopBar/TopHBox" unique_id=1988177]
+[node name="BtnTabExperiments" type="Button" parent="UI/TopBar/TopHBox" unique_id=334209510]
 layout_mode = 2
 text = "Experiments"
 
-[node name="BtnTabSettings" type="Button" parent="UI/TopBar/TopHBox" unique_id=2052788099]
+[node name="BtnTabSettings" type="Button" parent="UI/TopBar/TopHBox" unique_id=1143551130]
 layout_mode = 2
 text = "Settings"
 
-[node name="@Control@3" type="Control" parent="UI/TopBar/TopHBox" unique_id=1144369666]
+[node name="@Control@3" type="Control" parent="UI/TopBar/TopHBox" unique_id=1351806696]
 layout_mode = 2
 size_flags_horizontal = 3
 mouse_filter = 2
 
-[node name="LblConnection" type="Label" parent="UI/TopBar/TopHBox" unique_id=814725041]
+[node name="LblConnection" type="Label" parent="UI/TopBar/TopHBox" unique_id=1293357124]
 layout_mode = 2
 theme_override_font_sizes/font_size = 12
 theme_override_colors/font_color = Color(0.9, 0.6, 0.2, 1)
 text = "○ CONNECTING..."
 
-[node name="LblPhysicsStatus" type="Label" parent="UI/TopBar/TopHBox" unique_id=1521286284]
+[node name="LblPhysicsStatus" type="Label" parent="UI/TopBar/TopHBox" unique_id=858639089]
 layout_mode = 2
 theme_override_font_sizes/font_size = 12
 theme_override_colors/font_color = Color(0.6, 0.8, 1, 1)
 text = "Physics: 60 Hz"
 
-[node name="LblXR" type="Label" parent="UI/TopBar/TopHBox" unique_id=1076308400]
+[node name="LblXR" type="Label" parent="UI/TopBar/TopHBox" unique_id=2124731995]
 layout_mode = 2
 theme_override_font_sizes/font_size = 12
 theme_override_colors/font_color = Color(0.7, 0.85, 0.95, 1)
 text = "XR: Desktop Mode"
 
-[node name="OptCamera" type="OptionButton" parent="UI/TopBar/TopHBox" unique_id=277904411]
+[node name="OptCamera" type="OptionButton" parent="UI/TopBar/TopHBox" unique_id=1942818135]
 layout_mode = 2
 
-[node name="BtnResetCam" type="Button" parent="UI/TopBar/TopHBox" unique_id=1607414232]
+[node name="BtnResetCam" type="Button" parent="UI/TopBar/TopHBox" unique_id=1312137504]
 layout_mode = 2
 text = "Reset Cam"
 
-[node name="ContentArea" type="Control" parent="UI" unique_id=304406848]
+[node name="ContentArea" type="Control" parent="UI" unique_id=764268395]
 anchors_preset = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_top = 48.0
 mouse_filter = 2
 
-[node name="TabPanel_Sim" type="Control" parent="UI/ContentArea" unique_id=834466811]
+[node name="TabPanel_Sim" type="Control" parent="UI/ContentArea" unique_id=254525701]
 anchors_preset = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 2
 
-[node name="BtnToggleLeft" type="Button" parent="UI/ContentArea/TabPanel_Sim" unique_id=505298584]
+[node name="BtnToggleLeft" type="Button" parent="UI/ContentArea/TabPanel_Sim" unique_id=1133310776]
 custom_minimum_size = Vector2(28, 28)
 layout_mode = 0
 offset_left = 10.0
@@ -496,208 +511,208 @@ offset_right = 10.0
 offset_bottom = 10.0
 text = "◀"
 
-[node name="LeftPanel" type="PanelContainer" parent="UI/ContentArea/TabPanel_Sim" unique_id=1512290649]
+[node name="LeftPanel" type="PanelContainer" parent="UI/ContentArea/TabPanel_Sim" unique_id=1678473547]
 layout_mode = 0
 anchor_bottom = 1.0
 offset_left = 45.0
 offset_top = 10.0
 offset_right = 385.0
 offset_bottom = -170.0
-theme_override_styles/panel = SubResource("StyleBoxFlat_1epgm")
+theme_override_styles/panel = SubResource("StyleBoxFlat_152kg")
 
-[node name="@ScrollContainer@16" type="ScrollContainer" parent="UI/ContentArea/TabPanel_Sim/LeftPanel" unique_id=1497885768]
+[node name="@ScrollContainer@16" type="ScrollContainer" parent="UI/ContentArea/TabPanel_Sim/LeftPanel" unique_id=28431540]
 layout_mode = 2
 
-[node name="@VBoxContainer@17" type="VBoxContainer" parent="UI/ContentArea/TabPanel_Sim/LeftPanel/@ScrollContainer@16" unique_id=1063128222]
+[node name="@VBoxContainer@17" type="VBoxContainer" parent="UI/ContentArea/TabPanel_Sim/LeftPanel/@ScrollContainer@16" unique_id=194028526]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 10
 
-[node name="@PanelContainer@18" type="PanelContainer" parent="UI/ContentArea/TabPanel_Sim/LeftPanel/@ScrollContainer@16/@VBoxContainer@17" unique_id=80840656]
+[node name="@PanelContainer@18" type="PanelContainer" parent="UI/ContentArea/TabPanel_Sim/LeftPanel/@ScrollContainer@16/@VBoxContainer@17" unique_id=1162140801]
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_152kg")
+theme_override_styles/panel = SubResource("StyleBoxFlat_r4e17")
 
-[node name="@VBoxContainer@19" type="VBoxContainer" parent="UI/ContentArea/TabPanel_Sim/LeftPanel/@ScrollContainer@16/@VBoxContainer@17/@PanelContainer@18" unique_id=1054890978]
+[node name="@VBoxContainer@19" type="VBoxContainer" parent="UI/ContentArea/TabPanel_Sim/LeftPanel/@ScrollContainer@16/@VBoxContainer@17/@PanelContainer@18" unique_id=307393764]
 layout_mode = 2
 theme_override_constants/separation = 3
 
-[node name="@Label@20" type="Label" parent="UI/ContentArea/TabPanel_Sim/LeftPanel/@ScrollContainer@16/@VBoxContainer@17/@PanelContainer@18/@VBoxContainer@19" unique_id=2034264967]
+[node name="@Label@20" type="Label" parent="UI/ContentArea/TabPanel_Sim/LeftPanel/@ScrollContainer@16/@VBoxContainer@17/@PanelContainer@18/@VBoxContainer@19" unique_id=460688282]
 layout_mode = 2
 theme_override_font_sizes/font_size = 13
 theme_override_colors/font_color = Color(0, 0.9, 1, 1)
 text = "ROBOT STATUS DASHBOARD"
 
-[node name="LblSimState" type="Label" parent="UI/ContentArea/TabPanel_Sim/LeftPanel/@ScrollContainer@16/@VBoxContainer@17/@PanelContainer@18/@VBoxContainer@19" unique_id=562430136]
+[node name="LblSimState" type="Label" parent="UI/ContentArea/TabPanel_Sim/LeftPanel/@ScrollContainer@16/@VBoxContainer@17/@PanelContainer@18/@VBoxContainer@19" unique_id=1586768315]
 layout_mode = 2
 theme_override_font_sizes/font_size = 11
 text = "State: STANDING"
 
-[node name="LblSimBalance" type="Label" parent="UI/ContentArea/TabPanel_Sim/LeftPanel/@ScrollContainer@16/@VBoxContainer@17/@PanelContainer@18/@VBoxContainer@19" unique_id=2122452095]
+[node name="LblSimBalance" type="Label" parent="UI/ContentArea/TabPanel_Sim/LeftPanel/@ScrollContainer@16/@VBoxContainer@17/@PanelContainer@18/@VBoxContainer@19" unique_id=528368005]
 layout_mode = 2
 theme_override_font_sizes/font_size = 11
 text = "Balance: STABLE"
 
-[node name="LblSimFallCount" type="Label" parent="UI/ContentArea/TabPanel_Sim/LeftPanel/@ScrollContainer@16/@VBoxContainer@17/@PanelContainer@18/@VBoxContainer@19" unique_id=354449010]
+[node name="LblSimFallCount" type="Label" parent="UI/ContentArea/TabPanel_Sim/LeftPanel/@ScrollContainer@16/@VBoxContainer@17/@PanelContainer@18/@VBoxContainer@19" unique_id=620301395]
 layout_mode = 2
 theme_override_font_sizes/font_size = 11
 text = "Fall Incidents: 0"
 
-[node name="LblSimRPY" type="Label" parent="UI/ContentArea/TabPanel_Sim/LeftPanel/@ScrollContainer@16/@VBoxContainer@17/@PanelContainer@18/@VBoxContainer@19" unique_id=310784007]
+[node name="LblSimRPY" type="Label" parent="UI/ContentArea/TabPanel_Sim/LeftPanel/@ScrollContainer@16/@VBoxContainer@17/@PanelContainer@18/@VBoxContainer@19" unique_id=1459649270]
 layout_mode = 2
 theme_override_font_sizes/font_size = 11
 text = "R: +0.0° | P: +0.0° | Y: +0.0°"
 
-[node name="LblSimPos" type="Label" parent="UI/ContentArea/TabPanel_Sim/LeftPanel/@ScrollContainer@16/@VBoxContainer@17/@PanelContainer@18/@VBoxContainer@19" unique_id=2140704440]
+[node name="LblSimPos" type="Label" parent="UI/ContentArea/TabPanel_Sim/LeftPanel/@ScrollContainer@16/@VBoxContainer@17/@PanelContainer@18/@VBoxContainer@19" unique_id=1938270150]
 layout_mode = 2
 theme_override_font_sizes/font_size = 11
 text = "Pos: (0.00, 0.00, 0.85)m"
 
-[node name="LblSimWalkPhase" type="Label" parent="UI/ContentArea/TabPanel_Sim/LeftPanel/@ScrollContainer@16/@VBoxContainer@17/@PanelContainer@18/@VBoxContainer@19" unique_id=509533428]
+[node name="LblSimWalkPhase" type="Label" parent="UI/ContentArea/TabPanel_Sim/LeftPanel/@ScrollContainer@16/@VBoxContainer@17/@PanelContainer@18/@VBoxContainer@19" unique_id=775701943]
 layout_mode = 2
 theme_override_font_sizes/font_size = 11
 text = "Gait: STAND / IDLE"
 
-[node name="LblSimSensors" type="Label" parent="UI/ContentArea/TabPanel_Sim/LeftPanel/@ScrollContainer@16/@VBoxContainer@17/@PanelContainer@18/@VBoxContainer@19" unique_id=1572946416]
+[node name="LblSimSensors" type="Label" parent="UI/ContentArea/TabPanel_Sim/LeftPanel/@ScrollContainer@16/@VBoxContainer@17/@PanelContainer@18/@VBoxContainer@19" unique_id=940771366]
 layout_mode = 2
 theme_override_font_sizes/font_size = 11
 text = "Sensors: F: 3.50m | L: 3.50m | R: 3.50m"
 
-[node name="LblSimAvoidance" type="Label" parent="UI/ContentArea/TabPanel_Sim/LeftPanel/@ScrollContainer@16/@VBoxContainer@17/@PanelContainer@18/@VBoxContainer@19" unique_id=908162787]
+[node name="LblSimAvoidance" type="Label" parent="UI/ContentArea/TabPanel_Sim/LeftPanel/@ScrollContainer@16/@VBoxContainer@17/@PanelContainer@18/@VBoxContainer@19" unique_id=264377099]
 layout_mode = 2
 theme_override_font_sizes/font_size = 11
 text = "Avoidance: CLEAR"
 
-[node name="LblSimCollisions" type="Label" parent="UI/ContentArea/TabPanel_Sim/LeftPanel/@ScrollContainer@16/@VBoxContainer@17/@PanelContainer@18/@VBoxContainer@19" unique_id=1612154985]
+[node name="LblSimCollisions" type="Label" parent="UI/ContentArea/TabPanel_Sim/LeftPanel/@ScrollContainer@16/@VBoxContainer@17/@PanelContainer@18/@VBoxContainer@19" unique_id=1413526908]
 layout_mode = 2
 theme_override_font_sizes/font_size = 11
 text = "Collisions: 0"
 
-[node name="@PanelContainer@21" type="PanelContainer" parent="UI/ContentArea/TabPanel_Sim/LeftPanel/@ScrollContainer@16/@VBoxContainer@17" unique_id=122331947]
+[node name="@PanelContainer@21" type="PanelContainer" parent="UI/ContentArea/TabPanel_Sim/LeftPanel/@ScrollContainer@16/@VBoxContainer@17" unique_id=674475491]
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_152kg")
+theme_override_styles/panel = SubResource("StyleBoxFlat_r4e17")
 
-[node name="@VBoxContainer@22" type="VBoxContainer" parent="UI/ContentArea/TabPanel_Sim/LeftPanel/@ScrollContainer@16/@VBoxContainer@17/@PanelContainer@21" unique_id=1511308663]
+[node name="@VBoxContainer@22" type="VBoxContainer" parent="UI/ContentArea/TabPanel_Sim/LeftPanel/@ScrollContainer@16/@VBoxContainer@17/@PanelContainer@21" unique_id=1592872648]
 layout_mode = 2
 theme_override_constants/separation = 5
 
-[node name="@Label@23" type="Label" parent="UI/ContentArea/TabPanel_Sim/LeftPanel/@ScrollContainer@16/@VBoxContainer@17/@PanelContainer@21/@VBoxContainer@22" unique_id=216465054]
+[node name="@Label@23" type="Label" parent="UI/ContentArea/TabPanel_Sim/LeftPanel/@ScrollContainer@16/@VBoxContainer@17/@PanelContainer@21/@VBoxContainer@22" unique_id=2282584]
 layout_mode = 2
 theme_override_font_sizes/font_size = 13
 theme_override_colors/font_color = Color(0, 0.9, 1, 1)
 text = "QUICK CONTROL"
 
-[node name="@HBoxContainer@24" type="HBoxContainer" parent="UI/ContentArea/TabPanel_Sim/LeftPanel/@ScrollContainer@16/@VBoxContainer@17/@PanelContainer@21/@VBoxContainer@22" unique_id=2015185728]
+[node name="@HBoxContainer@24" type="HBoxContainer" parent="UI/ContentArea/TabPanel_Sim/LeftPanel/@ScrollContainer@16/@VBoxContainer@17/@PanelContainer@21/@VBoxContainer@22" unique_id=936782070]
 layout_mode = 2
 
-[node name="BtnSimWalk" type="Button" parent="UI/ContentArea/TabPanel_Sim/LeftPanel/@ScrollContainer@16/@VBoxContainer@17/@PanelContainer@21/@VBoxContainer@22/@HBoxContainer@24" unique_id=1618408829]
+[node name="BtnSimWalk" type="Button" parent="UI/ContentArea/TabPanel_Sim/LeftPanel/@ScrollContainer@16/@VBoxContainer@17/@PanelContainer@21/@VBoxContainer@22/@HBoxContainer@24" unique_id=842883662]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "▶ Walk"
 
-[node name="BtnSimStop" type="Button" parent="UI/ContentArea/TabPanel_Sim/LeftPanel/@ScrollContainer@16/@VBoxContainer@17/@PanelContainer@21/@VBoxContainer@22/@HBoxContainer@24" unique_id=1722189889]
+[node name="BtnSimStop" type="Button" parent="UI/ContentArea/TabPanel_Sim/LeftPanel/@ScrollContainer@16/@VBoxContainer@17/@PanelContainer@21/@VBoxContainer@22/@HBoxContainer@24" unique_id=1773856151]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "⏹ Stop"
 
-[node name="@HBoxContainer@25" type="HBoxContainer" parent="UI/ContentArea/TabPanel_Sim/LeftPanel/@ScrollContainer@16/@VBoxContainer@17/@PanelContainer@21/@VBoxContainer@22" unique_id=562756973]
+[node name="@HBoxContainer@25" type="HBoxContainer" parent="UI/ContentArea/TabPanel_Sim/LeftPanel/@ScrollContainer@16/@VBoxContainer@17/@PanelContainer@21/@VBoxContainer@22" unique_id=254604455]
 layout_mode = 2
 
-[node name="BtnSimStand" type="Button" parent="UI/ContentArea/TabPanel_Sim/LeftPanel/@ScrollContainer@16/@VBoxContainer@17/@PanelContainer@21/@VBoxContainer@22/@HBoxContainer@25" unique_id=465870210]
+[node name="BtnSimStand" type="Button" parent="UI/ContentArea/TabPanel_Sim/LeftPanel/@ScrollContainer@16/@VBoxContainer@17/@PanelContainer@21/@VBoxContainer@22/@HBoxContainer@25" unique_id=900719219]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "⚖ Stand"
 
-[node name="BtnSimReset" type="Button" parent="UI/ContentArea/TabPanel_Sim/LeftPanel/@ScrollContainer@16/@VBoxContainer@17/@PanelContainer@21/@VBoxContainer@22/@HBoxContainer@25" unique_id=1202739407]
+[node name="BtnSimReset" type="Button" parent="UI/ContentArea/TabPanel_Sim/LeftPanel/@ScrollContainer@16/@VBoxContainer@17/@PanelContainer@21/@VBoxContainer@22/@HBoxContainer@25" unique_id=833350997]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "↺ Reset Posture"
 
-[node name="@PanelContainer@26" type="PanelContainer" parent="UI/ContentArea/TabPanel_Sim/LeftPanel/@ScrollContainer@16/@VBoxContainer@17" unique_id=373598858]
+[node name="@PanelContainer@26" type="PanelContainer" parent="UI/ContentArea/TabPanel_Sim/LeftPanel/@ScrollContainer@16/@VBoxContainer@17" unique_id=1996663800]
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_152kg")
+theme_override_styles/panel = SubResource("StyleBoxFlat_r4e17")
 
-[node name="@VBoxContainer@27" type="VBoxContainer" parent="UI/ContentArea/TabPanel_Sim/LeftPanel/@ScrollContainer@16/@VBoxContainer@17/@PanelContainer@26" unique_id=989152795]
+[node name="@VBoxContainer@27" type="VBoxContainer" parent="UI/ContentArea/TabPanel_Sim/LeftPanel/@ScrollContainer@16/@VBoxContainer@17/@PanelContainer@26" unique_id=626932893]
 layout_mode = 2
 theme_override_constants/separation = 5
 
-[node name="@Label@28" type="Label" parent="UI/ContentArea/TabPanel_Sim/LeftPanel/@ScrollContainer@16/@VBoxContainer@17/@PanelContainer@26/@VBoxContainer@27" unique_id=18702945]
+[node name="@Label@28" type="Label" parent="UI/ContentArea/TabPanel_Sim/LeftPanel/@ScrollContainer@16/@VBoxContainer@17/@PanelContainer@26/@VBoxContainer@27" unique_id=700778820]
 layout_mode = 2
 theme_override_font_sizes/font_size = 13
 theme_override_colors/font_color = Color(0, 0.9, 1, 1)
 text = "EXTERNAL DISTURBANCE"
 
-[node name="@HBoxContainer@29" type="HBoxContainer" parent="UI/ContentArea/TabPanel_Sim/LeftPanel/@ScrollContainer@16/@VBoxContainer@17/@PanelContainer@26/@VBoxContainer@27" unique_id=1645582391]
+[node name="@HBoxContainer@29" type="HBoxContainer" parent="UI/ContentArea/TabPanel_Sim/LeftPanel/@ScrollContainer@16/@VBoxContainer@17/@PanelContainer@26/@VBoxContainer@27" unique_id=257048036]
 layout_mode = 2
 
-[node name="BtnSimSmallPush" type="Button" parent="UI/ContentArea/TabPanel_Sim/LeftPanel/@ScrollContainer@16/@VBoxContainer@17/@PanelContainer@26/@VBoxContainer@27/@HBoxContainer@29" unique_id=570708042]
+[node name="BtnSimSmallPush" type="Button" parent="UI/ContentArea/TabPanel_Sim/LeftPanel/@ScrollContainer@16/@VBoxContainer@17/@PanelContainer@26/@VBoxContainer@27/@HBoxContainer@29" unique_id=852053142]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "60N"
 
-[node name="BtnSimMedPush" type="Button" parent="UI/ContentArea/TabPanel_Sim/LeftPanel/@ScrollContainer@16/@VBoxContainer@17/@PanelContainer@26/@VBoxContainer@27/@HBoxContainer@29" unique_id=1043321251]
+[node name="BtnSimMedPush" type="Button" parent="UI/ContentArea/TabPanel_Sim/LeftPanel/@ScrollContainer@16/@VBoxContainer@17/@PanelContainer@26/@VBoxContainer@27/@HBoxContainer@29" unique_id=1493385185]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "160N"
 
-[node name="BtnSimStrongPush" type="Button" parent="UI/ContentArea/TabPanel_Sim/LeftPanel/@ScrollContainer@16/@VBoxContainer@17/@PanelContainer@26/@VBoxContainer@27/@HBoxContainer@29" unique_id=82149258]
+[node name="BtnSimStrongPush" type="Button" parent="UI/ContentArea/TabPanel_Sim/LeftPanel/@ScrollContainer@16/@VBoxContainer@17/@PanelContainer@26/@VBoxContainer@27/@HBoxContainer@29" unique_id=860951029]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "350N (Fall)"
 
-[node name="@PanelContainer@30" type="PanelContainer" parent="UI/ContentArea/TabPanel_Sim/LeftPanel/@ScrollContainer@16/@VBoxContainer@17" unique_id=2025219964]
+[node name="@PanelContainer@30" type="PanelContainer" parent="UI/ContentArea/TabPanel_Sim/LeftPanel/@ScrollContainer@16/@VBoxContainer@17" unique_id=505611818]
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_152kg")
+theme_override_styles/panel = SubResource("StyleBoxFlat_r4e17")
 
-[node name="@VBoxContainer@31" type="VBoxContainer" parent="UI/ContentArea/TabPanel_Sim/LeftPanel/@ScrollContainer@16/@VBoxContainer@17/@PanelContainer@30" unique_id=362064423]
+[node name="@VBoxContainer@31" type="VBoxContainer" parent="UI/ContentArea/TabPanel_Sim/LeftPanel/@ScrollContainer@16/@VBoxContainer@17/@PanelContainer@30" unique_id=117778923]
 layout_mode = 2
 theme_override_constants/separation = 5
 
-[node name="@Label@32" type="Label" parent="UI/ContentArea/TabPanel_Sim/LeftPanel/@ScrollContainer@16/@VBoxContainer@17/@PanelContainer@30/@VBoxContainer@31" unique_id=327528997]
+[node name="@Label@32" type="Label" parent="UI/ContentArea/TabPanel_Sim/LeftPanel/@ScrollContainer@16/@VBoxContainer@17/@PanelContainer@30/@VBoxContainer@31" unique_id=1960009392]
 layout_mode = 2
 theme_override_font_sizes/font_size = 13
 theme_override_colors/font_color = Color(0, 0.9, 1, 1)
 text = "ENVIRONMENT OBSTACLES"
 
-[node name="@HBoxContainer@33" type="HBoxContainer" parent="UI/ContentArea/TabPanel_Sim/LeftPanel/@ScrollContainer@16/@VBoxContainer@17/@PanelContainer@30/@VBoxContainer@31" unique_id=874985983]
+[node name="@HBoxContainer@33" type="HBoxContainer" parent="UI/ContentArea/TabPanel_Sim/LeftPanel/@ScrollContainer@16/@VBoxContainer@17/@PanelContainer@30/@VBoxContainer@31" unique_id=1146605663]
 layout_mode = 2
 
-[node name="BtnSimSpawnCube" type="Button" parent="UI/ContentArea/TabPanel_Sim/LeftPanel/@ScrollContainer@16/@VBoxContainer@17/@PanelContainer@30/@VBoxContainer@31/@HBoxContainer@33" unique_id=1971115652]
+[node name="BtnSimSpawnCube" type="Button" parent="UI/ContentArea/TabPanel_Sim/LeftPanel/@ScrollContainer@16/@VBoxContainer@17/@PanelContainer@30/@VBoxContainer@31/@HBoxContainer@33" unique_id=509766421]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "+ Cube"
 
-[node name="BtnSimSpawnCyl" type="Button" parent="UI/ContentArea/TabPanel_Sim/LeftPanel/@ScrollContainer@16/@VBoxContainer@17/@PanelContainer@30/@VBoxContainer@31/@HBoxContainer@33" unique_id=846497306]
+[node name="BtnSimSpawnCyl" type="Button" parent="UI/ContentArea/TabPanel_Sim/LeftPanel/@ScrollContainer@16/@VBoxContainer@17/@PanelContainer@30/@VBoxContainer@31/@HBoxContainer@33" unique_id=630380423]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "+ Cylinder"
 
-[node name="@HBoxContainer@34" type="HBoxContainer" parent="UI/ContentArea/TabPanel_Sim/LeftPanel/@ScrollContainer@16/@VBoxContainer@17/@PanelContainer@30/@VBoxContainer@31" unique_id=259257665]
+[node name="@HBoxContainer@34" type="HBoxContainer" parent="UI/ContentArea/TabPanel_Sim/LeftPanel/@ScrollContainer@16/@VBoxContainer@17/@PanelContainer@30/@VBoxContainer@31" unique_id=1524636234]
 layout_mode = 2
 
-[node name="BtnSimSpawnBarrier" type="Button" parent="UI/ContentArea/TabPanel_Sim/LeftPanel/@ScrollContainer@16/@VBoxContainer@17/@PanelContainer@30/@VBoxContainer@31/@HBoxContainer@34" unique_id=1977822667]
+[node name="BtnSimSpawnBarrier" type="Button" parent="UI/ContentArea/TabPanel_Sim/LeftPanel/@ScrollContainer@16/@VBoxContainer@17/@PanelContainer@30/@VBoxContainer@31/@HBoxContainer@34" unique_id=771660556]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "+ Barrier"
 
-[node name="BtnSimSpawnRamp" type="Button" parent="UI/ContentArea/TabPanel_Sim/LeftPanel/@ScrollContainer@16/@VBoxContainer@17/@PanelContainer@30/@VBoxContainer@31/@HBoxContainer@34" unique_id=1420691070]
+[node name="BtnSimSpawnRamp" type="Button" parent="UI/ContentArea/TabPanel_Sim/LeftPanel/@ScrollContainer@16/@VBoxContainer@17/@PanelContainer@30/@VBoxContainer@31/@HBoxContainer@34" unique_id=1272639610]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "+ Ramp"
 
-[node name="BtnSimSpawnWall" type="Button" parent="UI/ContentArea/TabPanel_Sim/LeftPanel/@ScrollContainer@16/@VBoxContainer@17/@PanelContainer@30/@VBoxContainer@31" unique_id=104708179]
+[node name="BtnSimSpawnWall" type="Button" parent="UI/ContentArea/TabPanel_Sim/LeftPanel/@ScrollContainer@16/@VBoxContainer@17/@PanelContainer@30/@VBoxContainer@31" unique_id=1611928010]
 layout_mode = 2
 text = "+ Wall"
 
-[node name="BtnSimClearObs" type="Button" parent="UI/ContentArea/TabPanel_Sim/LeftPanel/@ScrollContainer@16/@VBoxContainer@17/@PanelContainer@30/@VBoxContainer@31" unique_id=336892154]
+[node name="BtnSimClearObs" type="Button" parent="UI/ContentArea/TabPanel_Sim/LeftPanel/@ScrollContainer@16/@VBoxContainer@17/@PanelContainer@30/@VBoxContainer@31" unique_id=1495799127]
 layout_mode = 2
 text = "Clear All Obstacles"
 
-[node name="ChkSimAvoidance" type="CheckBox" parent="UI/ContentArea/TabPanel_Sim/LeftPanel/@ScrollContainer@16/@VBoxContainer@17/@PanelContainer@30/@VBoxContainer@31" unique_id=1882765568]
+[node name="ChkSimAvoidance" type="CheckBox" parent="UI/ContentArea/TabPanel_Sim/LeftPanel/@ScrollContainer@16/@VBoxContainer@17/@PanelContainer@30/@VBoxContainer@31" unique_id=1620169175]
 layout_mode = 2
 button_pressed = true
 text = "Reactive Obstacle Avoidance"
 
-[node name="BtnToggleRight" type="Button" parent="UI/ContentArea/TabPanel_Sim" unique_id=1069576982]
+[node name="BtnToggleRight" type="Button" parent="UI/ContentArea/TabPanel_Sim" unique_id=1532632707]
 custom_minimum_size = Vector2(28, 28)
 layout_mode = 0
 anchor_right = 1.0
@@ -706,7 +721,7 @@ offset_right = 22.0
 offset_bottom = 41.0
 text = "▶"
 
-[node name="RightPanel" type="PanelContainer" parent="UI/ContentArea/TabPanel_Sim" unique_id=1375012025]
+[node name="RightPanel" type="PanelContainer" parent="UI/ContentArea/TabPanel_Sim" unique_id=1372658633]
 layout_mode = 0
 anchor_left = 1.0
 anchor_right = 1.0
@@ -715,55 +730,55 @@ offset_left = -415.0
 offset_top = 10.0
 offset_right = -45.0
 offset_bottom = -170.0
-theme_override_styles/panel = SubResource("StyleBoxFlat_1epgm")
+theme_override_styles/panel = SubResource("StyleBoxFlat_152kg")
 
-[node name="@VBoxContainer@35" type="VBoxContainer" parent="UI/ContentArea/TabPanel_Sim/RightPanel" unique_id=1798032602]
+[node name="@VBoxContainer@35" type="VBoxContainer" parent="UI/ContentArea/TabPanel_Sim/RightPanel" unique_id=560993449]
 layout_mode = 2
 theme_override_constants/separation = 6
 
-[node name="@Label@36" type="Label" parent="UI/ContentArea/TabPanel_Sim/RightPanel/@VBoxContainer@35" unique_id=1537045396]
+[node name="@Label@36" type="Label" parent="UI/ContentArea/TabPanel_Sim/RightPanel/@VBoxContainer@35" unique_id=120789703]
 layout_mode = 2
 theme_override_font_sizes/font_size = 13
 theme_override_colors/font_color = Color(0, 0.9, 1, 1)
 text = "JOINT CONTROL & INSPECTOR"
 
-[node name="@HBoxContainer@37" type="HBoxContainer" parent="UI/ContentArea/TabPanel_Sim/RightPanel/@VBoxContainer@35" unique_id=1451479841]
+[node name="@HBoxContainer@37" type="HBoxContainer" parent="UI/ContentArea/TabPanel_Sim/RightPanel/@VBoxContainer@35" unique_id=1390392366]
 layout_mode = 2
 
-[node name="BtnFilter_ALL" type="Button" parent="UI/ContentArea/TabPanel_Sim/RightPanel/@VBoxContainer@35/@HBoxContainer@37" unique_id=583696093]
+[node name="BtnFilter_ALL" type="Button" parent="UI/ContentArea/TabPanel_Sim/RightPanel/@VBoxContainer@35/@HBoxContainer@37" unique_id=917323330]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "ALL"
 
-[node name="BtnFilter_HEAD" type="Button" parent="UI/ContentArea/TabPanel_Sim/RightPanel/@VBoxContainer@35/@HBoxContainer@37" unique_id=1196776497]
+[node name="BtnFilter_HEAD" type="Button" parent="UI/ContentArea/TabPanel_Sim/RightPanel/@VBoxContainer@35/@HBoxContainer@37" unique_id=1728451482]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "HEAD"
 
-[node name="BtnFilter_ARMS" type="Button" parent="UI/ContentArea/TabPanel_Sim/RightPanel/@VBoxContainer@35/@HBoxContainer@37" unique_id=1350667615]
+[node name="BtnFilter_ARMS" type="Button" parent="UI/ContentArea/TabPanel_Sim/RightPanel/@VBoxContainer@35/@HBoxContainer@37" unique_id=190937563]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "ARMS"
 
-[node name="BtnFilter_LEGS" type="Button" parent="UI/ContentArea/TabPanel_Sim/RightPanel/@VBoxContainer@35/@HBoxContainer@37" unique_id=1229770169]
+[node name="BtnFilter_LEGS" type="Button" parent="UI/ContentArea/TabPanel_Sim/RightPanel/@VBoxContainer@35/@HBoxContainer@37" unique_id=1228771515]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "LEGS"
 
-[node name="BtnResetAllJoints" type="Button" parent="UI/ContentArea/TabPanel_Sim/RightPanel/@VBoxContainer@35" unique_id=1819092295]
+[node name="BtnResetAllJoints" type="Button" parent="UI/ContentArea/TabPanel_Sim/RightPanel/@VBoxContainer@35" unique_id=701418108]
 layout_mode = 2
 text = "Release Manual Overrides"
 
-[node name="@ScrollContainer@40" type="ScrollContainer" parent="UI/ContentArea/TabPanel_Sim/RightPanel/@VBoxContainer@35" unique_id=1827469476]
+[node name="@ScrollContainer@40" type="ScrollContainer" parent="UI/ContentArea/TabPanel_Sim/RightPanel/@VBoxContainer@35" unique_id=2025467042]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="JointsVBox" type="VBoxContainer" parent="UI/ContentArea/TabPanel_Sim/RightPanel/@VBoxContainer@35/@ScrollContainer@40" unique_id=45683972]
+[node name="JointsVBox" type="VBoxContainer" parent="UI/ContentArea/TabPanel_Sim/RightPanel/@VBoxContainer@35/@ScrollContainer@40" unique_id=113514218]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 6
 
-[node name="BtnToggleBottom" type="Button" parent="UI/ContentArea/TabPanel_Sim" unique_id=1476325846]
+[node name="BtnToggleBottom" type="Button" parent="UI/ContentArea/TabPanel_Sim" unique_id=371368792]
 custom_minimum_size = Vector2(28, 28)
 layout_mode = 0
 anchor_bottom = 1.0
@@ -772,7 +787,7 @@ offset_right = 32.0
 offset_bottom = 31.0
 text = "▼"
 
-[node name="BottomPanel" type="PanelContainer" parent="UI/ContentArea/TabPanel_Sim" unique_id=117916771]
+[node name="BottomPanel" type="PanelContainer" parent="UI/ContentArea/TabPanel_Sim" unique_id=1819823167]
 layout_mode = 0
 anchor_top = 1.0
 anchor_right = 1.0
@@ -781,34 +796,34 @@ offset_left = 45.0
 offset_top = -160.0
 offset_right = -45.0
 offset_bottom = -10.0
-theme_override_styles/panel = SubResource("StyleBoxFlat_1epgm")
+theme_override_styles/panel = SubResource("StyleBoxFlat_152kg")
 
-[node name="@VBoxContainer@41" type="VBoxContainer" parent="UI/ContentArea/TabPanel_Sim/BottomPanel" unique_id=1507822776]
+[node name="@VBoxContainer@41" type="VBoxContainer" parent="UI/ContentArea/TabPanel_Sim/BottomPanel" unique_id=1358737281]
 layout_mode = 2
 theme_override_constants/separation = 4
 
-[node name="@HBoxContainer@42" type="HBoxContainer" parent="UI/ContentArea/TabPanel_Sim/BottomPanel/@VBoxContainer@41" unique_id=44304112]
+[node name="@HBoxContainer@42" type="HBoxContainer" parent="UI/ContentArea/TabPanel_Sim/BottomPanel/@VBoxContainer@41" unique_id=169009189]
 layout_mode = 2
 
-[node name="@Label@43" type="Label" parent="UI/ContentArea/TabPanel_Sim/BottomPanel/@VBoxContainer@41/@HBoxContainer@42" unique_id=868518857]
+[node name="@Label@43" type="Label" parent="UI/ContentArea/TabPanel_Sim/BottomPanel/@VBoxContainer@41/@HBoxContainer@42" unique_id=1261436795]
 layout_mode = 2
 theme_override_font_sizes/font_size = 12
 theme_override_colors/font_color = Color(0, 0.9, 1, 1)
 text = "LIVE SIMULATION & PHYSICS EVENT LOG"
 
-[node name="@Control@44" type="Control" parent="UI/ContentArea/TabPanel_Sim/BottomPanel/@VBoxContainer@41/@HBoxContainer@42" unique_id=1245797995]
+[node name="@Control@44" type="Control" parent="UI/ContentArea/TabPanel_Sim/BottomPanel/@VBoxContainer@41/@HBoxContainer@42" unique_id=860794620]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="BtnClearLog" type="Button" parent="UI/ContentArea/TabPanel_Sim/BottomPanel/@VBoxContainer@41/@HBoxContainer@42" unique_id=1847001552]
+[node name="BtnClearLog" type="Button" parent="UI/ContentArea/TabPanel_Sim/BottomPanel/@VBoxContainer@41/@HBoxContainer@42" unique_id=1904155369]
 layout_mode = 2
 text = "Clear Log"
 
-[node name="EventLogList" type="ItemList" parent="UI/ContentArea/TabPanel_Sim/BottomPanel/@VBoxContainer@41" unique_id=1760272117]
+[node name="EventLogList" type="ItemList" parent="UI/ContentArea/TabPanel_Sim/BottomPanel/@VBoxContainer@41" unique_id=1338148545]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="TabPanel_Control" type="PanelContainer" parent="UI/ContentArea" unique_id=869265924]
+[node name="TabPanel_Control" type="PanelContainer" parent="UI/ContentArea" unique_id=1637116409]
 visible = false
 layout_mode = 0
 anchor_bottom = 1.0
@@ -816,173 +831,173 @@ offset_left = 40.0
 offset_top = 20.0
 offset_right = 560.0
 offset_bottom = -20.0
-theme_override_styles/panel = SubResource("StyleBoxFlat_1epgm")
+theme_override_styles/panel = SubResource("StyleBoxFlat_152kg")
 
-[node name="@ScrollContainer@49" type="ScrollContainer" parent="UI/ContentArea/TabPanel_Control" unique_id=510745200]
+[node name="@ScrollContainer@49" type="ScrollContainer" parent="UI/ContentArea/TabPanel_Control" unique_id=1986553853]
 layout_mode = 2
 
-[node name="@VBoxContainer@50" type="VBoxContainer" parent="UI/ContentArea/TabPanel_Control/@ScrollContainer@49" unique_id=2077235146]
+[node name="@VBoxContainer@50" type="VBoxContainer" parent="UI/ContentArea/TabPanel_Control/@ScrollContainer@49" unique_id=304679051]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 14
 
-[node name="@Label@51" type="Label" parent="UI/ContentArea/TabPanel_Control/@ScrollContainer@49/@VBoxContainer@50" unique_id=686953617]
+[node name="@Label@51" type="Label" parent="UI/ContentArea/TabPanel_Control/@ScrollContainer@49/@VBoxContainer@50" unique_id=39778298]
 layout_mode = 2
 theme_override_font_sizes/font_size = 15
 theme_override_colors/font_color = Color(0, 0.9, 1, 1)
 text = "MULTI-DIRECTIONAL GAIT & LOCOMOTION"
 
-[node name="@PanelContainer@52" type="PanelContainer" parent="UI/ContentArea/TabPanel_Control/@ScrollContainer@49/@VBoxContainer@50" unique_id=1530459413]
+[node name="@PanelContainer@52" type="PanelContainer" parent="UI/ContentArea/TabPanel_Control/@ScrollContainer@49/@VBoxContainer@50" unique_id=552169778]
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_152kg")
+theme_override_styles/panel = SubResource("StyleBoxFlat_r4e17")
 
-[node name="@VBoxContainer@53" type="VBoxContainer" parent="UI/ContentArea/TabPanel_Control/@ScrollContainer@49/@VBoxContainer@50/@PanelContainer@52" unique_id=1587329719]
+[node name="@VBoxContainer@53" type="VBoxContainer" parent="UI/ContentArea/TabPanel_Control/@ScrollContainer@49/@VBoxContainer@50/@PanelContainer@52" unique_id=870058473]
 layout_mode = 2
 theme_override_constants/separation = 6
 alignment = 1
 
-[node name="BtnDirForward" type="Button" parent="UI/ContentArea/TabPanel_Control/@ScrollContainer@49/@VBoxContainer@50/@PanelContainer@52/@VBoxContainer@53" unique_id=613790530]
+[node name="BtnDirForward" type="Button" parent="UI/ContentArea/TabPanel_Control/@ScrollContainer@49/@VBoxContainer@50/@PanelContainer@52/@VBoxContainer@53" unique_id=1615024464]
 custom_minimum_size = Vector2(160, 36)
 layout_mode = 2
 size_flags_horizontal = 4
 text = "▲ FORWARD"
 
-[node name="@HBoxContainer@54" type="HBoxContainer" parent="UI/ContentArea/TabPanel_Control/@ScrollContainer@49/@VBoxContainer@50/@PanelContainer@52/@VBoxContainer@53" unique_id=932313904]
+[node name="@HBoxContainer@54" type="HBoxContainer" parent="UI/ContentArea/TabPanel_Control/@ScrollContainer@49/@VBoxContainer@50/@PanelContainer@52/@VBoxContainer@53" unique_id=569619088]
 layout_mode = 2
 theme_override_constants/separation = 8
 alignment = 1
 
-[node name="BtnDirLeft" type="Button" parent="UI/ContentArea/TabPanel_Control/@ScrollContainer@49/@VBoxContainer@50/@PanelContainer@52/@VBoxContainer@53/@HBoxContainer@54" unique_id=137305950]
+[node name="BtnDirLeft" type="Button" parent="UI/ContentArea/TabPanel_Control/@ScrollContainer@49/@VBoxContainer@50/@PanelContainer@52/@VBoxContainer@53/@HBoxContainer@54" unique_id=1586388174]
 custom_minimum_size = Vector2(120, 36)
 layout_mode = 2
 text = "◀ TURN LEFT"
 
-[node name="BtnDirStop" type="Button" parent="UI/ContentArea/TabPanel_Control/@ScrollContainer@49/@VBoxContainer@50/@PanelContainer@52/@VBoxContainer@53/@HBoxContainer@54" unique_id=414725095]
+[node name="BtnDirStop" type="Button" parent="UI/ContentArea/TabPanel_Control/@ScrollContainer@49/@VBoxContainer@50/@PanelContainer@52/@VBoxContainer@53/@HBoxContainer@54" unique_id=1477568200]
 custom_minimum_size = Vector2(100, 36)
 layout_mode = 2
 text = "⏹ STOP"
 
-[node name="BtnDirRight" type="Button" parent="UI/ContentArea/TabPanel_Control/@ScrollContainer@49/@VBoxContainer@50/@PanelContainer@52/@VBoxContainer@53/@HBoxContainer@54" unique_id=720512527]
+[node name="BtnDirRight" type="Button" parent="UI/ContentArea/TabPanel_Control/@ScrollContainer@49/@VBoxContainer@50/@PanelContainer@52/@VBoxContainer@53/@HBoxContainer@54" unique_id=1926558170]
 custom_minimum_size = Vector2(120, 36)
 layout_mode = 2
 text = "TURN RIGHT ▶"
 
-[node name="BtnDirBackward" type="Button" parent="UI/ContentArea/TabPanel_Control/@ScrollContainer@49/@VBoxContainer@50/@PanelContainer@52/@VBoxContainer@53" unique_id=971047641]
+[node name="BtnDirBackward" type="Button" parent="UI/ContentArea/TabPanel_Control/@ScrollContainer@49/@VBoxContainer@50/@PanelContainer@52/@VBoxContainer@53" unique_id=1604670689]
 custom_minimum_size = Vector2(160, 36)
 layout_mode = 2
 size_flags_horizontal = 4
 text = "▼ BACKWARD"
 
-[node name="@PanelContainer@55" type="PanelContainer" parent="UI/ContentArea/TabPanel_Control/@ScrollContainer@49/@VBoxContainer@50" unique_id=1393869]
+[node name="@PanelContainer@55" type="PanelContainer" parent="UI/ContentArea/TabPanel_Control/@ScrollContainer@49/@VBoxContainer@50" unique_id=1871878402]
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_152kg")
+theme_override_styles/panel = SubResource("StyleBoxFlat_r4e17")
 
-[node name="@VBoxContainer@56" type="VBoxContainer" parent="UI/ContentArea/TabPanel_Control/@ScrollContainer@49/@VBoxContainer@50/@PanelContainer@55" unique_id=578349560]
+[node name="@VBoxContainer@56" type="VBoxContainer" parent="UI/ContentArea/TabPanel_Control/@ScrollContainer@49/@VBoxContainer@50/@PanelContainer@55" unique_id=2011327003]
 layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="@Label@57" type="Label" parent="UI/ContentArea/TabPanel_Control/@ScrollContainer@49/@VBoxContainer@50/@PanelContainer@55/@VBoxContainer@56" unique_id=188791817]
+[node name="@Label@57" type="Label" parent="UI/ContentArea/TabPanel_Control/@ScrollContainer@49/@VBoxContainer@50/@PanelContainer@55/@VBoxContainer@56" unique_id=2013255562]
 layout_mode = 2
 theme_override_font_sizes/font_size = 13
 theme_override_colors/font_color = Color(0, 0.9, 1, 1)
 text = "GAIT PARAMETERS TUNING"
 
-[node name="@HBoxContainer@59" type="HBoxContainer" parent="UI/ContentArea/TabPanel_Control/@ScrollContainer@49/@VBoxContainer@50/@PanelContainer@55/@VBoxContainer@56" unique_id=957997446]
+[node name="@HBoxContainer@59" type="HBoxContainer" parent="UI/ContentArea/TabPanel_Control/@ScrollContainer@49/@VBoxContainer@50/@PanelContainer@55/@VBoxContainer@56" unique_id=28232145]
 layout_mode = 2
 
-[node name="@Label@58" type="Label" parent="UI/ContentArea/TabPanel_Control/@ScrollContainer@49/@VBoxContainer@50/@PanelContainer@55/@VBoxContainer@56/@HBoxContainer@59" unique_id=88483353]
+[node name="@Label@58" type="Label" parent="UI/ContentArea/TabPanel_Control/@ScrollContainer@49/@VBoxContainer@50/@PanelContainer@55/@VBoxContainer@56/@HBoxContainer@59" unique_id=562452466]
 custom_minimum_size = Vector2(140, 0)
 layout_mode = 2
 text = "Walking Speed:"
 
-[node name="LblCtrlSpeedVal" type="Label" parent="UI/ContentArea/TabPanel_Control/@ScrollContainer@49/@VBoxContainer@50/@PanelContainer@55/@VBoxContainer@56/@HBoxContainer@59" unique_id=1306963741]
+[node name="LblCtrlSpeedVal" type="Label" parent="UI/ContentArea/TabPanel_Control/@ScrollContainer@49/@VBoxContainer@50/@PanelContainer@55/@VBoxContainer@56/@HBoxContainer@59" unique_id=1612495113]
 layout_mode = 2
 text = "0.45 m/s"
 
-[node name="SldCtrlSpeed" type="HSlider" parent="UI/ContentArea/TabPanel_Control/@ScrollContainer@49/@VBoxContainer@50/@PanelContainer@55/@VBoxContainer@56" unique_id=857579717]
+[node name="SldCtrlSpeed" type="HSlider" parent="UI/ContentArea/TabPanel_Control/@ScrollContainer@49/@VBoxContainer@50/@PanelContainer@55/@VBoxContainer@56" unique_id=1241857603]
 layout_mode = 2
 min_value = 0.15
 max_value = 1.2
 step = 0.05
 value = 0.44999999999999996
 
-[node name="@HBoxContainer@61" type="HBoxContainer" parent="UI/ContentArea/TabPanel_Control/@ScrollContainer@49/@VBoxContainer@50/@PanelContainer@55/@VBoxContainer@56" unique_id=232278759]
+[node name="@HBoxContainer@61" type="HBoxContainer" parent="UI/ContentArea/TabPanel_Control/@ScrollContainer@49/@VBoxContainer@50/@PanelContainer@55/@VBoxContainer@56" unique_id=1256958001]
 layout_mode = 2
 
-[node name="@Label@60" type="Label" parent="UI/ContentArea/TabPanel_Control/@ScrollContainer@49/@VBoxContainer@50/@PanelContainer@55/@VBoxContainer@56/@HBoxContainer@61" unique_id=1188070259]
+[node name="@Label@60" type="Label" parent="UI/ContentArea/TabPanel_Control/@ScrollContainer@49/@VBoxContainer@50/@PanelContainer@55/@VBoxContainer@56/@HBoxContainer@61" unique_id=2141410542]
 custom_minimum_size = Vector2(140, 0)
 layout_mode = 2
 text = "Step Length Amplitude:"
 
-[node name="LblCtrlStepLenVal" type="Label" parent="UI/ContentArea/TabPanel_Control/@ScrollContainer@49/@VBoxContainer@50/@PanelContainer@55/@VBoxContainer@56/@HBoxContainer@61" unique_id=1479326295]
+[node name="LblCtrlStepLenVal" type="Label" parent="UI/ContentArea/TabPanel_Control/@ScrollContainer@49/@VBoxContainer@50/@PanelContainer@55/@VBoxContainer@56/@HBoxContainer@61" unique_id=1601795339]
 layout_mode = 2
 text = "0.080 rad"
 
-[node name="SldCtrlStepLen" type="HSlider" parent="UI/ContentArea/TabPanel_Control/@ScrollContainer@49/@VBoxContainer@50/@PanelContainer@55/@VBoxContainer@56" unique_id=1512554745]
+[node name="SldCtrlStepLen" type="HSlider" parent="UI/ContentArea/TabPanel_Control/@ScrollContainer@49/@VBoxContainer@50/@PanelContainer@55/@VBoxContainer@56" unique_id=598606393]
 layout_mode = 2
 min_value = 0.04
 max_value = 0.12
 step = 0.005
 value = 0.08
 
-[node name="@HBoxContainer@63" type="HBoxContainer" parent="UI/ContentArea/TabPanel_Control/@ScrollContainer@49/@VBoxContainer@50/@PanelContainer@55/@VBoxContainer@56" unique_id=161295695]
+[node name="@HBoxContainer@63" type="HBoxContainer" parent="UI/ContentArea/TabPanel_Control/@ScrollContainer@49/@VBoxContainer@50/@PanelContainer@55/@VBoxContainer@56" unique_id=1217029335]
 layout_mode = 2
 
-[node name="@Label@62" type="Label" parent="UI/ContentArea/TabPanel_Control/@ScrollContainer@49/@VBoxContainer@50/@PanelContainer@55/@VBoxContainer@56/@HBoxContainer@63" unique_id=169407791]
+[node name="@Label@62" type="Label" parent="UI/ContentArea/TabPanel_Control/@ScrollContainer@49/@VBoxContainer@50/@PanelContainer@55/@VBoxContainer@56/@HBoxContainer@63" unique_id=1571044203]
 custom_minimum_size = Vector2(140, 0)
 layout_mode = 2
 text = "Step Duration / Period:"
 
-[node name="LblCtrlStepDurVal" type="Label" parent="UI/ContentArea/TabPanel_Control/@ScrollContainer@49/@VBoxContainer@50/@PanelContainer@55/@VBoxContainer@56/@HBoxContainer@63" unique_id=2050111662]
+[node name="LblCtrlStepDurVal" type="Label" parent="UI/ContentArea/TabPanel_Control/@ScrollContainer@49/@VBoxContainer@50/@PanelContainer@55/@VBoxContainer@56/@HBoxContainer@63" unique_id=1020910817]
 layout_mode = 2
 text = "0.45 s"
 
-[node name="SldCtrlStepDur" type="HSlider" parent="UI/ContentArea/TabPanel_Control/@ScrollContainer@49/@VBoxContainer@50/@PanelContainer@55/@VBoxContainer@56" unique_id=229200129]
+[node name="SldCtrlStepDur" type="HSlider" parent="UI/ContentArea/TabPanel_Control/@ScrollContainer@49/@VBoxContainer@50/@PanelContainer@55/@VBoxContainer@56" unique_id=1594615006]
 layout_mode = 2
 min_value = 0.3
 max_value = 0.8
 step = 0.02
 value = 0.45999999999999996
 
-[node name="@PanelContainer@64" type="PanelContainer" parent="UI/ContentArea/TabPanel_Control/@ScrollContainer@49/@VBoxContainer@50" unique_id=2035125479]
+[node name="@PanelContainer@64" type="PanelContainer" parent="UI/ContentArea/TabPanel_Control/@ScrollContainer@49/@VBoxContainer@50" unique_id=1637161087]
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_152kg")
+theme_override_styles/panel = SubResource("StyleBoxFlat_r4e17")
 
-[node name="@VBoxContainer@65" type="VBoxContainer" parent="UI/ContentArea/TabPanel_Control/@ScrollContainer@49/@VBoxContainer@50/@PanelContainer@64" unique_id=228742515]
+[node name="@VBoxContainer@65" type="VBoxContainer" parent="UI/ContentArea/TabPanel_Control/@ScrollContainer@49/@VBoxContainer@50/@PanelContainer@64" unique_id=977042154]
 layout_mode = 2
 theme_override_constants/separation = 4
 
-[node name="@Label@66" type="Label" parent="UI/ContentArea/TabPanel_Control/@ScrollContainer@49/@VBoxContainer@50/@PanelContainer@64/@VBoxContainer@65" unique_id=261610436]
+[node name="@Label@66" type="Label" parent="UI/ContentArea/TabPanel_Control/@ScrollContainer@49/@VBoxContainer@50/@PanelContainer@64/@VBoxContainer@65" unique_id=249054153]
 layout_mode = 2
 theme_override_font_sizes/font_size = 13
 theme_override_colors/font_color = Color(0, 0.9, 1, 1)
 text = "LIVE ODOMETRY & GAIT PHASE"
 
-[node name="LblCtrlDir" type="Label" parent="UI/ContentArea/TabPanel_Control/@ScrollContainer@49/@VBoxContainer@50/@PanelContainer@64/@VBoxContainer@65" unique_id=1787848589]
+[node name="LblCtrlDir" type="Label" parent="UI/ContentArea/TabPanel_Control/@ScrollContainer@49/@VBoxContainer@50/@PanelContainer@64/@VBoxContainer@65" unique_id=399077041]
 layout_mode = 2
 theme_override_font_sizes/font_size = 11
 text = "Direction: FORWARD"
 
-[node name="LblCtrlSpeed" type="Label" parent="UI/ContentArea/TabPanel_Control/@ScrollContainer@49/@VBoxContainer@50/@PanelContainer@64/@VBoxContainer@65" unique_id=643744725]
+[node name="LblCtrlSpeed" type="Label" parent="UI/ContentArea/TabPanel_Control/@ScrollContainer@49/@VBoxContainer@50/@PanelContainer@64/@VBoxContainer@65" unique_id=2016736864]
 layout_mode = 2
 theme_override_font_sizes/font_size = 11
 text = "Speed: 0.00 m/s"
 
-[node name="LblCtrlDist" type="Label" parent="UI/ContentArea/TabPanel_Control/@ScrollContainer@49/@VBoxContainer@50/@PanelContainer@64/@VBoxContainer@65" unique_id=690233664]
+[node name="LblCtrlDist" type="Label" parent="UI/ContentArea/TabPanel_Control/@ScrollContainer@49/@VBoxContainer@50/@PanelContainer@64/@VBoxContainer@65" unique_id=826119653]
 layout_mode = 2
 theme_override_font_sizes/font_size = 11
 text = "Distance: 0.00 m"
 
-[node name="LblCtrlSupport" type="Label" parent="UI/ContentArea/TabPanel_Control/@ScrollContainer@49/@VBoxContainer@50/@PanelContainer@64/@VBoxContainer@65" unique_id=858805887]
+[node name="LblCtrlSupport" type="Label" parent="UI/ContentArea/TabPanel_Control/@ScrollContainer@49/@VBoxContainer@50/@PanelContainer@64/@VBoxContainer@65" unique_id=846213320]
 layout_mode = 2
 theme_override_font_sizes/font_size = 11
 text = "Support: DOUBLE"
 
-[node name="ProgCtrlGait" type="ProgressBar" parent="UI/ContentArea/TabPanel_Control/@ScrollContainer@49/@VBoxContainer@50/@PanelContainer@64/@VBoxContainer@65" unique_id=748137419]
+[node name="ProgCtrlGait" type="ProgressBar" parent="UI/ContentArea/TabPanel_Control/@ScrollContainer@49/@VBoxContainer@50/@PanelContainer@64/@VBoxContainer@65" unique_id=30767323]
 custom_minimum_size = Vector2(0, 16)
 layout_mode = 2
 
-[node name="TabPanel_Balance" type="PanelContainer" parent="UI/ContentArea" unique_id=1854279181]
+[node name="TabPanel_Balance" type="PanelContainer" parent="UI/ContentArea" unique_id=2081787022]
 visible = false
 layout_mode = 0
 anchor_bottom = 1.0
@@ -990,23 +1005,23 @@ offset_left = 40.0
 offset_top = 20.0
 offset_right = 620.0
 offset_bottom = -20.0
-theme_override_styles/panel = SubResource("StyleBoxFlat_1epgm")
+theme_override_styles/panel = SubResource("StyleBoxFlat_152kg")
 
-[node name="@ScrollContainer@69" type="ScrollContainer" parent="UI/ContentArea/TabPanel_Balance" unique_id=2020805958]
+[node name="@ScrollContainer@69" type="ScrollContainer" parent="UI/ContentArea/TabPanel_Balance" unique_id=298814672]
 layout_mode = 2
 
-[node name="@VBoxContainer@70" type="VBoxContainer" parent="UI/ContentArea/TabPanel_Balance/@ScrollContainer@69" unique_id=660364038]
+[node name="@VBoxContainer@70" type="VBoxContainer" parent="UI/ContentArea/TabPanel_Balance/@ScrollContainer@69" unique_id=1545743934]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 12
 
-[node name="@Label@71" type="Label" parent="UI/ContentArea/TabPanel_Balance/@ScrollContainer@69/@VBoxContainer@70" unique_id=771368293]
+[node name="@Label@71" type="Label" parent="UI/ContentArea/TabPanel_Balance/@ScrollContainer@69/@VBoxContainer@70" unique_id=2090676333]
 layout_mode = 2
 theme_override_font_sizes/font_size = 15
 theme_override_colors/font_color = Color(0, 0.9, 1, 1)
 text = "BALANCE & STABILITY MONITORING"
 
-[node name="GraphBalance" type="Control" parent="UI/ContentArea/TabPanel_Balance/@ScrollContainer@69/@VBoxContainer@70" unique_id=1746805954]
+[node name="GraphBalance" type="Control" parent="UI/ContentArea/TabPanel_Balance/@ScrollContainer@69/@VBoxContainer@70" unique_id=1442099036]
 custom_minimum_size = Vector2(480, 130)
 layout_mode = 2
 script = ExtResource("12_pm3ni")
@@ -1018,210 +1033,210 @@ series_b_color = Color(1, 0.5, 0.2, 1)
 y_min = -30.0
 y_max = 30.0
 
-[node name="@PanelContainer@72" type="PanelContainer" parent="UI/ContentArea/TabPanel_Balance/@ScrollContainer@69/@VBoxContainer@70" unique_id=321594754]
+[node name="@PanelContainer@72" type="PanelContainer" parent="UI/ContentArea/TabPanel_Balance/@ScrollContainer@69/@VBoxContainer@70" unique_id=295199607]
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_152kg")
+theme_override_styles/panel = SubResource("StyleBoxFlat_r4e17")
 
-[node name="@VBoxContainer@73" type="VBoxContainer" parent="UI/ContentArea/TabPanel_Balance/@ScrollContainer@69/@VBoxContainer@70/@PanelContainer@72" unique_id=667366787]
+[node name="@VBoxContainer@73" type="VBoxContainer" parent="UI/ContentArea/TabPanel_Balance/@ScrollContainer@69/@VBoxContainer@70/@PanelContainer@72" unique_id=2063726569]
 layout_mode = 2
 theme_override_constants/separation = 3
 
-[node name="LblBalRoll" type="Label" parent="UI/ContentArea/TabPanel_Balance/@ScrollContainer@69/@VBoxContainer@70/@PanelContainer@72/@VBoxContainer@73" unique_id=439996834]
+[node name="LblBalRoll" type="Label" parent="UI/ContentArea/TabPanel_Balance/@ScrollContainer@69/@VBoxContainer@70/@PanelContainer@72/@VBoxContainer@73" unique_id=442006762]
 layout_mode = 2
 theme_override_font_sizes/font_size = 11
 text = "Roll: +0.0°"
 
-[node name="LblBalPitch" type="Label" parent="UI/ContentArea/TabPanel_Balance/@ScrollContainer@69/@VBoxContainer@70/@PanelContainer@72/@VBoxContainer@73" unique_id=707660213]
+[node name="LblBalPitch" type="Label" parent="UI/ContentArea/TabPanel_Balance/@ScrollContainer@69/@VBoxContainer@70/@PanelContainer@72/@VBoxContainer@73" unique_id=1437541446]
 layout_mode = 2
 theme_override_font_sizes/font_size = 11
 text = "Pitch: +0.0°"
 
-[node name="LblBalYaw" type="Label" parent="UI/ContentArea/TabPanel_Balance/@ScrollContainer@69/@VBoxContainer@70/@PanelContainer@72/@VBoxContainer@73" unique_id=309803712]
+[node name="LblBalYaw" type="Label" parent="UI/ContentArea/TabPanel_Balance/@ScrollContainer@69/@VBoxContainer@70/@PanelContainer@72/@VBoxContainer@73" unique_id=812799986]
 layout_mode = 2
 theme_override_font_sizes/font_size = 11
 text = "Yaw: +0.0°"
 
-[node name="LblBalCOM" type="Label" parent="UI/ContentArea/TabPanel_Balance/@ScrollContainer@69/@VBoxContainer@70/@PanelContainer@72/@VBoxContainer@73" unique_id=1581378487]
+[node name="LblBalCOM" type="Label" parent="UI/ContentArea/TabPanel_Balance/@ScrollContainer@69/@VBoxContainer@70/@PanelContainer@72/@VBoxContainer@73" unique_id=129422023]
 layout_mode = 2
 theme_override_font_sizes/font_size = 11
 text = "COM (3D): (0.00, 0.00, 0.85)m"
 
-[node name="LblBalCOMProj" type="Label" parent="UI/ContentArea/TabPanel_Balance/@ScrollContainer@69/@VBoxContainer@70/@PanelContainer@72/@VBoxContainer@73" unique_id=76571445]
+[node name="LblBalCOMProj" type="Label" parent="UI/ContentArea/TabPanel_Balance/@ScrollContainer@69/@VBoxContainer@70/@PanelContainer@72/@VBoxContainer@73" unique_id=1375614426]
 layout_mode = 2
 theme_override_font_sizes/font_size = 11
 text = "Ground Proj: (0.00, 0.00)m"
 
-[node name="LblBalError" type="Label" parent="UI/ContentArea/TabPanel_Balance/@ScrollContainer@69/@VBoxContainer@70/@PanelContainer@72/@VBoxContainer@73" unique_id=1233342909]
+[node name="LblBalError" type="Label" parent="UI/ContentArea/TabPanel_Balance/@ScrollContainer@69/@VBoxContainer@70/@PanelContainer@72/@VBoxContainer@73" unique_id=1397516455]
 layout_mode = 2
 theme_override_font_sizes/font_size = 11
 text = "Balance Error: 0.000 m"
 
-[node name="LblBalSupportStatus" type="Label" parent="UI/ContentArea/TabPanel_Balance/@ScrollContainer@69/@VBoxContainer@70/@PanelContainer@72/@VBoxContainer@73" unique_id=1972773834]
+[node name="LblBalSupportStatus" type="Label" parent="UI/ContentArea/TabPanel_Balance/@ScrollContainer@69/@VBoxContainer@70/@PanelContainer@72/@VBoxContainer@73" unique_id=1033966705]
 layout_mode = 2
 theme_override_font_sizes/font_size = 11
 text = "Support Polygon: STABLE"
 
-[node name="LblBalFootLeft" type="Label" parent="UI/ContentArea/TabPanel_Balance/@ScrollContainer@69/@VBoxContainer@70/@PanelContainer@72/@VBoxContainer@73" unique_id=1514487059]
+[node name="LblBalFootLeft" type="Label" parent="UI/ContentArea/TabPanel_Balance/@ScrollContainer@69/@VBoxContainer@70/@PanelContainer@72/@VBoxContainer@73" unique_id=1419798532]
 layout_mode = 2
 theme_override_font_sizes/font_size = 11
 text = "Left Foot: GROUNDED"
 
-[node name="LblBalFootRight" type="Label" parent="UI/ContentArea/TabPanel_Balance/@ScrollContainer@69/@VBoxContainer@70/@PanelContainer@72/@VBoxContainer@73" unique_id=1878771963]
+[node name="LblBalFootRight" type="Label" parent="UI/ContentArea/TabPanel_Balance/@ScrollContainer@69/@VBoxContainer@70/@PanelContainer@72/@VBoxContainer@73" unique_id=1568283769]
 layout_mode = 2
 theme_override_font_sizes/font_size = 11
 text = "Right Foot: GROUNDED"
 
-[node name="@PanelContainer@74" type="PanelContainer" parent="UI/ContentArea/TabPanel_Balance/@ScrollContainer@69/@VBoxContainer@70" unique_id=2049250394]
+[node name="@PanelContainer@74" type="PanelContainer" parent="UI/ContentArea/TabPanel_Balance/@ScrollContainer@69/@VBoxContainer@70" unique_id=866885699]
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_152kg")
+theme_override_styles/panel = SubResource("StyleBoxFlat_r4e17")
 
-[node name="@VBoxContainer@75" type="VBoxContainer" parent="UI/ContentArea/TabPanel_Balance/@ScrollContainer@69/@VBoxContainer@70/@PanelContainer@74" unique_id=983415417]
+[node name="@VBoxContainer@75" type="VBoxContainer" parent="UI/ContentArea/TabPanel_Balance/@ScrollContainer@69/@VBoxContainer@70/@PanelContainer@74" unique_id=1820029694]
 layout_mode = 2
 theme_override_constants/separation = 6
 
-[node name="@Label@76" type="Label" parent="UI/ContentArea/TabPanel_Balance/@ScrollContainer@69/@VBoxContainer@70/@PanelContainer@74/@VBoxContainer@75" unique_id=1827019517]
+[node name="@Label@76" type="Label" parent="UI/ContentArea/TabPanel_Balance/@ScrollContainer@69/@VBoxContainer@70/@PanelContainer@74/@VBoxContainer@75" unique_id=1399049152]
 layout_mode = 2
 theme_override_font_sizes/font_size = 13
 theme_override_colors/font_color = Color(0, 0.9, 1, 1)
 text = "ACTIVE PID BALANCE CONTROLLER TUNING"
 
-[node name="@HBoxContainer@78" type="HBoxContainer" parent="UI/ContentArea/TabPanel_Balance/@ScrollContainer@69/@VBoxContainer@70/@PanelContainer@74/@VBoxContainer@75" unique_id=1098124183]
+[node name="@HBoxContainer@78" type="HBoxContainer" parent="UI/ContentArea/TabPanel_Balance/@ScrollContainer@69/@VBoxContainer@70/@PanelContainer@74/@VBoxContainer@75" unique_id=556656798]
 layout_mode = 2
 
-[node name="@Label@77" type="Label" parent="UI/ContentArea/TabPanel_Balance/@ScrollContainer@69/@VBoxContainer@70/@PanelContainer@74/@VBoxContainer@75/@HBoxContainer@78" unique_id=1749166035]
+[node name="@Label@77" type="Label" parent="UI/ContentArea/TabPanel_Balance/@ScrollContainer@69/@VBoxContainer@70/@PanelContainer@74/@VBoxContainer@75/@HBoxContainer@78" unique_id=1205827671]
 custom_minimum_size = Vector2(110, 0)
 layout_mode = 2
 theme_override_font_sizes/font_size = 11
 text = "Pitch Kp:"
 
-[node name="LblPidPKpVal" type="Label" parent="UI/ContentArea/TabPanel_Balance/@ScrollContainer@69/@VBoxContainer@70/@PanelContainer@74/@VBoxContainer@75/@HBoxContainer@78" unique_id=198155319]
+[node name="LblPidPKpVal" type="Label" parent="UI/ContentArea/TabPanel_Balance/@ScrollContainer@69/@VBoxContainer@70/@PanelContainer@74/@VBoxContainer@75/@HBoxContainer@78" unique_id=1990558049]
 custom_minimum_size = Vector2(45, 0)
 layout_mode = 2
 theme_override_font_sizes/font_size = 11
 text = "6.00"
 
-[node name="SldPidPKp" type="HSlider" parent="UI/ContentArea/TabPanel_Balance/@ScrollContainer@69/@VBoxContainer@70/@PanelContainer@74/@VBoxContainer@75/@HBoxContainer@78" unique_id=217139145]
+[node name="SldPidPKp" type="HSlider" parent="UI/ContentArea/TabPanel_Balance/@ScrollContainer@69/@VBoxContainer@70/@PanelContainer@74/@VBoxContainer@75/@HBoxContainer@78" unique_id=2128061189]
 layout_mode = 2
 size_flags_horizontal = 3
 max_value = 15.0
 step = 0.05
 value = 6.0
 
-[node name="@HBoxContainer@80" type="HBoxContainer" parent="UI/ContentArea/TabPanel_Balance/@ScrollContainer@69/@VBoxContainer@70/@PanelContainer@74/@VBoxContainer@75" unique_id=472640521]
+[node name="@HBoxContainer@80" type="HBoxContainer" parent="UI/ContentArea/TabPanel_Balance/@ScrollContainer@69/@VBoxContainer@70/@PanelContainer@74/@VBoxContainer@75" unique_id=1765553575]
 layout_mode = 2
 
-[node name="@Label@79" type="Label" parent="UI/ContentArea/TabPanel_Balance/@ScrollContainer@69/@VBoxContainer@70/@PanelContainer@74/@VBoxContainer@75/@HBoxContainer@80" unique_id=55433630]
+[node name="@Label@79" type="Label" parent="UI/ContentArea/TabPanel_Balance/@ScrollContainer@69/@VBoxContainer@70/@PanelContainer@74/@VBoxContainer@75/@HBoxContainer@80" unique_id=1436865702]
 custom_minimum_size = Vector2(110, 0)
 layout_mode = 2
 theme_override_font_sizes/font_size = 11
 text = "Pitch Ki:"
 
-[node name="LblPidPKiVal" type="Label" parent="UI/ContentArea/TabPanel_Balance/@ScrollContainer@69/@VBoxContainer@70/@PanelContainer@74/@VBoxContainer@75/@HBoxContainer@80" unique_id=1177984707]
+[node name="LblPidPKiVal" type="Label" parent="UI/ContentArea/TabPanel_Balance/@ScrollContainer@69/@VBoxContainer@70/@PanelContainer@74/@VBoxContainer@75/@HBoxContainer@80" unique_id=1289994602]
 custom_minimum_size = Vector2(45, 0)
 layout_mode = 2
 theme_override_font_sizes/font_size = 11
 text = "0.50"
 
-[node name="SldPidPKi" type="HSlider" parent="UI/ContentArea/TabPanel_Balance/@ScrollContainer@69/@VBoxContainer@70/@PanelContainer@74/@VBoxContainer@75/@HBoxContainer@80" unique_id=1362077356]
+[node name="SldPidPKi" type="HSlider" parent="UI/ContentArea/TabPanel_Balance/@ScrollContainer@69/@VBoxContainer@70/@PanelContainer@74/@VBoxContainer@75/@HBoxContainer@80" unique_id=2090183]
 layout_mode = 2
 size_flags_horizontal = 3
 max_value = 4.0
 step = 0.05
 value = 0.5
 
-[node name="@HBoxContainer@82" type="HBoxContainer" parent="UI/ContentArea/TabPanel_Balance/@ScrollContainer@69/@VBoxContainer@70/@PanelContainer@74/@VBoxContainer@75" unique_id=1289718921]
+[node name="@HBoxContainer@82" type="HBoxContainer" parent="UI/ContentArea/TabPanel_Balance/@ScrollContainer@69/@VBoxContainer@70/@PanelContainer@74/@VBoxContainer@75" unique_id=2013088358]
 layout_mode = 2
 
-[node name="@Label@81" type="Label" parent="UI/ContentArea/TabPanel_Balance/@ScrollContainer@69/@VBoxContainer@70/@PanelContainer@74/@VBoxContainer@75/@HBoxContainer@82" unique_id=153543730]
+[node name="@Label@81" type="Label" parent="UI/ContentArea/TabPanel_Balance/@ScrollContainer@69/@VBoxContainer@70/@PanelContainer@74/@VBoxContainer@75/@HBoxContainer@82" unique_id=1535329893]
 custom_minimum_size = Vector2(110, 0)
 layout_mode = 2
 theme_override_font_sizes/font_size = 11
 text = "Pitch Kd:"
 
-[node name="LblPidPKdVal" type="Label" parent="UI/ContentArea/TabPanel_Balance/@ScrollContainer@69/@VBoxContainer@70/@PanelContainer@74/@VBoxContainer@75/@HBoxContainer@82" unique_id=897042524]
+[node name="LblPidPKdVal" type="Label" parent="UI/ContentArea/TabPanel_Balance/@ScrollContainer@69/@VBoxContainer@70/@PanelContainer@74/@VBoxContainer@75/@HBoxContainer@82" unique_id=1397931190]
 custom_minimum_size = Vector2(45, 0)
 layout_mode = 2
 theme_override_font_sizes/font_size = 11
 text = "0.40"
 
-[node name="SldPidPKd" type="HSlider" parent="UI/ContentArea/TabPanel_Balance/@ScrollContainer@69/@VBoxContainer@70/@PanelContainer@74/@VBoxContainer@75/@HBoxContainer@82" unique_id=72070100]
+[node name="SldPidPKd" type="HSlider" parent="UI/ContentArea/TabPanel_Balance/@ScrollContainer@69/@VBoxContainer@70/@PanelContainer@74/@VBoxContainer@75/@HBoxContainer@82" unique_id=2099379568]
 layout_mode = 2
 size_flags_horizontal = 3
 max_value = 2.0
 step = 0.05
 value = 0.4
 
-[node name="@HBoxContainer@84" type="HBoxContainer" parent="UI/ContentArea/TabPanel_Balance/@ScrollContainer@69/@VBoxContainer@70/@PanelContainer@74/@VBoxContainer@75" unique_id=1069795713]
+[node name="@HBoxContainer@84" type="HBoxContainer" parent="UI/ContentArea/TabPanel_Balance/@ScrollContainer@69/@VBoxContainer@70/@PanelContainer@74/@VBoxContainer@75" unique_id=1715149456]
 layout_mode = 2
 
-[node name="@Label@83" type="Label" parent="UI/ContentArea/TabPanel_Balance/@ScrollContainer@69/@VBoxContainer@70/@PanelContainer@74/@VBoxContainer@75/@HBoxContainer@84" unique_id=1575594949]
+[node name="@Label@83" type="Label" parent="UI/ContentArea/TabPanel_Balance/@ScrollContainer@69/@VBoxContainer@70/@PanelContainer@74/@VBoxContainer@75/@HBoxContainer@84" unique_id=1120926536]
 custom_minimum_size = Vector2(110, 0)
 layout_mode = 2
 theme_override_font_sizes/font_size = 11
 text = "Roll Kp:"
 
-[node name="LblPidRKpVal" type="Label" parent="UI/ContentArea/TabPanel_Balance/@ScrollContainer@69/@VBoxContainer@70/@PanelContainer@74/@VBoxContainer@75/@HBoxContainer@84" unique_id=434505510]
+[node name="LblPidRKpVal" type="Label" parent="UI/ContentArea/TabPanel_Balance/@ScrollContainer@69/@VBoxContainer@70/@PanelContainer@74/@VBoxContainer@75/@HBoxContainer@84" unique_id=1536407969]
 custom_minimum_size = Vector2(45, 0)
 layout_mode = 2
 theme_override_font_sizes/font_size = 11
 text = "5.00"
 
-[node name="SldPidRKp" type="HSlider" parent="UI/ContentArea/TabPanel_Balance/@ScrollContainer@69/@VBoxContainer@70/@PanelContainer@74/@VBoxContainer@75/@HBoxContainer@84" unique_id=1427714570]
+[node name="SldPidRKp" type="HSlider" parent="UI/ContentArea/TabPanel_Balance/@ScrollContainer@69/@VBoxContainer@70/@PanelContainer@74/@VBoxContainer@75/@HBoxContainer@84" unique_id=1892584582]
 layout_mode = 2
 size_flags_horizontal = 3
 max_value = 12.0
 step = 0.05
 value = 5.0
 
-[node name="@HBoxContainer@86" type="HBoxContainer" parent="UI/ContentArea/TabPanel_Balance/@ScrollContainer@69/@VBoxContainer@70/@PanelContainer@74/@VBoxContainer@75" unique_id=1553819792]
+[node name="@HBoxContainer@86" type="HBoxContainer" parent="UI/ContentArea/TabPanel_Balance/@ScrollContainer@69/@VBoxContainer@70/@PanelContainer@74/@VBoxContainer@75" unique_id=1531563302]
 layout_mode = 2
 
-[node name="@Label@85" type="Label" parent="UI/ContentArea/TabPanel_Balance/@ScrollContainer@69/@VBoxContainer@70/@PanelContainer@74/@VBoxContainer@75/@HBoxContainer@86" unique_id=32684828]
+[node name="@Label@85" type="Label" parent="UI/ContentArea/TabPanel_Balance/@ScrollContainer@69/@VBoxContainer@70/@PanelContainer@74/@VBoxContainer@75/@HBoxContainer@86" unique_id=2019198156]
 custom_minimum_size = Vector2(110, 0)
 layout_mode = 2
 theme_override_font_sizes/font_size = 11
 text = "Roll Ki:"
 
-[node name="LblPidRKiVal" type="Label" parent="UI/ContentArea/TabPanel_Balance/@ScrollContainer@69/@VBoxContainer@70/@PanelContainer@74/@VBoxContainer@75/@HBoxContainer@86" unique_id=1027360764]
+[node name="LblPidRKiVal" type="Label" parent="UI/ContentArea/TabPanel_Balance/@ScrollContainer@69/@VBoxContainer@70/@PanelContainer@74/@VBoxContainer@75/@HBoxContainer@86" unique_id=1705507133]
 custom_minimum_size = Vector2(45, 0)
 layout_mode = 2
 theme_override_font_sizes/font_size = 11
 text = "0.30"
 
-[node name="SldPidRKi" type="HSlider" parent="UI/ContentArea/TabPanel_Balance/@ScrollContainer@69/@VBoxContainer@70/@PanelContainer@74/@VBoxContainer@75/@HBoxContainer@86" unique_id=1210237554]
+[node name="SldPidRKi" type="HSlider" parent="UI/ContentArea/TabPanel_Balance/@ScrollContainer@69/@VBoxContainer@70/@PanelContainer@74/@VBoxContainer@75/@HBoxContainer@86" unique_id=1965494255]
 layout_mode = 2
 size_flags_horizontal = 3
 max_value = 3.0
 step = 0.05
 value = 0.3
 
-[node name="@HBoxContainer@88" type="HBoxContainer" parent="UI/ContentArea/TabPanel_Balance/@ScrollContainer@69/@VBoxContainer@70/@PanelContainer@74/@VBoxContainer@75" unique_id=452978869]
+[node name="@HBoxContainer@88" type="HBoxContainer" parent="UI/ContentArea/TabPanel_Balance/@ScrollContainer@69/@VBoxContainer@70/@PanelContainer@74/@VBoxContainer@75" unique_id=1985674248]
 layout_mode = 2
 
-[node name="@Label@87" type="Label" parent="UI/ContentArea/TabPanel_Balance/@ScrollContainer@69/@VBoxContainer@70/@PanelContainer@74/@VBoxContainer@75/@HBoxContainer@88" unique_id=1583503842]
+[node name="@Label@87" type="Label" parent="UI/ContentArea/TabPanel_Balance/@ScrollContainer@69/@VBoxContainer@70/@PanelContainer@74/@VBoxContainer@75/@HBoxContainer@88" unique_id=77522653]
 custom_minimum_size = Vector2(110, 0)
 layout_mode = 2
 theme_override_font_sizes/font_size = 11
 text = "Roll Kd:"
 
-[node name="LblPidRKdVal" type="Label" parent="UI/ContentArea/TabPanel_Balance/@ScrollContainer@69/@VBoxContainer@70/@PanelContainer@74/@VBoxContainer@75/@HBoxContainer@88" unique_id=1606110828]
+[node name="LblPidRKdVal" type="Label" parent="UI/ContentArea/TabPanel_Balance/@ScrollContainer@69/@VBoxContainer@70/@PanelContainer@74/@VBoxContainer@75/@HBoxContainer@88" unique_id=1931796608]
 custom_minimum_size = Vector2(45, 0)
 layout_mode = 2
 theme_override_font_sizes/font_size = 11
 text = "0.30"
 
-[node name="SldPidRKd" type="HSlider" parent="UI/ContentArea/TabPanel_Balance/@ScrollContainer@69/@VBoxContainer@70/@PanelContainer@74/@VBoxContainer@75/@HBoxContainer@88" unique_id=302395384]
+[node name="SldPidRKd" type="HSlider" parent="UI/ContentArea/TabPanel_Balance/@ScrollContainer@69/@VBoxContainer@70/@PanelContainer@74/@VBoxContainer@75/@HBoxContainer@88" unique_id=1060866269]
 layout_mode = 2
 size_flags_horizontal = 3
 max_value = 1.5
 step = 0.05
 value = 0.3
 
-[node name="BtnPidResetDefaults" type="Button" parent="UI/ContentArea/TabPanel_Balance/@ScrollContainer@69/@VBoxContainer@70/@PanelContainer@74/@VBoxContainer@75" unique_id=517421929]
+[node name="BtnPidResetDefaults" type="Button" parent="UI/ContentArea/TabPanel_Balance/@ScrollContainer@69/@VBoxContainer@70/@PanelContainer@74/@VBoxContainer@75" unique_id=1869115007]
 layout_mode = 2
 text = "Reset PID Gains to Defaults"
 
-[node name="TabPanel_Sensors" type="PanelContainer" parent="UI/ContentArea" unique_id=646198513]
+[node name="TabPanel_Sensors" type="PanelContainer" parent="UI/ContentArea" unique_id=1501541725]
 visible = false
 layout_mode = 0
 anchor_bottom = 1.0
@@ -1229,98 +1244,98 @@ offset_left = 40.0
 offset_top = 20.0
 offset_right = 560.0
 offset_bottom = -20.0
-theme_override_styles/panel = SubResource("StyleBoxFlat_1epgm")
+theme_override_styles/panel = SubResource("StyleBoxFlat_152kg")
 
-[node name="@ScrollContainer@91" type="ScrollContainer" parent="UI/ContentArea/TabPanel_Sensors" unique_id=505008266]
+[node name="@ScrollContainer@91" type="ScrollContainer" parent="UI/ContentArea/TabPanel_Sensors" unique_id=1830660403]
 layout_mode = 2
 
-[node name="@VBoxContainer@92" type="VBoxContainer" parent="UI/ContentArea/TabPanel_Sensors/@ScrollContainer@91" unique_id=646952232]
+[node name="@VBoxContainer@92" type="VBoxContainer" parent="UI/ContentArea/TabPanel_Sensors/@ScrollContainer@91" unique_id=1949440058]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 14
 
-[node name="@Label@93" type="Label" parent="UI/ContentArea/TabPanel_Sensors/@ScrollContainer@91/@VBoxContainer@92" unique_id=2118322694]
+[node name="@Label@93" type="Label" parent="UI/ContentArea/TabPanel_Sensors/@ScrollContainer@91/@VBoxContainer@92" unique_id=1442237728]
 layout_mode = 2
 theme_override_font_sizes/font_size = 15
 theme_override_colors/font_color = Color(0, 0.9, 1, 1)
 text = "SENSOR ARRAY & OBSTACLE DETECTION"
 
-[node name="@PanelContainer@94" type="PanelContainer" parent="UI/ContentArea/TabPanel_Sensors/@ScrollContainer@91/@VBoxContainer@92" unique_id=872644722]
+[node name="@PanelContainer@94" type="PanelContainer" parent="UI/ContentArea/TabPanel_Sensors/@ScrollContainer@91/@VBoxContainer@92" unique_id=1568615451]
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_152kg")
+theme_override_styles/panel = SubResource("StyleBoxFlat_r4e17")
 
-[node name="LblSensStatusBanner" type="Label" parent="UI/ContentArea/TabPanel_Sensors/@ScrollContainer@91/@VBoxContainer@92/@PanelContainer@94" unique_id=1219067873]
+[node name="LblSensStatusBanner" type="Label" parent="UI/ContentArea/TabPanel_Sensors/@ScrollContainer@91/@VBoxContainer@92/@PanelContainer@94" unique_id=365433520]
 layout_mode = 2
 theme_override_font_sizes/font_size = 14
 theme_override_colors/font_color = Color(0.2, 0.9, 0.4, 1)
 text = "Proximity Status: CLEAR"
 
-[node name="@PanelContainer@95" type="PanelContainer" parent="UI/ContentArea/TabPanel_Sensors/@ScrollContainer@91/@VBoxContainer@92" unique_id=133435923]
+[node name="@PanelContainer@95" type="PanelContainer" parent="UI/ContentArea/TabPanel_Sensors/@ScrollContainer@91/@VBoxContainer@92" unique_id=1737600268]
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_152kg")
+theme_override_styles/panel = SubResource("StyleBoxFlat_r4e17")
 
-[node name="@VBoxContainer@96" type="VBoxContainer" parent="UI/ContentArea/TabPanel_Sensors/@ScrollContainer@91/@VBoxContainer@92/@PanelContainer@95" unique_id=299294424]
+[node name="@VBoxContainer@96" type="VBoxContainer" parent="UI/ContentArea/TabPanel_Sensors/@ScrollContainer@91/@VBoxContainer@92/@PanelContainer@95" unique_id=454137352]
 layout_mode = 2
 theme_override_constants/separation = 4
 
-[node name="LblSensFront" type="Label" parent="UI/ContentArea/TabPanel_Sensors/@ScrollContainer@91/@VBoxContainer@92/@PanelContainer@95/@VBoxContainer@96" unique_id=1102897116]
+[node name="LblSensFront" type="Label" parent="UI/ContentArea/TabPanel_Sensors/@ScrollContainer@91/@VBoxContainer@92/@PanelContainer@95/@VBoxContainer@96" unique_id=1499611896]
 layout_mode = 2
 theme_override_font_sizes/font_size = 12
 text = "Front Ray: 3.50m"
 
-[node name="LblSensLeft" type="Label" parent="UI/ContentArea/TabPanel_Sensors/@ScrollContainer@91/@VBoxContainer@92/@PanelContainer@95/@VBoxContainer@96" unique_id=956008099]
+[node name="LblSensLeft" type="Label" parent="UI/ContentArea/TabPanel_Sensors/@ScrollContainer@91/@VBoxContainer@92/@PanelContainer@95/@VBoxContainer@96" unique_id=1964061636]
 layout_mode = 2
 theme_override_font_sizes/font_size = 12
 text = "Left Ray: 3.50m"
 
-[node name="LblSensRight" type="Label" parent="UI/ContentArea/TabPanel_Sensors/@ScrollContainer@91/@VBoxContainer@92/@PanelContainer@95/@VBoxContainer@96" unique_id=1100942159]
+[node name="LblSensRight" type="Label" parent="UI/ContentArea/TabPanel_Sensors/@ScrollContainer@91/@VBoxContainer@92/@PanelContainer@95/@VBoxContainer@96" unique_id=82598801]
 layout_mode = 2
 theme_override_font_sizes/font_size = 12
 text = "Right Ray: 3.50m"
 
-[node name="LblSensMin" type="Label" parent="UI/ContentArea/TabPanel_Sensors/@ScrollContainer@91/@VBoxContainer@92/@PanelContainer@95/@VBoxContainer@96" unique_id=2070165208]
+[node name="LblSensMin" type="Label" parent="UI/ContentArea/TabPanel_Sensors/@ScrollContainer@91/@VBoxContainer@92/@PanelContainer@95/@VBoxContainer@96" unique_id=2072710497]
 layout_mode = 2
 theme_override_font_sizes/font_size = 12
 text = "Min Clearance: 3.50m"
 
-[node name="LblLidarSummary" type="Label" parent="UI/ContentArea/TabPanel_Sensors/@ScrollContainer@91/@VBoxContainer@92/@PanelContainer@95/@VBoxContainer@96" unique_id=241367789]
+[node name="LblLidarSummary" type="Label" parent="UI/ContentArea/TabPanel_Sensors/@ScrollContainer@91/@VBoxContainer@92/@PanelContainer@95/@VBoxContainer@96" unique_id=831850145]
 layout_mode = 2
 theme_override_font_sizes/font_size = 12
 text = "16-Ray LiDAR: Active (360° Sector Scan)"
 
-[node name="@PanelContainer@97" type="PanelContainer" parent="UI/ContentArea/TabPanel_Sensors/@ScrollContainer@91/@VBoxContainer@92" unique_id=1455669317]
+[node name="@PanelContainer@97" type="PanelContainer" parent="UI/ContentArea/TabPanel_Sensors/@ScrollContainer@91/@VBoxContainer@92" unique_id=753958674]
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_152kg")
+theme_override_styles/panel = SubResource("StyleBoxFlat_r4e17")
 
-[node name="@VBoxContainer@98" type="VBoxContainer" parent="UI/ContentArea/TabPanel_Sensors/@ScrollContainer@91/@VBoxContainer@92/@PanelContainer@97" unique_id=1088109784]
+[node name="@VBoxContainer@98" type="VBoxContainer" parent="UI/ContentArea/TabPanel_Sensors/@ScrollContainer@91/@VBoxContainer@92/@PanelContainer@97" unique_id=434528403]
 layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="@HBoxContainer@100" type="HBoxContainer" parent="UI/ContentArea/TabPanel_Sensors/@ScrollContainer@91/@VBoxContainer@92/@PanelContainer@97/@VBoxContainer@98" unique_id=786607120]
+[node name="@HBoxContainer@100" type="HBoxContainer" parent="UI/ContentArea/TabPanel_Sensors/@ScrollContainer@91/@VBoxContainer@92/@PanelContainer@97/@VBoxContainer@98" unique_id=390009456]
 layout_mode = 2
 
-[node name="@Label@99" type="Label" parent="UI/ContentArea/TabPanel_Sensors/@ScrollContainer@91/@VBoxContainer@92/@PanelContainer@97/@VBoxContainer@98/@HBoxContainer@100" unique_id=1867140020]
+[node name="@Label@99" type="Label" parent="UI/ContentArea/TabPanel_Sensors/@ScrollContainer@91/@VBoxContainer@92/@PanelContainer@97/@VBoxContainer@98/@HBoxContainer@100" unique_id=475160923]
 custom_minimum_size = Vector2(150, 0)
 layout_mode = 2
 text = "Max Detection Range:"
 
-[node name="LblSensRangeVal" type="Label" parent="UI/ContentArea/TabPanel_Sensors/@ScrollContainer@91/@VBoxContainer@92/@PanelContainer@97/@VBoxContainer@98/@HBoxContainer@100" unique_id=1649444298]
+[node name="LblSensRangeVal" type="Label" parent="UI/ContentArea/TabPanel_Sensors/@ScrollContainer@91/@VBoxContainer@92/@PanelContainer@97/@VBoxContainer@98/@HBoxContainer@100" unique_id=768317478]
 layout_mode = 2
 text = "3.5m"
 
-[node name="SldSensRange" type="HSlider" parent="UI/ContentArea/TabPanel_Sensors/@ScrollContainer@91/@VBoxContainer@92/@PanelContainer@97/@VBoxContainer@98" unique_id=1949689134]
+[node name="SldSensRange" type="HSlider" parent="UI/ContentArea/TabPanel_Sensors/@ScrollContainer@91/@VBoxContainer@92/@PanelContainer@97/@VBoxContainer@98" unique_id=646773899]
 layout_mode = 2
 min_value = 1.0
 max_value = 8.0
 step = 0.5
 value = 3.5
 
-[node name="ChkSensAvoid" type="CheckBox" parent="UI/ContentArea/TabPanel_Sensors/@ScrollContainer@91/@VBoxContainer@92/@PanelContainer@97/@VBoxContainer@98" unique_id=1439548261]
+[node name="ChkSensAvoid" type="CheckBox" parent="UI/ContentArea/TabPanel_Sensors/@ScrollContainer@91/@VBoxContainer@92/@PanelContainer@97/@VBoxContainer@98" unique_id=24025422]
 layout_mode = 2
 button_pressed = true
 text = "Autonomous Steering Avoidance Enabled"
 
-[node name="TabPanel_Analytics" type="PanelContainer" parent="UI/ContentArea" unique_id=1249603711]
+[node name="TabPanel_Analytics" type="PanelContainer" parent="UI/ContentArea" unique_id=358643700]
 visible = false
 layout_mode = 0
 anchor_bottom = 1.0
@@ -1328,23 +1343,23 @@ offset_left = 40.0
 offset_top = 20.0
 offset_right = 600.0
 offset_bottom = -20.0
-theme_override_styles/panel = SubResource("StyleBoxFlat_1epgm")
+theme_override_styles/panel = SubResource("StyleBoxFlat_152kg")
 
-[node name="@ScrollContainer@103" type="ScrollContainer" parent="UI/ContentArea/TabPanel_Analytics" unique_id=945192637]
+[node name="@ScrollContainer@103" type="ScrollContainer" parent="UI/ContentArea/TabPanel_Analytics" unique_id=177289419]
 layout_mode = 2
 
-[node name="@VBoxContainer@104" type="VBoxContainer" parent="UI/ContentArea/TabPanel_Analytics/@ScrollContainer@103" unique_id=1230981231]
+[node name="@VBoxContainer@104" type="VBoxContainer" parent="UI/ContentArea/TabPanel_Analytics/@ScrollContainer@103" unique_id=957786540]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 14
 
-[node name="@Label@105" type="Label" parent="UI/ContentArea/TabPanel_Analytics/@ScrollContainer@103/@VBoxContainer@104" unique_id=154870582]
+[node name="@Label@105" type="Label" parent="UI/ContentArea/TabPanel_Analytics/@ScrollContainer@103/@VBoxContainer@104" unique_id=1573291444]
 layout_mode = 2
 theme_override_font_sizes/font_size = 15
 theme_override_colors/font_color = Color(0, 0.9, 1, 1)
 text = "SIMULATION ANALYTICS & PERFORMANCE"
 
-[node name="GraphAnalytics" type="Control" parent="UI/ContentArea/TabPanel_Analytics/@ScrollContainer@103/@VBoxContainer@104" unique_id=246270598]
+[node name="GraphAnalytics" type="Control" parent="UI/ContentArea/TabPanel_Analytics/@ScrollContainer@103/@VBoxContainer@104" unique_id=9913820]
 custom_minimum_size = Vector2(480, 130)
 layout_mode = 2
 script = ExtResource("12_pm3ni")
@@ -1356,49 +1371,49 @@ series_b_color = Color(1, 0.3, 0.3, 1)
 y_min = 0.0
 y_max = 2.0
 
-[node name="@PanelContainer@106" type="PanelContainer" parent="UI/ContentArea/TabPanel_Analytics/@ScrollContainer@103/@VBoxContainer@104" unique_id=561708843]
+[node name="@PanelContainer@106" type="PanelContainer" parent="UI/ContentArea/TabPanel_Analytics/@ScrollContainer@103/@VBoxContainer@104" unique_id=1931598425]
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_152kg")
+theme_override_styles/panel = SubResource("StyleBoxFlat_r4e17")
 
-[node name="@VBoxContainer@107" type="VBoxContainer" parent="UI/ContentArea/TabPanel_Analytics/@ScrollContainer@103/@VBoxContainer@104/@PanelContainer@106" unique_id=2011111243]
+[node name="@VBoxContainer@107" type="VBoxContainer" parent="UI/ContentArea/TabPanel_Analytics/@ScrollContainer@103/@VBoxContainer@104/@PanelContainer@106" unique_id=717486400]
 layout_mode = 2
 theme_override_constants/separation = 4
 
-[node name="LblAnaDist" type="Label" parent="UI/ContentArea/TabPanel_Analytics/@ScrollContainer@103/@VBoxContainer@104/@PanelContainer@106/@VBoxContainer@107" unique_id=200611507]
+[node name="LblAnaDist" type="Label" parent="UI/ContentArea/TabPanel_Analytics/@ScrollContainer@103/@VBoxContainer@104/@PanelContainer@106/@VBoxContainer@107" unique_id=21388439]
 layout_mode = 2
 theme_override_font_sizes/font_size = 12
 text = "Total Distance: 0.00 m"
 
-[node name="LblAnaAvgSpeed" type="Label" parent="UI/ContentArea/TabPanel_Analytics/@ScrollContainer@103/@VBoxContainer@104/@PanelContainer@106/@VBoxContainer@107" unique_id=46689226]
+[node name="LblAnaAvgSpeed" type="Label" parent="UI/ContentArea/TabPanel_Analytics/@ScrollContainer@103/@VBoxContainer@104/@PanelContainer@106/@VBoxContainer@107" unique_id=356874635]
 layout_mode = 2
 theme_override_font_sizes/font_size = 12
 text = "Instant Speed: 0.00 m/s"
 
-[node name="LblAnaMaxTilt" type="Label" parent="UI/ContentArea/TabPanel_Analytics/@ScrollContainer@103/@VBoxContainer@104/@PanelContainer@106/@VBoxContainer@107" unique_id=1900286646]
+[node name="LblAnaMaxTilt" type="Label" parent="UI/ContentArea/TabPanel_Analytics/@ScrollContainer@103/@VBoxContainer@104/@PanelContainer@106/@VBoxContainer@107" unique_id=1324572213]
 layout_mode = 2
 theme_override_font_sizes/font_size = 12
 text = "Max Tilt: 0.0°"
 
-[node name="LblAnaFalls" type="Label" parent="UI/ContentArea/TabPanel_Analytics/@ScrollContainer@103/@VBoxContainer@104/@PanelContainer@106/@VBoxContainer@107" unique_id=1778338563]
+[node name="LblAnaFalls" type="Label" parent="UI/ContentArea/TabPanel_Analytics/@ScrollContainer@103/@VBoxContainer@104/@PanelContainer@106/@VBoxContainer@107" unique_id=192810151]
 layout_mode = 2
 theme_override_font_sizes/font_size = 12
 text = "Falls Sustained: 0"
 
-[node name="LblAnaCollisions" type="Label" parent="UI/ContentArea/TabPanel_Analytics/@ScrollContainer@103/@VBoxContainer@104/@PanelContainer@106/@VBoxContainer@107" unique_id=985912408]
+[node name="LblAnaCollisions" type="Label" parent="UI/ContentArea/TabPanel_Analytics/@ScrollContainer@103/@VBoxContainer@104/@PanelContainer@106/@VBoxContainer@107" unique_id=552319376]
 layout_mode = 2
 theme_override_font_sizes/font_size = 12
 text = "Collisions: 0"
 
-[node name="LblAnaStability" type="Label" parent="UI/ContentArea/TabPanel_Analytics/@ScrollContainer@103/@VBoxContainer@104/@PanelContainer@106/@VBoxContainer@107" unique_id=1544793721]
+[node name="LblAnaStability" type="Label" parent="UI/ContentArea/TabPanel_Analytics/@ScrollContainer@103/@VBoxContainer@104/@PanelContainer@106/@VBoxContainer@107" unique_id=2098067389]
 layout_mode = 2
 theme_override_font_sizes/font_size = 12
 text = "Stability Score: 100.0%"
 
-[node name="BtnExportCsv" type="Button" parent="UI/ContentArea/TabPanel_Analytics/@ScrollContainer@103/@VBoxContainer@104" unique_id=57211443]
+[node name="BtnExportCsv" type="Button" parent="UI/ContentArea/TabPanel_Analytics/@ScrollContainer@103/@VBoxContainer@104" unique_id=1548957247]
 layout_mode = 2
 text = "📥 Export Full Telemetry CSV"
 
-[node name="TabPanel_Experiments" type="PanelContainer" parent="UI/ContentArea" unique_id=1861941555]
+[node name="TabPanel_Experiments" type="PanelContainer" parent="UI/ContentArea" unique_id=924854742]
 visible = false
 layout_mode = 0
 anchor_bottom = 1.0
@@ -1406,110 +1421,110 @@ offset_left = 40.0
 offset_top = 20.0
 offset_right = 600.0
 offset_bottom = -20.0
-theme_override_styles/panel = SubResource("StyleBoxFlat_1epgm")
+theme_override_styles/panel = SubResource("StyleBoxFlat_152kg")
 
-[node name="@ScrollContainer@110" type="ScrollContainer" parent="UI/ContentArea/TabPanel_Experiments" unique_id=720240893]
+[node name="@ScrollContainer@110" type="ScrollContainer" parent="UI/ContentArea/TabPanel_Experiments" unique_id=958035392]
 layout_mode = 2
 
-[node name="@VBoxContainer@111" type="VBoxContainer" parent="UI/ContentArea/TabPanel_Experiments/@ScrollContainer@110" unique_id=1057526535]
+[node name="@VBoxContainer@111" type="VBoxContainer" parent="UI/ContentArea/TabPanel_Experiments/@ScrollContainer@110" unique_id=1573467139]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 12
 
-[node name="@Label@112" type="Label" parent="UI/ContentArea/TabPanel_Experiments/@ScrollContainer@110/@VBoxContainer@111" unique_id=1508286302]
+[node name="@Label@112" type="Label" parent="UI/ContentArea/TabPanel_Experiments/@ScrollContainer@110/@VBoxContainer@111" unique_id=1153879516]
 layout_mode = 2
 theme_override_font_sizes/font_size = 15
 theme_override_colors/font_color = Color(0, 0.9, 1, 1)
 text = "PREDEFINED ROBOTICS EXPERIMENTS"
 
-[node name="OptExpScenario" type="OptionButton" parent="UI/ContentArea/TabPanel_Experiments/@ScrollContainer@110/@VBoxContainer@111" unique_id=641243617]
+[node name="OptExpScenario" type="OptionButton" parent="UI/ContentArea/TabPanel_Experiments/@ScrollContainer@110/@VBoxContainer@111" unique_id=1020831616]
 layout_mode = 2
 
-[node name="@PanelContainer@123" type="PanelContainer" parent="UI/ContentArea/TabPanel_Experiments/@ScrollContainer@110/@VBoxContainer@111" unique_id=1036337202]
+[node name="@PanelContainer@123" type="PanelContainer" parent="UI/ContentArea/TabPanel_Experiments/@ScrollContainer@110/@VBoxContainer@111" unique_id=1613424857]
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_152kg")
+theme_override_styles/panel = SubResource("StyleBoxFlat_r4e17")
 
-[node name="@VBoxContainer@124" type="VBoxContainer" parent="UI/ContentArea/TabPanel_Experiments/@ScrollContainer@110/@VBoxContainer@111/@PanelContainer@123" unique_id=226544810]
+[node name="@VBoxContainer@124" type="VBoxContainer" parent="UI/ContentArea/TabPanel_Experiments/@ScrollContainer@110/@VBoxContainer@111/@PanelContainer@123" unique_id=1027498068]
 layout_mode = 2
 theme_override_constants/separation = 5
 
-[node name="LblExpTitle" type="Label" parent="UI/ContentArea/TabPanel_Experiments/@ScrollContainer@110/@VBoxContainer@111/@PanelContainer@123/@VBoxContainer@124" unique_id=337448391]
+[node name="LblExpTitle" type="Label" parent="UI/ContentArea/TabPanel_Experiments/@ScrollContainer@110/@VBoxContainer@111/@PanelContainer@123/@VBoxContainer@124" unique_id=1708438148]
 layout_mode = 2
 theme_override_font_sizes/font_size = 13
 theme_override_colors/font_color = Color(0, 0.9, 1, 1)
 text = "Experiment 1: Basic Walking Dynamics"
 
-[node name="LblExpDesc" type="Label" parent="UI/ContentArea/TabPanel_Experiments/@ScrollContainer@110/@VBoxContainer@111/@PanelContainer@123/@VBoxContainer@124" unique_id=182894035]
+[node name="LblExpDesc" type="Label" parent="UI/ContentArea/TabPanel_Experiments/@ScrollContainer@110/@VBoxContainer@111/@PanelContainer@123/@VBoxContainer@124" unique_id=1518467505]
 layout_mode = 2
 theme_override_font_sizes/font_size = 11
 text = "Executes forward locomotion test."
 
-[node name="ProgExp" type="ProgressBar" parent="UI/ContentArea/TabPanel_Experiments/@ScrollContainer@110/@VBoxContainer@111/@PanelContainer@123/@VBoxContainer@124" unique_id=484548270]
+[node name="ProgExp" type="ProgressBar" parent="UI/ContentArea/TabPanel_Experiments/@ScrollContainer@110/@VBoxContainer@111/@PanelContainer@123/@VBoxContainer@124" unique_id=339591515]
 custom_minimum_size = Vector2(0, 18)
 layout_mode = 2
 
-[node name="LblExpStatus" type="Label" parent="UI/ContentArea/TabPanel_Experiments/@ScrollContainer@110/@VBoxContainer@111/@PanelContainer@123/@VBoxContainer@124" unique_id=1807901311]
+[node name="LblExpStatus" type="Label" parent="UI/ContentArea/TabPanel_Experiments/@ScrollContainer@110/@VBoxContainer@111/@PanelContainer@123/@VBoxContainer@124" unique_id=778493253]
 layout_mode = 2
 theme_override_font_sizes/font_size = 12
 text = "Status: NOT_RUN"
 
-[node name="@PanelContainer@125" type="PanelContainer" parent="UI/ContentArea/TabPanel_Experiments/@ScrollContainer@110/@VBoxContainer@111" unique_id=1939400931]
+[node name="@PanelContainer@125" type="PanelContainer" parent="UI/ContentArea/TabPanel_Experiments/@ScrollContainer@110/@VBoxContainer@111" unique_id=106711743]
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_152kg")
+theme_override_styles/panel = SubResource("StyleBoxFlat_r4e17")
 
-[node name="@VBoxContainer@126" type="VBoxContainer" parent="UI/ContentArea/TabPanel_Experiments/@ScrollContainer@110/@VBoxContainer@111/@PanelContainer@125" unique_id=1206617279]
+[node name="@VBoxContainer@126" type="VBoxContainer" parent="UI/ContentArea/TabPanel_Experiments/@ScrollContainer@110/@VBoxContainer@111/@PanelContainer@125" unique_id=1865510090]
 layout_mode = 2
 theme_override_constants/separation = 4
 
-[node name="@Label@127" type="Label" parent="UI/ContentArea/TabPanel_Experiments/@ScrollContainer@110/@VBoxContainer@111/@PanelContainer@125/@VBoxContainer@126" unique_id=35093549]
+[node name="@Label@127" type="Label" parent="UI/ContentArea/TabPanel_Experiments/@ScrollContainer@110/@VBoxContainer@111/@PanelContainer@125/@VBoxContainer@126" unique_id=648575055]
 layout_mode = 2
 theme_override_font_sizes/font_size = 12
 theme_override_colors/font_color = Color(0, 0.9, 1, 1)
 text = "VERIFICATION CRITERIA CHECKLIST"
 
-[node name="ChkExpC1" type="CheckBox" parent="UI/ContentArea/TabPanel_Experiments/@ScrollContainer@110/@VBoxContainer@111/@PanelContainer@125/@VBoxContainer@126" unique_id=762167002]
+[node name="ChkExpC1" type="CheckBox" parent="UI/ContentArea/TabPanel_Experiments/@ScrollContainer@110/@VBoxContainer@111/@PanelContainer@125/@VBoxContainer@126" unique_id=186533933]
 layout_mode = 2
 disabled = true
 text = "Criterion"
 
-[node name="ChkExpC2" type="CheckBox" parent="UI/ContentArea/TabPanel_Experiments/@ScrollContainer@110/@VBoxContainer@111/@PanelContainer@125/@VBoxContainer@126" unique_id=1578158599]
+[node name="ChkExpC2" type="CheckBox" parent="UI/ContentArea/TabPanel_Experiments/@ScrollContainer@110/@VBoxContainer@111/@PanelContainer@125/@VBoxContainer@126" unique_id=1760991461]
 layout_mode = 2
 disabled = true
 text = "Criterion"
 
-[node name="ChkExpC3" type="CheckBox" parent="UI/ContentArea/TabPanel_Experiments/@ScrollContainer@110/@VBoxContainer@111/@PanelContainer@125/@VBoxContainer@126" unique_id=77550700]
+[node name="ChkExpC3" type="CheckBox" parent="UI/ContentArea/TabPanel_Experiments/@ScrollContainer@110/@VBoxContainer@111/@PanelContainer@125/@VBoxContainer@126" unique_id=1638632620]
 layout_mode = 2
 disabled = true
 text = "Criterion"
 
-[node name="ChkExpC4" type="CheckBox" parent="UI/ContentArea/TabPanel_Experiments/@ScrollContainer@110/@VBoxContainer@111/@PanelContainer@125/@VBoxContainer@126" unique_id=385539074]
+[node name="ChkExpC4" type="CheckBox" parent="UI/ContentArea/TabPanel_Experiments/@ScrollContainer@110/@VBoxContainer@111/@PanelContainer@125/@VBoxContainer@126" unique_id=1792925078]
 layout_mode = 2
 disabled = true
 text = "Criterion"
 
-[node name="@HBoxContainer@128" type="HBoxContainer" parent="UI/ContentArea/TabPanel_Experiments/@ScrollContainer@110/@VBoxContainer@111" unique_id=861403393]
+[node name="@HBoxContainer@128" type="HBoxContainer" parent="UI/ContentArea/TabPanel_Experiments/@ScrollContainer@110/@VBoxContainer@111" unique_id=1332858201]
 layout_mode = 2
 
-[node name="BtnExpStart" type="Button" parent="UI/ContentArea/TabPanel_Experiments/@ScrollContainer@110/@VBoxContainer@111/@HBoxContainer@128" unique_id=1827834079]
+[node name="BtnExpStart" type="Button" parent="UI/ContentArea/TabPanel_Experiments/@ScrollContainer@110/@VBoxContainer@111/@HBoxContainer@128" unique_id=596893629]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "▶ Start Experiment"
 
-[node name="BtnExpStop" type="Button" parent="UI/ContentArea/TabPanel_Experiments/@ScrollContainer@110/@VBoxContainer@111/@HBoxContainer@128" unique_id=1481786906]
+[node name="BtnExpStop" type="Button" parent="UI/ContentArea/TabPanel_Experiments/@ScrollContainer@110/@VBoxContainer@111/@HBoxContainer@128" unique_id=33116947]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "⏹ Stop"
 
-[node name="BtnExpReset" type="Button" parent="UI/ContentArea/TabPanel_Experiments/@ScrollContainer@110/@VBoxContainer@111/@HBoxContainer@128" unique_id=15489468]
+[node name="BtnExpReset" type="Button" parent="UI/ContentArea/TabPanel_Experiments/@ScrollContainer@110/@VBoxContainer@111/@HBoxContainer@128" unique_id=2053884963]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "↺ Reset"
 
-[node name="BtnExpExportCsv" type="Button" parent="UI/ContentArea/TabPanel_Experiments/@ScrollContainer@110/@VBoxContainer@111" unique_id=156629426]
+[node name="BtnExpExportCsv" type="Button" parent="UI/ContentArea/TabPanel_Experiments/@ScrollContainer@110/@VBoxContainer@111" unique_id=554904011]
 layout_mode = 2
 text = "📥 Export Experiment CSV"
 
-[node name="TabPanel_Settings" type="PanelContainer" parent="UI/ContentArea" unique_id=1883736045]
+[node name="TabPanel_Settings" type="PanelContainer" parent="UI/ContentArea" unique_id=955221862]
 visible = false
 layout_mode = 0
 anchor_bottom = 1.0
@@ -1517,134 +1532,134 @@ offset_left = 40.0
 offset_top = 20.0
 offset_right = 560.0
 offset_bottom = -20.0
-theme_override_styles/panel = SubResource("StyleBoxFlat_1epgm")
+theme_override_styles/panel = SubResource("StyleBoxFlat_152kg")
 
-[node name="@ScrollContainer@131" type="ScrollContainer" parent="UI/ContentArea/TabPanel_Settings" unique_id=1927863483]
+[node name="@ScrollContainer@131" type="ScrollContainer" parent="UI/ContentArea/TabPanel_Settings" unique_id=1990083564]
 layout_mode = 2
 
-[node name="@VBoxContainer@132" type="VBoxContainer" parent="UI/ContentArea/TabPanel_Settings/@ScrollContainer@131" unique_id=1395888250]
+[node name="@VBoxContainer@132" type="VBoxContainer" parent="UI/ContentArea/TabPanel_Settings/@ScrollContainer@131" unique_id=818617646]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 14
 
-[node name="@Label@133" type="Label" parent="UI/ContentArea/TabPanel_Settings/@ScrollContainer@131/@VBoxContainer@132" unique_id=942147383]
+[node name="@Label@133" type="Label" parent="UI/ContentArea/TabPanel_Settings/@ScrollContainer@131/@VBoxContainer@132" unique_id=1174279310]
 layout_mode = 2
 theme_override_font_sizes/font_size = 15
 theme_override_colors/font_color = Color(0, 0.9, 1, 1)
 text = "PHYSICS ENGINE & SIMULATOR SETTINGS"
 
-[node name="@PanelContainer@134" type="PanelContainer" parent="UI/ContentArea/TabPanel_Settings/@ScrollContainer@131/@VBoxContainer@132" unique_id=1519692984]
+[node name="@PanelContainer@134" type="PanelContainer" parent="UI/ContentArea/TabPanel_Settings/@ScrollContainer@131/@VBoxContainer@132" unique_id=597776689]
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_152kg")
+theme_override_styles/panel = SubResource("StyleBoxFlat_r4e17")
 
-[node name="@VBoxContainer@135" type="VBoxContainer" parent="UI/ContentArea/TabPanel_Settings/@ScrollContainer@131/@VBoxContainer@132/@PanelContainer@134" unique_id=1496145550]
+[node name="@VBoxContainer@135" type="VBoxContainer" parent="UI/ContentArea/TabPanel_Settings/@ScrollContainer@131/@VBoxContainer@132/@PanelContainer@134" unique_id=1744952221]
 layout_mode = 2
 theme_override_constants/separation = 6
 
-[node name="@HBoxContainer@137" type="HBoxContainer" parent="UI/ContentArea/TabPanel_Settings/@ScrollContainer@131/@VBoxContainer@132/@PanelContainer@134/@VBoxContainer@135" unique_id=2045783735]
+[node name="@HBoxContainer@137" type="HBoxContainer" parent="UI/ContentArea/TabPanel_Settings/@ScrollContainer@131/@VBoxContainer@132/@PanelContainer@134/@VBoxContainer@135" unique_id=1801856259]
 layout_mode = 2
 
-[node name="@Label@136" type="Label" parent="UI/ContentArea/TabPanel_Settings/@ScrollContainer@131/@VBoxContainer@132/@PanelContainer@134/@VBoxContainer@135/@HBoxContainer@137" unique_id=27500188]
+[node name="@Label@136" type="Label" parent="UI/ContentArea/TabPanel_Settings/@ScrollContainer@131/@VBoxContainer@132/@PanelContainer@134/@VBoxContainer@135/@HBoxContainer@137" unique_id=2088173488]
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 text = "Gravity:"
 
-[node name="LblSetGravityVal" type="Label" parent="UI/ContentArea/TabPanel_Settings/@ScrollContainer@131/@VBoxContainer@132/@PanelContainer@134/@VBoxContainer@135/@HBoxContainer@137" unique_id=1813319700]
+[node name="LblSetGravityVal" type="Label" parent="UI/ContentArea/TabPanel_Settings/@ScrollContainer@131/@VBoxContainer@132/@PanelContainer@134/@VBoxContainer@135/@HBoxContainer@137" unique_id=376176111]
 layout_mode = 2
 text = "-9.81 m/s²"
 
-[node name="SldSetGravity" type="HSlider" parent="UI/ContentArea/TabPanel_Settings/@ScrollContainer@131/@VBoxContainer@132/@PanelContainer@134/@VBoxContainer@135" unique_id=1892097557]
+[node name="SldSetGravity" type="HSlider" parent="UI/ContentArea/TabPanel_Settings/@ScrollContainer@131/@VBoxContainer@132/@PanelContainer@134/@VBoxContainer@135" unique_id=342795391]
 layout_mode = 2
 min_value = -20.0
 max_value = 0.0
 step = 0.1
 value = -9.8
 
-[node name="@HBoxContainer@138" type="HBoxContainer" parent="UI/ContentArea/TabPanel_Settings/@ScrollContainer@131/@VBoxContainer@132/@PanelContainer@134/@VBoxContainer@135" unique_id=110851918]
+[node name="@HBoxContainer@138" type="HBoxContainer" parent="UI/ContentArea/TabPanel_Settings/@ScrollContainer@131/@VBoxContainer@132/@PanelContainer@134/@VBoxContainer@135" unique_id=1452986587]
 layout_mode = 2
 
-[node name="BtnGravEarth" type="Button" parent="UI/ContentArea/TabPanel_Settings/@ScrollContainer@131/@VBoxContainer@132/@PanelContainer@134/@VBoxContainer@135/@HBoxContainer@138" unique_id=2066454631]
+[node name="BtnGravEarth" type="Button" parent="UI/ContentArea/TabPanel_Settings/@ScrollContainer@131/@VBoxContainer@132/@PanelContainer@134/@VBoxContainer@135/@HBoxContainer@138" unique_id=2097531454]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Earth (-9.81)"
 
-[node name="BtnGravMoon" type="Button" parent="UI/ContentArea/TabPanel_Settings/@ScrollContainer@131/@VBoxContainer@132/@PanelContainer@134/@VBoxContainer@135/@HBoxContainer@138" unique_id=1725587537]
+[node name="BtnGravMoon" type="Button" parent="UI/ContentArea/TabPanel_Settings/@ScrollContainer@131/@VBoxContainer@132/@PanelContainer@134/@VBoxContainer@135/@HBoxContainer@138" unique_id=263808570]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Moon (-1.62)"
 
-[node name="BtnGravMars" type="Button" parent="UI/ContentArea/TabPanel_Settings/@ScrollContainer@131/@VBoxContainer@132/@PanelContainer@134/@VBoxContainer@135/@HBoxContainer@138" unique_id=1351020000]
+[node name="BtnGravMars" type="Button" parent="UI/ContentArea/TabPanel_Settings/@ScrollContainer@131/@VBoxContainer@132/@PanelContainer@134/@VBoxContainer@135/@HBoxContainer@138" unique_id=756176629]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Mars (-3.71)"
 
-[node name="BtnGravZero" type="Button" parent="UI/ContentArea/TabPanel_Settings/@ScrollContainer@131/@VBoxContainer@132/@PanelContainer@134/@VBoxContainer@135/@HBoxContainer@138" unique_id=1295834346]
+[node name="BtnGravZero" type="Button" parent="UI/ContentArea/TabPanel_Settings/@ScrollContainer@131/@VBoxContainer@132/@PanelContainer@134/@VBoxContainer@135/@HBoxContainer@138" unique_id=1617761146]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Zero-G (0.0)"
 
-[node name="@PanelContainer@139" type="PanelContainer" parent="UI/ContentArea/TabPanel_Settings/@ScrollContainer@131/@VBoxContainer@132" unique_id=135756670]
+[node name="@PanelContainer@139" type="PanelContainer" parent="UI/ContentArea/TabPanel_Settings/@ScrollContainer@131/@VBoxContainer@132" unique_id=1188445054]
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_152kg")
+theme_override_styles/panel = SubResource("StyleBoxFlat_r4e17")
 
-[node name="@VBoxContainer@140" type="VBoxContainer" parent="UI/ContentArea/TabPanel_Settings/@ScrollContainer@131/@VBoxContainer@132/@PanelContainer@139" unique_id=772405325]
+[node name="@VBoxContainer@140" type="VBoxContainer" parent="UI/ContentArea/TabPanel_Settings/@ScrollContainer@131/@VBoxContainer@132/@PanelContainer@139" unique_id=1111414636]
 layout_mode = 2
 theme_override_constants/separation = 6
 
-[node name="@HBoxContainer@142" type="HBoxContainer" parent="UI/ContentArea/TabPanel_Settings/@ScrollContainer@131/@VBoxContainer@132/@PanelContainer@139/@VBoxContainer@140" unique_id=1976357312]
+[node name="@HBoxContainer@142" type="HBoxContainer" parent="UI/ContentArea/TabPanel_Settings/@ScrollContainer@131/@VBoxContainer@132/@PanelContainer@139/@VBoxContainer@140" unique_id=999751110]
 layout_mode = 2
 
-[node name="@Label@141" type="Label" parent="UI/ContentArea/TabPanel_Settings/@ScrollContainer@131/@VBoxContainer@132/@PanelContainer@139/@VBoxContainer@140/@HBoxContainer@142" unique_id=588426678]
+[node name="@Label@141" type="Label" parent="UI/ContentArea/TabPanel_Settings/@ScrollContainer@131/@VBoxContainer@132/@PanelContainer@139/@VBoxContainer@140/@HBoxContainer@142" unique_id=1656932223]
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 text = "Physics Step:"
 
-[node name="LblSetTimestepVal" type="Label" parent="UI/ContentArea/TabPanel_Settings/@ScrollContainer@131/@VBoxContainer@132/@PanelContainer@139/@VBoxContainer@140/@HBoxContainer@142" unique_id=1682499111]
+[node name="LblSetTimestepVal" type="Label" parent="UI/ContentArea/TabPanel_Settings/@ScrollContainer@131/@VBoxContainer@132/@PanelContainer@139/@VBoxContainer@140/@HBoxContainer@142" unique_id=1254606211]
 layout_mode = 2
 text = "60 Hz (0.0167s)"
 
-[node name="SldSetTimestep" type="HSlider" parent="UI/ContentArea/TabPanel_Settings/@ScrollContainer@131/@VBoxContainer@132/@PanelContainer@139/@VBoxContainer@140" unique_id=87853011]
+[node name="SldSetTimestep" type="HSlider" parent="UI/ContentArea/TabPanel_Settings/@ScrollContainer@131/@VBoxContainer@132/@PanelContainer@139/@VBoxContainer@140" unique_id=1392328704]
 layout_mode = 2
 min_value = 30.0
 max_value = 240.0
 step = 30.0
 value = 60.0
 
-[node name="@PanelContainer@143" type="PanelContainer" parent="UI/ContentArea/TabPanel_Settings/@ScrollContainer@131/@VBoxContainer@132" unique_id=327143135]
+[node name="@PanelContainer@143" type="PanelContainer" parent="UI/ContentArea/TabPanel_Settings/@ScrollContainer@131/@VBoxContainer@132" unique_id=1501123290]
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_152kg")
+theme_override_styles/panel = SubResource("StyleBoxFlat_r4e17")
 
-[node name="@VBoxContainer@144" type="VBoxContainer" parent="UI/ContentArea/TabPanel_Settings/@ScrollContainer@131/@VBoxContainer@132/@PanelContainer@143" unique_id=912817699]
+[node name="@VBoxContainer@144" type="VBoxContainer" parent="UI/ContentArea/TabPanel_Settings/@ScrollContainer@131/@VBoxContainer@132/@PanelContainer@143" unique_id=180877952]
 layout_mode = 2
 theme_override_constants/separation = 6
 
-[node name="@Label@145" type="Label" parent="UI/ContentArea/TabPanel_Settings/@ScrollContainer@131/@VBoxContainer@132/@PanelContainer@143/@VBoxContainer@144" unique_id=167949197]
+[node name="@Label@145" type="Label" parent="UI/ContentArea/TabPanel_Settings/@ScrollContainer@131/@VBoxContainer@132/@PanelContainer@143/@VBoxContainer@144" unique_id=78885016]
 layout_mode = 2
 text = "Simulation Time Multiplier:"
 
-[node name="OptSetSimSpeed" type="OptionButton" parent="UI/ContentArea/TabPanel_Settings/@ScrollContainer@131/@VBoxContainer@132/@PanelContainer@143/@VBoxContainer@144" unique_id=1279432821]
+[node name="OptSetSimSpeed" type="OptionButton" parent="UI/ContentArea/TabPanel_Settings/@ScrollContainer@131/@VBoxContainer@132/@PanelContainer@143/@VBoxContainer@144" unique_id=259982974]
 layout_mode = 2
 
-[node name="@PanelContainer@156" type="PanelContainer" parent="UI/ContentArea/TabPanel_Settings/@ScrollContainer@131/@VBoxContainer@132" unique_id=1119940694]
+[node name="@PanelContainer@156" type="PanelContainer" parent="UI/ContentArea/TabPanel_Settings/@ScrollContainer@131/@VBoxContainer@132" unique_id=1974192256]
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_152kg")
+theme_override_styles/panel = SubResource("StyleBoxFlat_r4e17")
 
-[node name="@VBoxContainer@157" type="VBoxContainer" parent="UI/ContentArea/TabPanel_Settings/@ScrollContainer@131/@VBoxContainer@132/@PanelContainer@156" unique_id=1430461828]
+[node name="@VBoxContainer@157" type="VBoxContainer" parent="UI/ContentArea/TabPanel_Settings/@ScrollContainer@131/@VBoxContainer@132/@PanelContainer@156" unique_id=991855821]
 layout_mode = 2
 theme_override_constants/separation = 4
 
-[node name="@Label@158" type="Label" parent="UI/ContentArea/TabPanel_Settings/@ScrollContainer@131/@VBoxContainer@132/@PanelContainer@156/@VBoxContainer@157" unique_id=1542905871]
+[node name="@Label@158" type="Label" parent="UI/ContentArea/TabPanel_Settings/@ScrollContainer@131/@VBoxContainer@132/@PanelContainer@156/@VBoxContainer@157" unique_id=1915271028]
 layout_mode = 2
 theme_override_colors/font_color = Color(0, 0.9, 1, 1)
 text = "VR HUMANOID ROBOT SIMULATOR"
 
-[node name="@Label@159" type="Label" parent="UI/ContentArea/TabPanel_Settings/@ScrollContainer@131/@VBoxContainer@132/@PanelContainer@156/@VBoxContainer@157" unique_id=1131680803]
+[node name="@Label@159" type="Label" parent="UI/ContentArea/TabPanel_Settings/@ScrollContainer@131/@VBoxContainer@132/@PanelContainer@156/@VBoxContainer@157" unique_id=665958190]
 layout_mode = 2
 theme_override_font_sizes/font_size = 11
 text = "Engineering End Semester Examination (ESE) Project
 Developed by Aryan & Vilas"
 
-[node name="@Label@160" type="Label" parent="UI/ContentArea/TabPanel_Settings/@ScrollContainer@131/@VBoxContainer@132/@PanelContainer@156/@VBoxContainer@157" unique_id=1501829750]
+[node name="@Label@160" type="Label" parent="UI/ContentArea/TabPanel_Settings/@ScrollContainer@131/@VBoxContainer@132/@PanelContainer@156/@VBoxContainer@157" unique_id=190729876]
 layout_mode = 2
 theme_override_font_sizes/font_size = 10
 text = "Physics Engine: PyBullet 3.2.7 | 3D Visualization: Godot 4.7.2 | Protocol: TCP JSON"

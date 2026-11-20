@@ -21,10 +21,9 @@ func update_obstacles(obstacles_list: Array) -> void:
 			add_child(node)
 			spawned_visuals[id] = node
 
-		spawned_visuals[id].global_position = g_pos
 		var quat = obs.get("orientation", [0, 0, 0, 1])
-		if quat.size() >= 4:
-			spawned_visuals[id].global_transform.basis = _pb_to_godot_basis(quat)
+		var b = _pb_to_godot_basis(quat) if quat.size() >= 4 else Basis()
+		spawned_visuals[id].global_transform = Transform3D(b, g_pos)
 
 	# Clean up deleted obstacles
 	var to_remove = []

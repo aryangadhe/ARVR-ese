@@ -712,6 +712,8 @@ func _on_network_connected() -> void:
 	if status_connection:
 		status_connection.text = "● BACKEND CONNECTED"
 		status_connection.add_theme_color_override("font_color", Color(0.2, 0.9, 0.4))
+	if network_client:
+		network_client.send_command("stand")
 
 func _on_network_disconnected() -> void:
 	if status_connection:

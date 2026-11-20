@@ -8,21 +8,21 @@ class_name CameraController
 @export var min_distance: float = 0.8
 @export var max_distance: float = 12.0
 
-var distance: float = 3.2
-var pitch: float = -0.35
+var distance: float = 2.8
+var pitch: float = -0.30
 var yaw: float = 0.785  # ~45 deg
-var target_offset: Vector3 = Vector3(0, 0.8, 0)
+var target_offset: Vector3 = Vector3(0, 0.85, 0)
 
 var is_orbiting: bool = false
 var is_panning: bool = false
 var last_mouse_pos: Vector2 = Vector2.ZERO
 
 var current_mode: String = "ORBIT"
-var robot_pos_cached: Vector3 = Vector3(0, 0.8, 0)
+var robot_pos_cached: Vector3 = Vector3(0, 0.85, 0)
 
 # Target values for smooth preset transitions
-var target_distance: float = 3.2
-var target_pitch: float = -0.35
+var target_distance: float = 2.8
+var target_pitch: float = -0.30
 var target_yaw: float = 0.785
 var transitioning: bool = false
 
@@ -124,6 +124,11 @@ func set_target_position(pos: Vector3) -> void:
 	robot_pos_cached = pos
 	if current_mode == "FOLLOW":
 		target_offset = Vector3(pos.x, pos.y + 0.3, pos.z)
+		_update_transform()
+	elif current_mode == "ORBIT":
+		target_offset.x = lerp(target_offset.x, pos.x, 0.1)
+		target_offset.z = lerp(target_offset.z, pos.z, 0.1)
+		target_offset.y = lerp(target_offset.y, pos.y + 0.1, 0.1)
 		_update_transform()
 
 func _update_transform() -> void:
