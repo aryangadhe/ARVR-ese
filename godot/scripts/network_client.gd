@@ -152,3 +152,63 @@ func toggle_avoidance(enabled: bool) -> void:
 		"enabled": enabled
 	})
 
+func set_direction(direction: String) -> void:
+	send_json({
+		"type": "set_direction",
+		"direction": direction
+	})
+
+func set_gait_params(step_length: float, step_duration: float, speed: float) -> void:
+	send_json({
+		"type": "set_gait_params",
+		"step_length": step_length,
+		"step_duration": step_duration,
+		"speed": speed
+	})
+
+func start_experiment(experiment_id: int) -> void:
+	send_json({
+		"type": "start_experiment",
+		"experiment_id": experiment_id
+	})
+
+func stop_experiment() -> void:
+	send_json({
+		"type": "stop_experiment"
+	})
+
+func reset_experiment() -> void:
+	send_json({
+		"type": "reset_experiment"
+	})
+
+func export_csv(filename: String = "") -> void:
+	send_json({
+		"type": "export_csv",
+		"filename": filename
+	})
+
+func set_sensor_range(max_range: float) -> void:
+	send_json({
+		"type": "set_sensor_range",
+		"max_range": max_range
+	})
+
+func set_gravity(gravity: float) -> void:
+	send_json({
+		"type": "set_gravity",
+		"gravity": gravity
+	})
+
+func set_time_step(time_step: float) -> void:
+	send_json({
+		"type": "set_time_step",
+		"time_step": time_step
+	})
+
+func clear_events() -> void:
+	send_json({
+		"type": "clear_events"
+	})
+
+

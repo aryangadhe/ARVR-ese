@@ -21,6 +21,10 @@ class DistanceSensor:
         self.left_angle_rad = math.radians(left_angle_deg)
         self.right_angle_rad = math.radians(right_angle_deg)
 
+    def set_max_range(self, max_range: float):
+        """Set distance sensor maximum range in meters."""
+        self.max_range = max(0.5, min(10.0, float(max_range)))
+
     def read(self) -> Dict[str, Any]:
         """
         Cast three rays (front, left, right) from the torso forward into the environment.

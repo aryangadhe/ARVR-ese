@@ -1,7 +1,8 @@
 """
 Feedback-based balance controller for the humanoid robot.
-Uses dual PID controllers (pitch and roll) to compute corrective ankle and hip joint offsets.
-Estimates Center of Mass (COM) and support polygon to determine balance stability condition.
+Uses dual PID controllers (pitch and roll) to compute corrective joint offsets.
+Calculates 3D Center of Mass (COM), ground projection, support polygon geometry,
+and live balance error for real-time stability monitoring.
 """
 
 import math
@@ -27,7 +28,6 @@ class BalanceController:
         self.desired_pitch = 0.0
 
         # Pitch PID controller: corrects forward/backward tilt
-        # Pure PD (ki=0.0) prevents integral windup drift during prolonged standing & walking
         self.pitch_pid = PIDController(
             kp=1.1,
             ki=0.0,
@@ -55,6 +55,9 @@ class BalanceController:
         self.last_status = "STABLE"
         self.com = (0.0, 0.0, 0.0)
         self.support_polygon: List[Tuple[float, float]] = []
+        self.balance_error = 0.0
+        self.total_balance_error = 0.0
+        self.balance_samples = 0
 
     def _init_link_properties(self):
         """Retrieve masses of base link (torso) and all child links."""
@@ -81,14 +84,25 @@ class BalanceController:
         self.pitch_pid.set_gains(pitch_kp, pitch_ki, pitch_kd)
         self.roll_pid.set_gains(roll_kp, roll_ki, roll_kd)
 
+    def get_pid_gains(self) -> Dict[str, float]:
+        """Return current PID gains dictionary."""
+        return {
+            "pitch_kp": self.pitch_pid.kp,
+            "pitch_ki": self.pitch_pid.ki,
+            "pitch_kd": self.pitch_pid.kd,
+            "roll_kp": self.roll_pid.kp,
+            "roll_ki": self.roll_pid.ki,
+            "roll_kd": self.roll_pid.kd,
+        }
+
     def update(
         self, imu_data: Dict[str, Any], dt: float, walking_active: bool = False
     ) -> Dict[str, Any]:
         """
-        Calculate corrective joint angle offsets to maintain balance.
+        Calculate corrective joint angle offsets to maintain balance and compile metrics.
         """
-        roll = imu_data["roll"]
-        pitch = imu_data["pitch"]
+        roll = imu_data.get("raw_roll", imu_data.get("roll", 0.0))
+        pitch = imu_data.get("raw_pitch", imu_data.get("pitch", 0.0))
 
         # Calculate errors (desired - current)
         pitch_error = self.desired_pitch - pitch
@@ -101,7 +115,7 @@ class BalanceController:
             corrective_pitch = self.pitch_pid.update(pitch_error, dt)
             corrective_roll = self.roll_pid.update(roll_error, dt)
 
-        # Compute Center of Mass (COM)
+        # 1. Compute accurate 3D Center of Mass (COM)
         positions = []
         base_pos, _ = p.getBasePositionAndOrientation(self.robot_id)
         positions.append(base_pos)
@@ -119,10 +133,32 @@ class BalanceController:
                 right_foot_pos = link_pos
 
         self.com = compute_center_of_mass(self._link_masses, positions)
-        self.support_polygon = compute_support_polygon(left_foot_pos, right_foot_pos, foot_length=0.24, foot_width=0.14)
+
+        # 2. Foot contact evaluation with ground
+        contacts_left = p.getContactPoints(self.robot_id, linkIndexA=8)
+        contacts_right = p.getContactPoints(self.robot_id, linkIndexA=12)
+        l_grounded = len(contacts_left) > 0
+        r_grounded = len(contacts_right) > 0
+
+        # 3. Compute 2D Support Polygon and COM Ground Projection
+        self.support_polygon = compute_support_polygon(
+            left_foot_pos, right_foot_pos, foot_length=0.24, foot_width=0.14
+        )
         com_in_support = is_point_in_polygon_2d(self.com[0], self.com[1], self.support_polygon)
 
-        # Determine balance condition
+        # Polygon centroid
+        if self.support_polygon:
+            poly_cx = sum(pt[0] for pt in self.support_polygon) / len(self.support_polygon)
+            poly_cy = sum(pt[1] for pt in self.support_polygon) / len(self.support_polygon)
+            self.balance_error = math.sqrt((self.com[0] - poly_cx) ** 2 + (self.com[1] - poly_cy) ** 2)
+        else:
+            self.balance_error = 0.0
+
+        self.total_balance_error += self.balance_error
+        self.balance_samples += 1
+        avg_balance_error = round(self.total_balance_error / max(1, self.balance_samples), 4)
+
+        # 4. Determine live balance status
         abs_roll_deg = abs(rad_to_deg(roll))
         abs_pitch_deg = abs(rad_to_deg(pitch))
         max_tilt = max(abs_roll_deg, abs_pitch_deg)
@@ -133,14 +169,16 @@ class BalanceController:
             self.last_status = "FALLING"
         elif max_tilt > 12.0 or not com_in_support:
             self.last_status = "UNSTABLE"
-        elif max_tilt > 4.0:
+        elif max_tilt > 6.0:
+            self.last_status = "WARNING"
+        elif max_tilt > 3.0:
             self.last_status = "BALANCING"
         else:
             self.last_status = "STABLE"
 
-        # Restoring joint offsets via hips:
+        # 5. Restoring joint offsets via hips
         # Negative feedback: when tilted forward (pitch > 0), corrective_pitch < 0,
-        # so -corrective_pitch increases hip pitch (extends thighs, pulling torso upright).
+        # so -corrective_pitch extends thighs, pulling torso upright.
         # Both hip roll joints have axis [1, 0, 0] in URDF, so parallel same-sign rotation tilts pelvis laterally.
         hip_pitch_scale = 0.80 if walking_active else 0.90
         hip_roll_scale = 0.30 if walking_active else 0.40
@@ -161,8 +199,25 @@ class BalanceController:
             "corrective_pitch": round(corrective_pitch, 4),
             "corrective_roll": round(corrective_roll, 4),
             "center_of_mass": [round(c, 3) for c in self.com],
+            "com_ground_projection": [round(self.com[0], 3), round(self.com[1], 3), 0.0],
             "com_in_support": com_in_support,
-            "support_polygon": self.support_polygon,
+            "support_polygon": [[round(p[0], 3), round(p[1], 3)] for p in self.support_polygon],
+            "balance_error": round(self.balance_error, 4),
+            "average_balance_error": avg_balance_error,
+            "foot_contacts": {
+                "left": len(contacts_left),
+                "right": len(contacts_right),
+                "left_grounded": l_grounded,
+                "right_grounded": r_grounded,
+            },
+            "pid_gains": {
+                "pitch_kp": self.pitch_pid.kp,
+                "pitch_ki": self.pitch_pid.ki,
+                "pitch_kd": self.pitch_pid.kd,
+                "roll_kp": self.roll_pid.kp,
+                "roll_ki": self.roll_pid.ki,
+                "roll_kd": self.roll_pid.kd,
+            },
             "offsets": offsets,
         }
 
@@ -170,3 +225,5 @@ class BalanceController:
         self.pitch_pid.reset()
         self.roll_pid.reset()
         self.last_status = "STABLE"
+        self.total_balance_error = 0.0
+        self.balance_samples = 0

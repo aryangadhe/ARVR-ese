@@ -22,6 +22,9 @@ func update_obstacles(obstacles_list: Array) -> void:
 			spawned_visuals[id] = node
 
 		spawned_visuals[id].global_position = g_pos
+		var quat = obs.get("orientation", [0, 0, 0, 1])
+		if quat.size() >= 4:
+			spawned_visuals[id].global_transform.basis = _pb_to_godot_basis(quat)
 
 	# Clean up deleted obstacles
 	var to_remove = []
@@ -33,6 +36,16 @@ func update_obstacles(obstacles_list: Array) -> void:
 		var node = spawned_visuals[id]
 		node.queue_free()
 		spawned_visuals.erase(id)
+
+func _pb_to_godot_basis(pb_quat: Array) -> Basis:
+	var q = Quaternion(pb_quat[0], pb_quat[1], pb_quat[2], pb_quat[3])
+	var wx = q * Vector3(1.0, 0.0, 0.0)
+	var wy = q * Vector3(0.0, 1.0, 0.0)
+	var wz = q * Vector3(0.0, 0.0, 1.0)
+	var gx = Vector3(wy.y, -wy.z, wy.x)
+	var gy = Vector3(-wz.y, wz.z, -wz.x)
+	var gz = Vector3(wx.y, -wx.z, wx.x)
+	return Basis(gx, gy, gz)
 
 func _create_obstacle_node(obs_type: String, size_array: Array) -> Node3D:
 	var mesh_inst = MeshInstance3D.new()
@@ -52,11 +65,28 @@ func _create_obstacle_node(obs_type: String, size_array: Array) -> Node3D:
 		var hx = size_array[0] if size_array.size() > 0 else 0.1
 		var hy = size_array[1] if size_array.size() > 1 else 1.2
 		var hz = size_array[2] if size_array.size() > 2 else 0.5
-		# Map half extents to Godot box size:
-		# x_pb (forward) -> z_g, y_pb (left/width) -> x_g, z_pb (up/height) -> y_g
 		box.size = Vector3(hy * 2.0, hz * 2.0, hx * 2.0)
 		mesh_inst.mesh = box
-		mat.albedo_color = Color(0.3, 0.5, 0.8)
+		mat.albedo_color = Color(0.3, 0.55, 0.8)
+	elif obs_type == "barrier":
+		var box = BoxMesh.new()
+		var hx = size_array[0] if size_array.size() > 0 else 0.15
+		var hy = size_array[1] if size_array.size() > 1 else 0.8
+		var hz = size_array[2] if size_array.size() > 2 else 0.35
+		box.size = Vector3(hy * 2.0, hz * 2.0, hx * 2.0)
+		mesh_inst.mesh = box
+		mat.albedo_color = Color(0.95, 0.50, 0.1)
+		mat.emission_enabled = true
+		mat.emission = Color(0.2, 0.1, 0.0)
+	elif obs_type == "ramp":
+		var box = BoxMesh.new()
+		var hx = size_array[0] if size_array.size() > 0 else 0.8
+		var hy = size_array[1] if size_array.size() > 1 else 0.5
+		var hz = size_array[2] if size_array.size() > 2 else 0.12
+		box.size = Vector3(hy * 2.0, hz * 2.0, hx * 2.0)
+		mesh_inst.mesh = box
+		mat.albedo_color = Color(0.25, 0.65, 0.85)
+		mat.roughness = 0.6
 	else: # default cube
 		var box = BoxMesh.new()
 		var hx = size_array[0] if size_array.size() > 0 else 0.25

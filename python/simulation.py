@@ -1,7 +1,8 @@
 """
 Physics simulation manager using PyBullet.
 Handles physics world setup, ground plane, humanoid robot lifecycle,
-and dynamic obstacle placement (cubes, cylinders, barriers).
+dynamic obstacle placement (cubes, cylinders, walls, barriers, ramps),
+collision event tracking, event logging, and scenario experiment management.
 """
 
 import os
@@ -9,6 +10,8 @@ from typing import Dict, Any, List, Optional, Tuple
 import pybullet as p
 import pybullet_data
 from python.robot import HumanoidRobot
+from python.communication.events import EventLogger
+from python.controllers.experiment_manager import ExperimentManager
 
 
 class PhysicsSimulation:
@@ -37,7 +40,18 @@ class PhysicsSimulation:
         # Track spawned obstacles: {id: {"type": ..., "position": ..., "size": ...}}
         self.obstacles: Dict[int, Dict[str, Any]] = {}
 
+        # Collision & analytics tracking
+        self.total_collisions = 0
+        self.active_collision = False
+
+        # Structured event logger
+        self.event_logger = EventLogger()
+
+        # Initialize simulation
         self.initialize()
+
+        # Experiment manager
+        self.experiment_mgr = ExperimentManager(self)
 
     def initialize(self):
         """Connect to PyBullet, configure gravity, load ground and robot."""
@@ -96,6 +110,16 @@ class PhysicsSimulation:
                 cameraTargetPosition=[0, 0, 0.8],
             )
 
+    def set_time_step(self, time_step: float):
+        """Adjust physics simulation time step."""
+        self.time_step = max(0.002, min(0.05, float(time_step)))
+        p.setTimeStep(self.time_step)
+
+    def set_gravity(self, gravity_z: float):
+        """Adjust vertical gravity acceleration."""
+        self.gravity = float(gravity_z)
+        p.setGravity(0, 0, self.gravity)
+
     def spawn_obstacle(
         self,
         obstacle_type: str = "cube",
@@ -104,19 +128,19 @@ class PhysicsSimulation:
     ) -> int:
         """
         Spawn an obstacle in the physics world.
-        obstacle_type: 'cube', 'cylinder', or 'wall'
-        position: [x, y, z]
-        size: [half_x, half_y, half_z] for box, or [radius, height] for cylinder
+        Supported types: 'cube', 'cylinder', 'wall', 'barrier', 'ramp'
         """
+        obs_type = obstacle_type.lower()
         if position is None:
             position = [1.8, 0.0, 0.4]
 
         col_id = -1
         vis_id = -1
+        orientation = [0.0, 0.0, 0.0, 1.0]
 
-        if obstacle_type.lower() == "cylinder":
-            radius = size[0] if size else 0.25
-            height = size[1] if size else 0.8
+        if obs_type == "cylinder":
+            radius = size[0] if size and len(size) > 0 else 0.25
+            height = size[1] if size and len(size) > 1 else 0.8
             col_id = p.createCollisionShape(p.GEOM_CYLINDER, radius=radius, height=height)
             vis_id = p.createVisualShape(
                 p.GEOM_CYLINDER,
@@ -124,16 +148,34 @@ class PhysicsSimulation:
                 length=height,
                 rgbaColor=[0.85, 0.35, 0.2, 1.0],
             )
-        elif obstacle_type.lower() == "wall":
-            half_extents = size if size else [0.1, 1.2, 0.5]
+        elif obs_type == "wall":
+            half_extents = size if size and len(size) >= 3 else [0.1, 1.2, 0.5]
             col_id = p.createCollisionShape(p.GEOM_BOX, halfExtents=half_extents)
             vis_id = p.createVisualShape(
                 p.GEOM_BOX,
                 halfExtents=half_extents,
                 rgbaColor=[0.3, 0.5, 0.7, 1.0],
             )
+        elif obs_type == "barrier":
+            half_extents = size if size and len(size) >= 3 else [0.15, 0.8, 0.35]
+            col_id = p.createCollisionShape(p.GEOM_BOX, halfExtents=half_extents)
+            vis_id = p.createVisualShape(
+                p.GEOM_BOX,
+                halfExtents=half_extents,
+                rgbaColor=[0.95, 0.55, 0.1, 1.0],
+            )
+        elif obs_type == "ramp":
+            half_extents = size if size and len(size) >= 3 else [0.8, 0.5, 0.12]
+            col_id = p.createCollisionShape(p.GEOM_BOX, halfExtents=half_extents)
+            vis_id = p.createVisualShape(
+                p.GEOM_BOX,
+                halfExtents=half_extents,
+                rgbaColor=[0.25, 0.65, 0.85, 1.0],
+            )
+            # 8 degree incline around Y axis
+            orientation = p.getQuaternionFromEuler([0.0, -0.14, 0.0])
         else:  # default 'cube'
-            half_extents = size if size else [0.25, 0.25, 0.4]
+            half_extents = size if size and len(size) >= 3 else [0.25, 0.25, 0.4]
             col_id = p.createCollisionShape(p.GEOM_BOX, halfExtents=half_extents)
             vis_id = p.createVisualShape(
                 p.GEOM_BOX,
@@ -146,14 +188,23 @@ class PhysicsSimulation:
             baseCollisionShapeIndex=col_id,
             baseVisualShapeIndex=vis_id,
             basePosition=position,
+            baseOrientation=orientation,
         )
 
         self.obstacles[body_id] = {
             "id": body_id,
-            "type": obstacle_type.lower(),
+            "type": obs_type,
             "position": position,
             "size": size,
+            "orientation": list(orientation),
         }
+
+        if self.event_logger:
+            self.event_logger.log(
+                "Environment",
+                f"Spawned {obs_type.upper()} obstacle at {position} (ID: {body_id})",
+                "INFO",
+            )
         return body_id
 
     def remove_obstacle(self, obstacle_id: int):
@@ -165,27 +216,67 @@ class PhysicsSimulation:
         for obs_id in list(self.obstacles.keys()):
             p.removeBody(obs_id)
         self.obstacles.clear()
+        if self.event_logger:
+            self.event_logger.log("Environment", "Cleared all environment obstacles", "INFO")
+
+    def _check_collisions(self):
+        """Evaluate physical contact points between robot links and spawned obstacles."""
+        had_collision = False
+        for obs_id in self.obstacles.keys():
+            contacts = p.getContactPoints(bodyA=self.robot_id, bodyB=obs_id)
+            if contacts and len(contacts) > 0:
+                had_collision = True
+                break
+
+        if had_collision and not self.active_collision:
+            self.total_collisions += 1
+            if self.event_logger:
+                self.event_logger.log("Collision", "Robot collided with obstacle!", "WARNING")
+        self.active_collision = had_collision
 
     def step(self) -> Dict[str, Any]:
         """Advance physics simulation by one time step and update robot telemetry."""
         # 1. Update robot control
         telemetry = self.robot.update(self.time_step)
 
-        # 2. Advance PyBullet physics
+        # 2. Update walking odometry
+        base_pos, _ = p.getBasePositionAndOrientation(self.robot_id)
+        self.robot.walking_ctrl.update_odometry(base_pos[0], self.time_step)
+
+        # 3. Advance PyBullet physics
         p.stepSimulation()
 
-        # 3. Attach obstacle info to telemetry
+        # 4. Check collisions with obstacles
+        self._check_collisions()
+
+        # 5. Advance experiment scenario if active
+        if self.experiment_mgr:
+            self.experiment_mgr.metrics["collisions"] = self.total_collisions
+            self.experiment_mgr.update(self.time_step, telemetry)
+
+        # 6. Attach environment info, collision counts, event logs, and experiment state
         telemetry["obstacles"] = list(self.obstacles.values())
+        telemetry["collision_count"] = self.total_collisions
+        telemetry["active_collision"] = self.active_collision
+        telemetry["events"] = self.event_logger.get_recent(25) if self.event_logger else []
+        telemetry["experiment"] = self.experiment_mgr.get_state() if self.experiment_mgr else {}
+        telemetry["physics"] = {
+            "time_step": self.time_step,
+            "frequency_hz": round(1.0 / self.time_step, 1),
+            "gravity": self.gravity,
+        }
+
         return telemetry
 
     def reset_robot(self):
         """Reset robot to initial posture without clearing obstacles."""
         if self.robot:
             self.robot.reset()
+        if self.event_logger:
+            self.event_logger.log("Simulation", "Robot posture reset to initial nominal standing", "INFO")
 
     def close(self):
         """Disconnect PyBullet physics client."""
         if self.physics_client_id >= 0:
             p.disconnect(self.physics_client_id)
             self.physics_client_id = -1
-

@@ -206,6 +206,60 @@ class SimulationServer:
                 elif msg_type == MessageType.TOGGLE_AVOIDANCE:
                     self.sim.robot.obstacle_ctrl.enabled = bool(cmd.get("enabled", True))
 
+                elif msg_type in (MessageType.SET_DIRECTION, "set_direction"):
+                    direction = cmd.get("direction", "forward")
+                    self.sim.robot.walking_ctrl.set_direction(direction)
+                    if self.sim.event_logger:
+                        self.sim.event_logger.log("Control", f"Walking direction changed to {direction.upper()}", "INFO")
+
+                elif msg_type in (MessageType.SET_GAIT_PARAMS, "set_gait_params"):
+                    if "step_length" in cmd:
+                        self.sim.robot.walking_ctrl.set_step_length(float(cmd["step_length"]))
+                    if "step_duration" in cmd:
+                        self.sim.robot.walking_ctrl.set_step_duration(float(cmd["step_duration"]))
+                    if "speed" in cmd:
+                        self.sim.robot.walking_ctrl.speed = float(cmd["speed"])
+                    if self.sim.event_logger:
+                        self.sim.event_logger.log("Control", "Gait parameters updated", "INFO")
+
+                elif msg_type in (MessageType.START_EXPERIMENT, "start_experiment"):
+                    exp_id = int(cmd.get("experiment_id", 1))
+                    if self.sim.experiment_mgr:
+                        self.sim.experiment_mgr.start_experiment(exp_id)
+
+                elif msg_type in (MessageType.STOP_EXPERIMENT, "stop_experiment"):
+                    if self.sim.experiment_mgr:
+                        self.sim.experiment_mgr.stop_experiment()
+
+                elif msg_type in (MessageType.RESET_EXPERIMENT, "reset_experiment"):
+                    if self.sim.experiment_mgr:
+                        self.sim.experiment_mgr.reset_experiment()
+
+                elif msg_type in (MessageType.EXPORT_CSV, "export_csv"):
+                    filename = cmd.get("filename", "")
+                    if self.sim.experiment_mgr:
+                        saved_path = self.sim.experiment_mgr.export_csv(filename)
+                        if self.sim.event_logger:
+                            self.sim.event_logger.log("Experiment", f"Exported telemetry CSV: {saved_path}", "INFO")
+
+                elif msg_type in (MessageType.SET_SENSOR_RANGE, "set_sensor_range"):
+                    max_range = float(cmd.get("max_range", 3.5))
+                    self.sim.robot.distance_sensor.set_max_range(max_range)
+                    if self.sim.event_logger:
+                        self.sim.event_logger.log("Sensors", f"Sensor max range set to {max_range:.1f}m", "INFO")
+
+                elif msg_type in (MessageType.SET_GRAVITY, "set_gravity"):
+                    gravity = float(cmd.get("gravity", -9.81))
+                    self.sim.set_gravity(gravity)
+
+                elif msg_type in (MessageType.SET_TIME_STEP, "set_time_step"):
+                    time_step = float(cmd.get("time_step", 1.0 / 60.0))
+                    self.sim.set_time_step(time_step)
+
+                elif msg_type in (MessageType.CLEAR_EVENTS, "clear_events"):
+                    if self.sim.event_logger:
+                        self.sim.event_logger.clear()
+
             except Exception as e:
                 print(f"[Server] Error executing command {cmd}: {e}")
 

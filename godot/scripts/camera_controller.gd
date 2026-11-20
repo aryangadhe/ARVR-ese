@@ -8,8 +8,8 @@ class_name CameraController
 @export var min_distance: float = 0.8
 @export var max_distance: float = 12.0
 
-var distance: float = 3.0
-var pitch: float = -0.3
+var distance: float = 3.2
+var pitch: float = -0.35
 var yaw: float = 0.785  # ~45 deg
 var target_offset: Vector3 = Vector3(0, 0.8, 0)
 
@@ -17,18 +17,77 @@ var is_orbiting: bool = false
 var is_panning: bool = false
 var last_mouse_pos: Vector2 = Vector2.ZERO
 
+var current_mode: String = "ORBIT"
+var robot_pos_cached: Vector3 = Vector3(0, 0.8, 0)
+
+# Target values for smooth preset transitions
+var target_distance: float = 3.2
+var target_pitch: float = -0.35
+var target_yaw: float = 0.785
+var transitioning: bool = false
+
 @onready var camera: Camera3D = $Camera3D
 
 func _ready() -> void:
 	reset_camera()
 	_update_transform()
 
+func _process(delta: float) -> void:
+	if current_mode == "FOLLOW":
+		target_offset = target_offset.lerp(robot_pos_cached + Vector3(0, 0.4, 0), delta * 4.0)
+		_update_transform()
+
+	if transitioning:
+		distance = lerp(distance, target_distance, delta * 6.0)
+		pitch = lerp(pitch, target_pitch, delta * 6.0)
+		yaw = lerp(yaw, target_yaw, delta * 6.0)
+		if abs(distance - target_distance) < 0.02 and abs(pitch - target_pitch) < 0.02:
+			transitioning = false
+		_update_transform()
+
+func set_mode(mode: String) -> void:
+	current_mode = mode
+	match mode:
+		"ORBIT":
+			target_distance = 3.2
+			target_pitch = -0.35
+			target_yaw = 0.785
+			target_offset = robot_pos_cached + Vector3(0, 0.4, 0)
+			transitioning = true
+		"FOLLOW":
+			target_distance = 2.8
+			target_pitch = -0.25
+			target_yaw = 0.4
+			transitioning = true
+		"FRONT":
+			target_distance = 3.0
+			target_pitch = -0.10
+			target_yaw = 3.14159  # Facing front
+			target_offset = robot_pos_cached + Vector3(0, 0.5, 0)
+			transitioning = true
+		"SIDE":
+			target_distance = 3.0
+			target_pitch = -0.10
+			target_yaw = 1.5708  # Profile view
+			target_offset = robot_pos_cached + Vector3(0, 0.5, 0)
+			transitioning = true
+		"TOP":
+			target_distance = 4.5
+			target_pitch = -1.45  # Near 90 deg down
+			target_yaw = 0.0
+			target_offset = robot_pos_cached + Vector3(0, 0.0, 0)
+			transitioning = true
+		"FREE":
+			transitioning = false
+
 func reset_camera() -> void:
-	distance = 3.2
-	pitch = -0.35
-	yaw = 0.785
-	target_offset = Vector3(0, 0.8, 0)
-	_update_transform()
+	set_mode("ORBIT")
+
+func update_robot_pos(pos: Vector3) -> void:
+	robot_pos_cached = pos
+	if current_mode == "FOLLOW":
+		target_offset = robot_pos_cached + Vector3(0, 0.4, 0)
+		_update_transform()
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton:
@@ -62,8 +121,10 @@ func _unhandled_input(event: InputEvent) -> void:
 			_update_transform()
 
 func set_target_position(pos: Vector3) -> void:
-	target_offset = Vector3(pos.x, pos.y + 0.3, pos.z)
-	_update_transform()
+	robot_pos_cached = pos
+	if current_mode == "FOLLOW":
+		target_offset = Vector3(pos.x, pos.y + 0.3, pos.z)
+		_update_transform()
 
 func _update_transform() -> void:
 	# Spherical orbit calculation
