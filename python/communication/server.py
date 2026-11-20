@@ -126,6 +126,7 @@ class SimulationServer:
                         # If robot is fallen, reset upright first before starting gait
                         if self.sim.robot.fall_ctrl.state == self.sim.robot.fall_ctrl.STATE_FALLEN:
                             self.sim.reset_robot()
+                        self.sim.robot.clear_all_manual_joints()
                         speed = float(cmd.get("speed", 0.4))
                         self.sim.robot.walking_ctrl.start_walking(speed)
                         print(f"[Command] Walk started with speed {speed}")

@@ -27,23 +27,24 @@ class BalanceController:
         self.desired_pitch = 0.0
 
         # Pitch PID controller: corrects forward/backward tilt
+        # Pure PD (ki=0.0) prevents integral windup drift during prolonged standing & walking
         self.pitch_pid = PIDController(
-            kp=1.5,
-            ki=0.06,
-            kd=0.35,
-            min_output=-0.45,
-            max_output=0.45,
-            integral_limit=0.15,
+            kp=1.1,
+            ki=0.0,
+            kd=0.20,
+            min_output=-0.30,
+            max_output=0.30,
+            integral_limit=0.0,
         )
 
         # Roll PID controller: corrects lateral tilt
         self.roll_pid = PIDController(
-            kp=1.1,
-            ki=0.04,
-            kd=0.25,
-            min_output=-0.30,
-            max_output=0.30,
-            integral_limit=0.10,
+            kp=0.8,
+            ki=0.0,
+            kd=0.15,
+            min_output=-0.20,
+            max_output=0.20,
+            integral_limit=0.0,
         )
 
         # Cache link masses for Center of Mass calculation
@@ -137,16 +138,20 @@ class BalanceController:
         else:
             self.last_status = "STABLE"
 
-        # Negative feedback corrective joint commands:
-        # Pitch: push body back when tilted forward
-        # Roll: left and right hip roll are mirrored across X-axis, so opposite signs!
+        # Restoring joint offsets via hips:
+        # Negative feedback: when tilted forward (pitch > 0), corrective_pitch < 0,
+        # so -corrective_pitch increases hip pitch (extends thighs, pulling torso upright).
+        # Both hip roll joints have axis [1, 0, 0] in URDF, so parallel same-sign rotation tilts pelvis laterally.
+        hip_pitch_scale = 0.80 if walking_active else 0.90
+        hip_roll_scale = 0.30 if walking_active else 0.40
+
         offsets = {
-            "left_ankle_pitch": -corrective_pitch * 0.70,
-            "right_ankle_pitch": -corrective_pitch * 0.70,
-            "left_hip_pitch": corrective_pitch * 0.50,
-            "right_hip_pitch": corrective_pitch * 0.50,
-            "left_hip_roll": corrective_roll * 0.50,
-            "right_hip_roll": -corrective_roll * 0.50,
+            "left_hip_pitch": -corrective_pitch * hip_pitch_scale,
+            "right_hip_pitch": -corrective_pitch * hip_pitch_scale,
+            "left_hip_roll": -corrective_roll * hip_roll_scale,
+            "right_hip_roll": -corrective_roll * hip_roll_scale,
+            "left_ankle_pitch": 0.0,
+            "right_ankle_pitch": 0.0,
         }
 
         return {

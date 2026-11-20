@@ -27,16 +27,16 @@ def parse_message(raw_text: str) -> Tuple[bool, Optional[Dict[str, Any]], Option
     Parse a JSON message string and validate basic envelope.
     Returns (success, parsed_dict, error_message).
     """
-    text = raw_text.strip()
+    text = raw_text.strip("\x00\r\n\t ")
     if not text:
-        return False, None, "Empty message"
+        return False, None, None
 
     # Strip any leading binary/control characters before '{'
     brace_idx = text.find("{")
+    if brace_idx == -1:
+        return False, None, None
     if brace_idx > 0:
         text = text[brace_idx:]
-    elif brace_idx == -1:
-        return False, None, "No JSON object found in message"
 
     try:
         data = json.loads(text)

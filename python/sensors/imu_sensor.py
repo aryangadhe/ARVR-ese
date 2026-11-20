@@ -43,6 +43,8 @@ class IMUSensor:
             "orientation_quat": [orn[0], orn[1], orn[2], orn[3]],
             "roll": filtered_roll,
             "pitch": filtered_pitch,
+            "raw_roll": raw_roll,
+            "raw_pitch": raw_pitch,
             "yaw": raw_yaw,
             "roll_deg": rad_to_deg(filtered_roll),
             "pitch_deg": rad_to_deg(filtered_pitch),

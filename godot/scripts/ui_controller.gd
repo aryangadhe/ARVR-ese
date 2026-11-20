@@ -67,10 +67,19 @@ func _connect_control_buttons() -> void:
 		network_client.disconnected_from_server.connect(_on_network_disconnected)
 		network_client.telemetry_received.connect(_on_telemetry_received)
 
-	_bind_button("BtnWalk", func(): network_client.send_command("walk"))
+	_bind_button("BtnWalk", func():
+		_reset_sliders_to_defaults()
+		network_client.send_command("walk")
+	)
 	_bind_button("BtnStop", func(): network_client.send_command("stop"))
-	_bind_button("BtnStand", func(): network_client.send_command("stand"))
-	_bind_button("BtnReset", func(): network_client.send_command("reset"))
+	_bind_button("BtnStand", func():
+		_reset_sliders_to_defaults()
+		network_client.send_command("stand")
+	)
+	_bind_button("BtnReset", func():
+		_reset_sliders_to_defaults()
+		network_client.send_command("reset")
+	)
 
 	_bind_button("BtnSmallPush", func(): network_client.send_push(60.0, "forward", 0.15))
 	_bind_button("BtnMedPush", func(): network_client.send_push(160.0, "forward", 0.15))
@@ -95,9 +104,21 @@ func _connect_control_buttons() -> void:
 	)
 
 	_bind_button("BtnResetAllJoints", func():
+		_reset_sliders_to_defaults()
 		if network_client:
 			network_client.clear_all_joints()
 	)
+
+func _reset_sliders_to_defaults() -> void:
+	updating_from_telemetry = true
+	for j_name in JOINT_DEFS:
+		if j_name in joint_ui_map:
+			var sld: HSlider = joint_ui_map[j_name]["slider"]
+			var val_lbl: Label = joint_ui_map[j_name]["val_lbl"]
+			var def_val = JOINT_DEFS[j_name]["default"]
+			sld.value = def_val
+			val_lbl.text = "Cur: %+.1f° (Set: %+.1f°)" % [def_val, def_val]
+	updating_from_telemetry = false
 
 func _bind_button(node_name: String, callback: Callable) -> void:
 	var btn: Button = find_child(node_name, true, false) as Button

@@ -17,7 +17,7 @@ from python.utils.math_utils import rad_to_deg
 
 
 class HumanoidRobot:
-    INITIAL_POSITION = [0.0, 0.0, 0.85]
+    INITIAL_POSITION = [0.0, 0.0, 0.83]
     INITIAL_ORIENTATION = [0.0, 0.0, 0.0, 1.0]
 
     def __init__(self, robot_id: int):
@@ -99,8 +99,12 @@ class HumanoidRobot:
             if avoidance["speed_factor"] <= 0.0:
                 self.walking_ctrl.stop_walking()
 
-        # 4. Gait generation
-        gait = self.walking_ctrl.update(dt)
+        # 4. Gait generation with active pitch stabilization feedback
+        gait = self.walking_ctrl.update(
+            dt,
+            pitch=imu_data.get("raw_pitch", imu_data["pitch"]),
+            pitch_rate=imu_data["angular_velocity"][1],
+        )
 
         # 5. Balance control feedback
         balance = self.balance_ctrl.update(
