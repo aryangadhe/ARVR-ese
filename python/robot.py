@@ -94,16 +94,19 @@ class HumanoidRobot:
         # 3. Obstacle avoidance evaluation
         avoidance = self.obstacle_ctrl.evaluate(distance_data)
         if self.walking_ctrl.is_walking and avoidance["enabled"]:
-            # Steer and adjust speed according to obstacle clearance
-            self.walking_ctrl.set_turn_rate(avoidance["turn_rate"])
-            if avoidance["speed_factor"] <= 0.0:
-                self.walking_ctrl.stop_walking()
+            # Only override steering and speed if an obstacle is actively detected
+            if avoidance["action"] != ObstacleAvoidanceController.ACTION_CLEAR:
+                self.walking_ctrl.set_turn_rate(avoidance["turn_rate"])
+                if avoidance["speed_factor"] <= 0.0:
+                    self.walking_ctrl.stop_walking()
 
-        # 4. Gait generation with active pitch stabilization feedback
+        # 4. Gait generation with active pitch and roll stabilization feedback
         gait = self.walking_ctrl.update(
             dt,
             pitch=imu_data.get("raw_pitch", imu_data["pitch"]),
             pitch_rate=imu_data["angular_velocity"][1],
+            roll=imu_data.get("raw_roll", imu_data["roll"]),
+            roll_rate=imu_data["angular_velocity"][0],
         )
 
         # 5. Balance control feedback

@@ -40,8 +40,8 @@ class WalkingController:
         self.current_step_idx = 0  # 0: Left swing / Right stance, 1: Right swing / Left stance
 
         # Nominal standing joint angles (radians)
-        # Symmetrically positioned over foot center with flat soles:
-        # Hip(-0.05) + Knee(+0.10) + Ankle(-0.05) = 0.0 -> perfectly flat foot
+        # Calibrated for stable biped upright posture with CoM centered over 24cm foot sole:
+        # Hip(-0.07) + Knee(+0.10) + Ankle(-0.03) = 0.0 -> perfectly flat foot
         self.nominal_standing = {
             "neck_pitch": 0.0,
             "left_shoulder_pitch": 0.0,
@@ -49,21 +49,22 @@ class WalkingController:
             "right_shoulder_pitch": 0.0,
             "right_elbow_pitch": 0.0,
             "left_hip_roll": 0.0,
-            "left_hip_pitch": -0.05,
+            "left_hip_pitch": -0.07,
             "left_knee_pitch": 0.10,
-            "left_ankle_pitch": -0.05,
+            "left_ankle_pitch": -0.03,
             "right_hip_roll": 0.0,
-            "right_hip_pitch": -0.05,
+            "right_hip_pitch": -0.07,
             "right_knee_pitch": 0.10,
-            "right_ankle_pitch": -0.05,
+            "right_ankle_pitch": -0.03,
         }
 
-        # Gait trajectory parameters (adjustable)
-        self.step_amp = 0.10  # forward swing reach (step length)
-        self.push_amp = 0.10  # stance push propulsion (symmetric with step length)
-        self.knee_pitch_amp = 0.42  # knee lift clearance (~2.5cm ground clearance to prevent scuffing)
+        # Gait trajectory parameters (calibrated for stable dynamic limit-cycle biped walking)
+        self.step_amp = 0.06  # forward swing reach (step length)
+        self.push_amp = 0.06  # stance push propulsion
+        self.knee_pitch_amp = 0.30  # knee lift clearance (clean swing clearance without raising CoM)
         self.arm_swing_amp = 0.15  # counterbalance arm swing
-        self.lateral_roll_amp = 0.035  # weight shift roll towards stance foot
+        self.lateral_roll_amp = 0.08  # dynamic lateral weight shift onto stance foot
+        self.step_duration = 0.36  # cadence: 2.78 Hz half-stride rate prevents inverted pendulum tipping
 
         # Odometry tracking
         self.walking_distance = 0.0
@@ -140,10 +141,13 @@ class WalkingController:
         dt: float,
         pitch: float = 0.0,
         pitch_rate: float = 0.0,
+        roll: float = 0.0,
+        roll_rate: float = 0.0,
     ) -> Dict[str, Any]:
         """
         Advance gait generator and produce target joint angles.
-        Applies active stance ankle pitch stabilization to keep sole flat and body upright.
+        Applies active stance sole leveling, active stance knee/ankle pitch stabilization,
+        and lateral roll damping to prevent tipping.
         """
         if not self.is_walking:
             self.support_leg = "DOUBLE"
@@ -169,58 +173,61 @@ class WalkingController:
         u = clamp(self.step_time / self.step_duration, 0.0, 1.0)
 
         # Monotonic smooth half-cosine functions:
-        # Forward: swing sweeps -1 to +1 (reaches forward), stance sweeps +1 to -1 (pushes backward)
-        # Backward: reversed sign
         dir_sign = -1.0 if self.direction == self.DIR_BACKWARD else 1.0
-
         f_fwd = -math.cos(math.pi * u) * dir_sign
         f_bwd = math.cos(math.pi * u) * dir_sign
         lift = self.knee_pitch_amp * math.sin(math.pi * u)
-        roll = self.lateral_roll_amp * math.sin(math.pi * u)
+        lateral_roll = self.lateral_roll_amp * math.sin(math.pi * u)
 
-        # Steering bias from turn_rate
-        left_turn_bias = -self.turn_rate * 0.10
-        right_turn_bias = self.turn_rate * 0.10
+        # Active balance stabilizers during walking
+        # 1. Knee flexion stabilizer: if tilting backward (pitch < 0), flex stance knee to shift CoM forward
+        knee_stab = clamp(-0.40 * min(0.0, pitch), 0.0, 0.12)
+        # 2. Ankle pitch stabilizer: ground reaction push to keep torso upright
+        ankle_pitch_stab = clamp(1.4 * pitch + 0.07 * pitch_rate, -0.28, 0.28)
+        # 3. Hip pitch stabilizer: subtle torso angle counter-torque
+        hip_pitch_stab = clamp(0.7 * pitch + 0.04 * pitch_rate, -0.15, 0.15)
+        # 4. Roll stabilizer: damp lateral oscillations
+        roll_corr = clamp(0.4 * roll + 0.03 * roll_rate, -0.04, 0.04)
+
+        # Steering bias applied to swing leg for yaw rotation
+        turn_bias = clamp(self.turn_rate * 0.02, -0.025, 0.025)
 
         nom = self.nominal_standing
         targets = dict(nom)
-
-        # Active stance sole pitch stabilization via ankle ground reaction
-        ankle_stabilizer = 1.5 * pitch + 0.05 * pitch_rate
 
         self.support_leg = "RIGHT" if self.current_step_idx == 0 else "LEFT"
         support_leg = self.support_leg
 
         if self.current_step_idx == 0:
-            phase_idx = self.PHASE_LEFT_SWING if u < 0.8 else self.PHASE_WEIGHT_SHIFT_LEFT
-            # Left leg: Swing (lifts foot, reaches forward/backward)
-            hip_l = nom["left_hip_pitch"] - (self.step_amp * f_fwd) + left_turn_bias
+            phase_idx = self.PHASE_LEFT_SWING if u < 0.75 else self.PHASE_WEIGHT_SHIFT_LEFT
+            # Left leg: Swing (lifts foot, reaches in travel direction, sole parallel to floor for flat touchdown)
+            hip_l = nom["left_hip_pitch"] - (self.step_amp * f_fwd) - hip_pitch_stab * 0.5 - turn_bias
             knee_l = nom["left_knee_pitch"] + lift
-            ankle_l = -hip_l - knee_l + 0.03
+            ankle_l = clamp(-hip_l - knee_l, -0.7, 0.7)
 
-            # Right leg: Stance (pushes on ground with sole leveling)
-            hip_r = nom["right_hip_pitch"] - (self.push_amp * f_bwd) + right_turn_bias
-            knee_r = nom["right_knee_pitch"]
-            ankle_r = nom["right_ankle_pitch"] + ankle_stabilizer
+            # Right leg: Stance (pushes on ground with full sole leveling + active ankle/knee pitch stabilization)
+            hip_r = nom["right_hip_pitch"] - (self.push_amp * f_bwd) - hip_pitch_stab
+            knee_r = nom["right_knee_pitch"] + knee_stab
+            ankle_r = clamp(-hip_r - knee_r + ankle_pitch_stab, -0.7, 0.7)
 
             # Torso rolls towards right support foot
-            roll_l = -roll
-            roll_r = -roll
+            roll_l = -lateral_roll - roll_corr
+            roll_r = -lateral_roll - roll_corr
         else:
-            phase_idx = self.PHASE_RIGHT_SWING if u < 0.8 else self.PHASE_WEIGHT_SHIFT_RIGHT
-            # Right leg: Swing (lifts foot, reaches forward/backward)
-            hip_r = nom["right_hip_pitch"] - (self.step_amp * f_fwd) + right_turn_bias
+            phase_idx = self.PHASE_RIGHT_SWING if u < 0.75 else self.PHASE_WEIGHT_SHIFT_RIGHT
+            # Right leg: Swing (lifts foot, reaches in travel direction, sole parallel to floor for flat touchdown)
+            hip_r = nom["right_hip_pitch"] - (self.step_amp * f_fwd) - hip_pitch_stab * 0.5 + turn_bias
             knee_r = nom["right_knee_pitch"] + lift
-            ankle_r = -hip_r - knee_r + 0.03
+            ankle_r = clamp(-hip_r - knee_r, -0.7, 0.7)
 
-            # Left leg: Stance (pushes on ground with sole leveling)
-            hip_l = nom["left_hip_pitch"] - (self.push_amp * f_bwd) + left_turn_bias
-            knee_l = nom["left_knee_pitch"]
-            ankle_l = nom["left_ankle_pitch"] + ankle_stabilizer
+            # Left leg: Stance (pushes on ground with full sole leveling + active ankle/knee pitch stabilization)
+            hip_l = nom["left_hip_pitch"] - (self.push_amp * f_bwd) - hip_pitch_stab
+            knee_l = nom["left_knee_pitch"] + knee_stab
+            ankle_l = clamp(-hip_l - knee_l + ankle_pitch_stab, -0.7, 0.7)
 
             # Torso rolls towards left support foot
-            roll_l = roll
-            roll_r = roll
+            roll_l = lateral_roll - roll_corr
+            roll_r = lateral_roll - roll_corr
 
         targets["left_hip_pitch"] = hip_l
         targets["left_knee_pitch"] = knee_l

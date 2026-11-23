@@ -14,8 +14,15 @@ if not exist "%GODOT_BIN%" (
 )
 :found_godot
 
+echo Locating Python Interpreter...
+set PYTHON_BIN=python
+if exist "C:\Users\aryan\anaconda3\python.exe" (
+    set PYTHON_BIN=C:\Users\aryan\anaconda3\python.exe
+)
+echo Using Python: %PYTHON_BIN%
+
 echo Starting Python Physics Simulation Backend on port 9099...
-start "Humanoid Physics Backend" cmd /k "python -m python.main"
+start "Humanoid Physics Backend" cmd /k ""%PYTHON_BIN%" -m python.main"
 
 echo Waiting for backend server initialization...
 ping 127.0.0.1 -n 3 >nul

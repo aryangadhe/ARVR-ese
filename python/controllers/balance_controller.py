@@ -180,16 +180,18 @@ class BalanceController:
         # Negative feedback: when tilted forward (pitch > 0), corrective_pitch < 0,
         # so -corrective_pitch extends thighs, pulling torso upright.
         # Both hip roll joints have axis [1, 0, 0] in URDF, so parallel same-sign rotation tilts pelvis laterally.
-        hip_pitch_scale = 0.80 if walking_active else 0.90
-        hip_roll_scale = 0.30 if walking_active else 0.40
+        # In walking mode, walking_controller handles active stance sole leveling and dynamic limit-cycle balance.
+        hip_pitch_scale = 0.0 if walking_active else 0.90
+        hip_roll_scale = 0.0 if walking_active else 0.40
+        ankle_pitch_scale = 0.0 if walking_active else 0.40
 
         offsets = {
             "left_hip_pitch": -corrective_pitch * hip_pitch_scale,
             "right_hip_pitch": -corrective_pitch * hip_pitch_scale,
             "left_hip_roll": -corrective_roll * hip_roll_scale,
             "right_hip_roll": -corrective_roll * hip_roll_scale,
-            "left_ankle_pitch": 0.0,
-            "right_ankle_pitch": 0.0,
+            "left_ankle_pitch": -corrective_pitch * ankle_pitch_scale,
+            "right_ankle_pitch": -corrective_pitch * ankle_pitch_scale,
         }
 
         return {
