@@ -86,6 +86,17 @@ func _create_obstacle_node(obs_type: String, size_array: Array) -> Node3D:
 		mesh_inst.mesh = box
 		mat.albedo_color = Color(0.25, 0.65, 0.85)
 		mat.roughness = 0.6
+	elif obs_type == "receptacle":
+		var box = BoxMesh.new()
+		var hx = size_array[0] if size_array.size() > 0 else 0.09
+		var hy = size_array[1] if size_array.size() > 1 else 0.09
+		var hz = size_array[2] if size_array.size() > 2 else 0.20
+		box.size = Vector3(hy * 2.0, hz * 2.0, hx * 2.0)
+		mesh_inst.mesh = box
+		mat.albedo_color = Color(0.15, 0.75, 0.45)
+		mat.emission_enabled = true
+		mat.emission = Color(0.05, 0.35, 0.18)
+		mat.emission_energy_multiplier = 0.8
 	else: # default cube
 		var box = BoxMesh.new()
 		var hx = size_array[0] if size_array.size() > 0 else 0.25

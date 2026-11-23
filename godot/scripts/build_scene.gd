@@ -25,240 +25,325 @@ func _init() -> void:
 	var mat_visor = load("res://materials/visor.tres")
 	var mat_floor = load("res://materials/floor.tres")
 
-	# Helper to safely load texture from disk (works headless without editor import pass)
-	var get_tex = func(rel_path: String) -> Texture2D:
-		var full_path = ProjectSettings.globalize_path(rel_path)
-		if FileAccess.file_exists(rel_path) or FileAccess.file_exists(full_path):
-			var p = full_path if FileAccess.file_exists(full_path) else rel_path
-			var img = Image.load_from_file(p)
-			if img:
-				return ImageTexture.create_from_image(img)
-		return null
-
-	var tex_floor = get_tex.call("res://textures/floor_grid.png")
-	var tex_wall = get_tex.call("res://textures/wall_panel.png")
-	var tex_hazard = get_tex.call("res://textures/hazard_stripes.png")
+	# Load textures
+	var tex_floor = load("res://textures/floor_grid.png")
+	var tex_wall = load("res://textures/wall_panel.png")
+	var tex_hazard = load("res://textures/hazard_stripes.png")
 
 	if tex_floor:
-		mat_floor.albedo_color = Color(0.92, 0.95, 0.98)
+		mat_floor.albedo_color = Color(0.95, 0.98, 1.0)
 		mat_floor.albedo_texture = tex_floor
-		mat_floor.uv1_scale = Vector3(18, 18, 18)
-		mat_floor.roughness = 0.45
+		mat_floor.uv1_scale = Vector3(40, 40, 40)
+		mat_floor.roughness = 0.35
 		mat_floor.metallic = 0.25
+		mat_floor.emission_enabled = true
+		mat_floor.emission = Color(0.0, 0.40, 0.65)
+		mat_floor.emission_energy_multiplier = 0.35
+		mat_floor.emission_texture = tex_floor
 
-	# Metallic wall panel material
+	# Save updated floor material
+	ResourceSaver.save(mat_floor, "res://materials/floor.tres")
+
+	# Modular metallic wall panel material
 	var wall_mat = StandardMaterial3D.new()
-	wall_mat.albedo_color = Color(0.85, 0.90, 0.95)
+	wall_mat.albedo_color = Color(0.88, 0.92, 0.96)
 	if tex_wall:
 		wall_mat.albedo_texture = tex_wall
-		wall_mat.uv1_scale = Vector3(8, 2, 1)
-	wall_mat.metallic = 0.35
-	wall_mat.roughness = 0.45
+		wall_mat.uv1_scale = Vector3(16, 3, 1)
+	wall_mat.metallic = 0.45
+	wall_mat.roughness = 0.35
 
-	# Safety Hazard material
+	# Industrial safety hazard material
 	var mat_hazard = StandardMaterial3D.new()
 	mat_hazard.albedo_color = Color(1.0, 1.0, 1.0)
 	if tex_hazard:
 		mat_hazard.albedo_texture = tex_hazard
-		mat_hazard.uv1_scale = Vector3(4, 1, 1)
+		mat_hazard.uv1_scale = Vector3(8, 1, 1)
 	mat_hazard.metallic = 0.2
 	mat_hazard.roughness = 0.4
 
-	# Track lane material
+	# High-grip track lane material
 	var mat_track = StandardMaterial3D.new()
-	mat_track.albedo_color = Color(0.12, 0.16, 0.22)
-	mat_track.roughness = 0.5
+	mat_track.albedo_color = Color(0.10, 0.13, 0.18)
+	mat_track.roughness = 0.55
+	mat_track.metallic = 0.15
 
-	# Platform surface material (Distinct high-tech laboratory test pad)
+	# High-tech laboratory test platform material
 	var mat_platform = StandardMaterial3D.new()
-	mat_platform.albedo_color = Color(0.18, 0.22, 0.28)
-	mat_platform.metallic = 0.35
-	mat_platform.roughness = 0.45
+	mat_platform.albedo_color = Color(0.16, 0.20, 0.26)
+	mat_platform.metallic = 0.45
+	mat_platform.roughness = 0.35
 
-	# 1. WorldEnvironment
+	# Industrial structural steel material
+	var mat_steel = StandardMaterial3D.new()
+	mat_steel.albedo_color = Color(0.20, 0.24, 0.30)
+	mat_steel.metallic = 0.85
+	mat_steel.roughness = 0.30
+
+	# 1. WorldEnvironment with 3D Sky Dome & Atmospheric Depth Fog
 	var env_node = WorldEnvironment.new()
 	env_node.name = "WorldEnvironment"
 	var env = Environment.new()
-	env.background_mode = Environment.BG_COLOR
-	env.background_color = Color(0.04, 0.06, 0.09)
-	env.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
-	env.ambient_light_color = Color(0.28, 0.34, 0.44)
-	env.ambient_light_energy = 1.2
+	env.background_mode = Environment.BG_SKY
+	var sky = Sky.new()
+	var sky_mat = ProceduralSkyMaterial.new()
+	sky_mat.sky_top_color = Color(0.06, 0.10, 0.18)      # Deep high-tech midnight navy
+	sky_mat.sky_horizon_color = Color(0.20, 0.28, 0.38)  # Atmospheric twilight horizon
+	sky_mat.ground_bottom_color = Color(0.04, 0.06, 0.08)
+	sky_mat.ground_horizon_color = Color(0.14, 0.20, 0.28)
+	sky_mat.sun_angle_max = 32.0
+	sky.sky_material = sky_mat
+	env.sky = sky
+
+	# Ambient lighting from sky atmosphere & reflections
+	env.ambient_light_source = Environment.AMBIENT_SOURCE_SKY
+	env.ambient_light_color = Color(0.40, 0.50, 0.65)
+	env.ambient_light_energy = 1.35
+	env.reflected_light_source = Environment.REFLECTION_SOURCE_SKY
+
+	# ACES Tonemapping & Subtle Bloom
 	env.tonemap_mode = Environment.TONE_MAPPER_ACES
 	env.glow_enabled = true
-	env.glow_intensity = 0.6
-	env.glow_bloom = 0.15
+	env.glow_intensity = 0.5
+	env.glow_bloom = 0.12
+
+	# Atmospheric depth fog to give immense sense of scale
+	env.fog_enabled = true
+	env.fog_light_color = Color(0.12, 0.18, 0.25)
+	env.fog_density = 0.006
+	env.fog_aerial_perspective = 0.4
 	env_node.environment = env
 	root.add_child(env_node)
 	env_node.owner = root
 
-	# 2. DirectionalLight3D
+	# 2. Main Key Directional Light (Sun)
 	var dir_light = DirectionalLight3D.new()
 	dir_light.name = "DirectionalLight3D"
-	dir_light.position = Vector3(6.0, 12.0, 8.0)
-	dir_light.rotation_degrees = Vector3(-50, 35, 0)
+	dir_light.position = Vector3(18.0, 26.0, 22.0)
+	dir_light.rotation_degrees = Vector3(-52, 40, 0)
 	dir_light.shadow_enabled = true
-	dir_light.light_energy = 1.4
+	dir_light.shadow_bias = 0.02
+	dir_light.light_energy = 1.65
 	dir_light.light_color = Color(0.96, 0.98, 1.0)
 	root.add_child(dir_light)
 	dir_light.owner = root
 
-	# 3. Overhead Lights for Testing Zones
+	# 3. High-Bay Arena Lighting Array (9 fixtures across the 80m hangar)
+	var arena_light_coords = [
+		Vector3(-16.0, 11.0, -22.0),
+		Vector3(0.0, 11.0, -22.0),
+		Vector3(16.0, 11.0, -22.0),
+		Vector3(-16.0, 11.0, 0.0),
+		Vector3(0.0, 11.0, 0.0),
+		Vector3(16.0, 11.0, 0.0),
+		Vector3(-16.0, 11.0, 22.0),
+		Vector3(0.0, 11.0, 22.0),
+		Vector3(16.0, 11.0, 22.0),
+	]
+
+	var mat_light_emitter = StandardMaterial3D.new()
+	mat_light_emitter.albedo_color = Color(1.0, 1.0, 1.0)
+	mat_light_emitter.emission_enabled = true
+	mat_light_emitter.emission = Color(0.85, 0.95, 1.0)
+	mat_light_emitter.emission_energy_multiplier = 2.5
+
+	for idx in range(arena_light_coords.size()):
+		var pos = arena_light_coords[idx]
+
+		# Physical lamp fixture housing
+		var fixture = MeshInstance3D.new()
+		fixture.name = "HighBayFixture_%d" % idx
+		var fix_box = BoxMesh.new()
+		fix_box.size = Vector3(1.2, 0.35, 1.2)
+		fixture.mesh = fix_box
+		fixture.position = pos
+		fixture.material_override = mat_steel
+		root.add_child(fixture)
+		fixture.owner = root
+
+		# Glowing emitter lens
+		var lens = MeshInstance3D.new()
+		lens.name = "Lens"
+		var lens_box = BoxMesh.new()
+		lens_box.size = Vector3(0.9, 0.05, 0.9)
+		lens.mesh = lens_box
+		lens.position = Vector3(0, -0.18, 0)
+		lens.material_override = mat_light_emitter
+		fixture.add_child(lens)
+		lens.owner = root
+
+		# Point/omni light source
+		var omni = OmniLight3D.new()
+		omni.name = "Light"
+		omni.position = Vector3(0, -0.5, 0)
+		omni.light_color = Color(0.85, 0.94, 1.0)
+		omni.light_energy = 1.4
+		omni.omni_range = 28.0
+		omni.omni_attenuation = 1.2
+		fixture.add_child(omni)
+		omni.owner = root
+
+	# Central SpotLight focused on the Robot Testing Pad
 	var spot_center = SpotLight3D.new()
 	spot_center.name = "SpotCenterPlatform"
-	spot_center.position = Vector3(0.0, 6.2, 0.0)
+	spot_center.position = Vector3(0.0, 9.5, 0.0)
 	spot_center.rotation_degrees = Vector3(-90, 0, 0)
-	spot_center.light_color = Color(0.85, 0.95, 1.0)
-	spot_center.light_energy = 2.2
-	spot_center.spot_range = 12.0
-	spot_center.spot_angle = 45.0
+	spot_center.light_color = Color(0.90, 0.96, 1.0)
+	spot_center.light_energy = 2.4
+	spot_center.spot_range = 16.0
+	spot_center.spot_angle = 48.0
 	root.add_child(spot_center)
 	spot_center.owner = root
 
-	var spot_track = SpotLight3D.new()
-	spot_track.name = "SpotWalkingTrack"
-	spot_track.position = Vector3(0.0, 6.2, -6.0)
-	spot_track.rotation_degrees = Vector3(-90, 0, 0)
-	spot_track.light_color = Color(0.80, 0.92, 1.0)
-	spot_track.light_energy = 2.0
-	spot_track.spot_range = 14.0
-	spot_track.spot_angle = 50.0
-	root.add_child(spot_track)
-	spot_track.owner = root
-
-	var spot_zone_c = SpotLight3D.new()
-	spot_zone_c.name = "SpotZoneC_Incline"
-	spot_zone_c.position = Vector3(-5.0, 5.8, -5.0)
-	spot_zone_c.rotation_degrees = Vector3(-90, 0, 0)
-	spot_zone_c.light_color = Color(0.9, 0.95, 1.0)
-	spot_zone_c.light_energy = 1.6
-	spot_zone_c.spot_range = 10.0
-	spot_zone_c.spot_angle = 45.0
-	root.add_child(spot_zone_c)
-	spot_zone_c.owner = root
-
-	var spot_zone_d = SpotLight3D.new()
-	spot_zone_d.name = "SpotZoneD_Obstacles"
-	spot_zone_d.position = Vector3(5.0, 5.8, -5.0)
-	spot_zone_d.rotation_degrees = Vector3(-90, 0, 0)
-	spot_zone_d.light_color = Color(1.0, 0.95, 0.85)
-	spot_zone_d.light_energy = 1.6
-	spot_zone_d.spot_range = 10.0
-	spot_zone_d.spot_angle = 45.0
-	root.add_child(spot_zone_d)
-	spot_zone_d.owner = root
-
-	var omni_fill = OmniLight3D.new()
-	omni_fill.name = "OmniFillCenter"
-	omni_fill.position = Vector3(0.0, 4.5, -2.0)
-	omni_fill.light_color = Color(0.65, 0.75, 0.90)
-	omni_fill.light_energy = 0.8
-	omni_fill.omni_range = 20.0
-	root.add_child(omni_fill)
-	omni_fill.owner = root
-
-	# 4. Laboratory Environment
+	# 4. Expansive Laboratory Environment (80m x 80m Proving Grounds Hangar)
 	var lab_env = Node3D.new()
 	lab_env.name = "LaboratoryEnvironment"
 	root.add_child(lab_env)
 	lab_env.owner = root
 
-	# Main Floor
+	# Main Expansive Floor (80m x 80m with 1m metric grid)
 	var floor_mesh = MeshInstance3D.new()
 	floor_mesh.name = "FloorGrid"
 	var p_mesh = PlaneMesh.new()
-	p_mesh.size = Vector2(36, 36)
+	p_mesh.size = Vector2(80.0, 80.0)
 	floor_mesh.mesh = p_mesh
 	floor_mesh.material_override = mat_floor
 	lab_env.add_child(floor_mesh)
 	floor_mesh.owner = root
 
-	# Walking Track (Stretching from Z=+4 to Z=-12)
+	# Walking Track (4.2m wide, 36m long stretching from Z = +6m to Z = -30m)
 	var track_mesh = MeshInstance3D.new()
 	track_mesh.name = "WalkingTrack"
 	var tr_plane = PlaneMesh.new()
-	tr_plane.size = Vector2(3.2, 16.0)
+	tr_plane.size = Vector2(4.2, 36.0)
 	track_mesh.mesh = tr_plane
-	track_mesh.position = Vector3(0.0, 0.005, -4.0)
+	track_mesh.position = Vector3(0.0, 0.005, -12.0)
 	track_mesh.material_override = mat_track
 	lab_env.add_child(track_mesh)
 	track_mesh.owner = root
 
 	# Hazard borders along left and right sides of walking track
-	for track_side in [-1.65, 1.65]:
+	for track_side in [-2.15, 2.15]:
 		var h_border = MeshInstance3D.new()
 		h_border.name = "TrackHazardBorder_%s" % ("L" if track_side < 0 else "R")
 		var hb_plane = PlaneMesh.new()
-		hb_plane.size = Vector2(0.12, 16.0)
+		hb_plane.size = Vector2(0.16, 36.0)
 		h_border.mesh = hb_plane
-		h_border.position = Vector3(track_side, 0.007, -4.0)
+		h_border.position = Vector3(track_side, 0.007, -12.0)
 		h_border.material_override = mat_hazard
 		lab_env.add_child(h_border)
 		h_border.owner = root
 
-	# Center Dashed Line along Walking Track
+	# Center Glowing Cyan Dashed Line along Walking Track
 	var center_line = MeshInstance3D.new()
 	center_line.name = "TrackCenterLine"
 	var cl_mesh = PlaneMesh.new()
-	cl_mesh.size = Vector2(0.08, 15.0)
+	cl_mesh.size = Vector2(0.12, 34.0)
 	center_line.mesh = cl_mesh
-	center_line.position = Vector3(0.0, 0.008, -4.0)
+	center_line.position = Vector3(0.0, 0.008, -12.0)
 	var mat_cline = StandardMaterial3D.new()
-	mat_cline.albedo_color = Color(0.0, 0.85, 1.0, 0.8)
+	mat_cline.albedo_color = Color(0.0, 0.9, 1.0, 0.9)
 	mat_cline.emission_enabled = true
-	mat_cline.emission = Color(0.0, 0.7, 1.0)
+	mat_cline.emission = Color(0.0, 0.8, 1.0)
+	mat_cline.emission_energy_multiplier = 1.6
 	center_line.material_override = mat_cline
 	lab_env.add_child(center_line)
 	center_line.owner = root
 
-	# Metric Scale Markers along track (every 2m)
-	for d in range(0, 11, 2):
+	# Metric Scale Markers & Physical Extruded Distance Signs every 2m from 0m to 20m
+	for d in range(0, 22, 2):
 		var tick = MeshInstance3D.new()
 		tick.name = "MetricTick_%dm" % d
 		var tick_plane = PlaneMesh.new()
-		tick_plane.size = Vector2(2.6, 0.08)
+		tick_plane.size = Vector2(3.6, 0.10)
 		tick.mesh = tick_plane
-		# Z in godot is -X in pybullet
 		tick.position = Vector3(0.0, 0.009, -float(d))
 		var mat_tick = StandardMaterial3D.new()
-		mat_tick.albedo_color = Color(0.85, 0.90, 1.0, 0.6)
+		mat_tick.albedo_color = Color(0.85, 0.92, 1.0, 0.75)
+		mat_tick.emission_enabled = true
+		mat_tick.emission = Color(0.0, 0.7, 1.0)
+		mat_tick.emission_energy_multiplier = 0.6
 		tick.material_override = mat_tick
 		lab_env.add_child(tick)
 		tick.owner = root
 
-	# Robot Starting Platform (Circular illuminated platform)
+		# 3D Physical Metric Distance Marker Pillar on track edge
+		var sign_pillar = MeshInstance3D.new()
+		sign_pillar.name = "MetricSign_%dm" % d
+		var sp_box = BoxMesh.new()
+		sp_box.size = Vector3(0.20, 0.50, 0.20)
+		sign_pillar.mesh = sp_box
+		sign_pillar.position = Vector3(2.40, 0.25, -float(d))
+		sign_pillar.material_override = mat_steel
+		lab_env.add_child(sign_pillar)
+		sign_pillar.owner = root
+
+		# Glowing distance indicator cap
+		var sign_cap = MeshInstance3D.new()
+		sign_cap.name = "SignCap"
+		var sc_box = BoxMesh.new()
+		sc_box.size = Vector3(0.22, 0.06, 0.22)
+		sign_cap.mesh = sc_box
+		sign_cap.position = Vector3(0, 0.26, 0)
+		sign_cap.material_override = mat_visor
+		sign_pillar.add_child(sign_cap)
+		sign_cap.owner = root
+
+	# Robot Starting Platform (Circular illuminated platform, radius 2.4m)
 	var platform = MeshInstance3D.new()
 	platform.name = "StartingPlatform"
 	var cyl_plat = CylinderMesh.new()
-	cyl_plat.top_radius = 1.3
-	cyl_plat.bottom_radius = 1.3
-	cyl_plat.height = 0.02
+	cyl_plat.top_radius = 2.4
+	cyl_plat.bottom_radius = 2.4
+	cyl_plat.height = 0.025
 	platform.mesh = cyl_plat
-	platform.position = Vector3(0, 0.01, 0)
+	platform.position = Vector3(0, 0.012, 0)
 	platform.material_override = mat_platform
 	lab_env.add_child(platform)
 	platform.owner = root
 
-	# Platform glowing rim ring
-	var plat_ring = MeshInstance3D.new()
-	plat_ring.name = "PlatformRimRing"
-	var ring_mesh = TorusMesh.new()
-	ring_mesh.inner_radius = 1.25
-	ring_mesh.outer_radius = 1.32
-	ring_mesh.rings = 32
-	plat_ring.mesh = ring_mesh
-	plat_ring.position = Vector3(0, 0.015, 0)
-	plat_ring.material_override = mat_visor
-	lab_env.add_child(plat_ring)
-	plat_ring.owner = root
+	# Platform glowing concentric calibration rings
+	for r_radius in [1.2, 2.38]:
+		var plat_ring = MeshInstance3D.new()
+		plat_ring.name = "PlatformRing_R%.1f" % r_radius
+		var ring_mesh = TorusMesh.new()
+		ring_mesh.inner_radius = r_radius - 0.04
+		ring_mesh.outer_radius = r_radius
+		ring_mesh.rings = 36
+		plat_ring.mesh = ring_mesh
+		plat_ring.position = Vector3(0, 0.018, 0)
+		plat_ring.material_override = mat_visor
+		lab_env.add_child(plat_ring)
+		plat_ring.owner = root
 
-	# Laboratory Boundary Walls (Full 4-wall enclosure)
+	# Platform Calibration Crosshairs (+X and +Y axes)
+	var cross_x = MeshInstance3D.new()
+	cross_x.name = "PlatformCrosshairX"
+	var px_box = PlaneMesh.new()
+	px_box.size = Vector2(0.06, 4.4)
+	cross_x.mesh = px_box
+	cross_x.position = Vector3(0, 0.016, 0)
+	cross_x.material_override = mat_visor
+	lab_env.add_child(cross_x)
+	cross_x.owner = root
+
+	var cross_y = MeshInstance3D.new()
+	cross_y.name = "PlatformCrosshairY"
+	var py_box = PlaneMesh.new()
+	py_box.size = Vector2(4.4, 0.06)
+	cross_y.mesh = py_box
+	cross_y.position = Vector3(0, 0.016, 0)
+	cross_y.material_override = mat_visor
+	lab_env.add_child(cross_y)
+	cross_y.owner = root
+
+	# Grand Laboratory Boundary Walls (80m wide, 12m high enclosure)
 	var wall_north = MeshInstance3D.new()
 	wall_north.name = "WallNorth"
 	var bn_mesh = BoxMesh.new()
-	bn_mesh.size = Vector3(36, 7.0, 0.5)
+	bn_mesh.size = Vector3(80.0, 12.0, 1.0)
 	wall_north.mesh = bn_mesh
-	wall_north.position = Vector3(0, 3.5, -18)
+	wall_north.position = Vector3(0, 6.0, -40.0)
 	wall_north.material_override = wall_mat
 	lab_env.add_child(wall_north)
 	wall_north.owner = root
@@ -266,9 +351,9 @@ func _init() -> void:
 	var wall_south = MeshInstance3D.new()
 	wall_south.name = "WallSouth"
 	var bs_mesh = BoxMesh.new()
-	bs_mesh.size = Vector3(36, 7.0, 0.5)
+	bs_mesh.size = Vector3(80.0, 12.0, 1.0)
 	wall_south.mesh = bs_mesh
-	wall_south.position = Vector3(0, 3.5, 14)
+	wall_south.position = Vector3(0, 6.0, 36.0)
 	wall_south.material_override = wall_mat
 	lab_env.add_child(wall_south)
 	wall_south.owner = root
@@ -276,9 +361,9 @@ func _init() -> void:
 	var wall_east = MeshInstance3D.new()
 	wall_east.name = "WallEast"
 	var be_mesh = BoxMesh.new()
-	be_mesh.size = Vector3(0.5, 7.0, 32)
+	be_mesh.size = Vector3(1.0, 12.0, 76.0)
 	wall_east.mesh = be_mesh
-	wall_east.position = Vector3(18, 3.5, -2)
+	wall_east.position = Vector3(40.0, 6.0, -2.0)
 	wall_east.material_override = wall_mat
 	lab_env.add_child(wall_east)
 	wall_east.owner = root
@@ -286,20 +371,119 @@ func _init() -> void:
 	var wall_west = MeshInstance3D.new()
 	wall_west.name = "WallWest"
 	var bw_mesh = BoxMesh.new()
-	bw_mesh.size = Vector3(0.5, 7.0, 32)
+	bw_mesh.size = Vector3(1.0, 12.0, 76.0)
 	wall_west.mesh = bw_mesh
-	wall_west.position = Vector3(-18, 3.5, -2)
+	wall_west.position = Vector3(-40.0, 6.0, -2.0)
 	wall_west.material_override = wall_mat
 	lab_env.add_child(wall_west)
 	wall_west.owner = root
 
-	# Accent light strips on all 4 walls
+	# Vertical Architectural Pillars/Buttresses every 12m along all walls (physical 3D depth & shadows)
+	for col_x in [-30.0, -15.0, 0.0, 15.0, 30.0]:
+		var col_n = MeshInstance3D.new()
+		col_n.name = "ColumnNorth_X%d" % int(col_x)
+		var c_mesh = BoxMesh.new()
+		c_mesh.size = Vector3(1.2, 12.0, 1.2)
+		col_n.mesh = c_mesh
+		col_n.position = Vector3(col_x, 6.0, -39.4)
+		col_n.material_override = mat_steel
+		lab_env.add_child(col_n)
+		col_n.owner = root
+
+		var col_s = MeshInstance3D.new()
+		col_s.name = "ColumnSouth_X%d" % int(col_x)
+		col_s.mesh = c_mesh
+		col_s.position = Vector3(col_x, 6.0, 35.4)
+		col_s.material_override = mat_steel
+		lab_env.add_child(col_s)
+		col_s.owner = root
+
+	for col_z in [-28.0, -14.0, 0.0, 14.0, 28.0]:
+		var col_e = MeshInstance3D.new()
+		col_e.name = "ColumnEast_Z%d" % int(col_z)
+		var c_mesh = BoxMesh.new()
+		c_mesh.size = Vector3(1.2, 12.0, 1.2)
+		col_e.mesh = c_mesh
+		col_e.position = Vector3(39.4, 6.0, col_z)
+		col_e.material_override = mat_steel
+		lab_env.add_child(col_e)
+		col_e.owner = root
+
+		var col_w = MeshInstance3D.new()
+		col_w.name = "ColumnWest_Z%d" % int(col_z)
+		col_w.mesh = c_mesh
+		col_w.position = Vector3(-39.4, 6.0, col_z)
+		col_w.material_override = mat_steel
+		lab_env.add_child(col_w)
+		col_w.owner = root
+
+	# 2nd-Floor Observation Control Gallery on North Wall (Y = 6.5m to 9.5m)
+	var obs_gallery = MeshInstance3D.new()
+	obs_gallery.name = "ObservationGallery"
+	var og_mesh = BoxMesh.new()
+	og_mesh.size = Vector3(44.0, 3.2, 2.5)
+	obs_gallery.mesh = og_mesh
+	obs_gallery.position = Vector3(0, 8.0, -38.6)
+	obs_gallery.material_override = mat_platform
+	lab_env.add_child(obs_gallery)
+	obs_gallery.owner = root
+
+	# Observation Tinted Glass Viewing Windows
+	var obs_glass = MeshInstance3D.new()
+	obs_glass.name = "ObservationGlass"
+	var gl_mesh = BoxMesh.new()
+	gl_mesh.size = Vector3(42.0, 2.2, 0.1)
+	obs_glass.mesh = gl_mesh
+	obs_glass.position = Vector3(0, 8.0, -37.3)
+	var mat_glass = StandardMaterial3D.new()
+	mat_glass.albedo_color = Color(0.1, 0.3, 0.5, 0.6)
+	mat_glass.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	mat_glass.metallic = 0.9
+	mat_glass.roughness = 0.1
+	obs_glass.material_override = mat_glass
+	lab_env.add_child(obs_glass)
+	obs_glass.owner = root
+
+	# Glowing Terminal Monitors inside Observation Control Room
+	for mon_idx in range(-16, 17, 8):
+		var monitor = MeshInstance3D.new()
+		monitor.name = "ControlMonitor_%d" % mon_idx
+		var m_box = BoxMesh.new()
+		m_box.size = Vector3(2.4, 1.2, 0.1)
+		monitor.mesh = m_box
+		monitor.position = Vector3(float(mon_idx), 8.2, -38.4)
+		var mat_mon = StandardMaterial3D.new()
+		mat_mon.albedo_color = Color(0.0, 0.8, 1.0)
+		mat_mon.emission_enabled = true
+		mat_mon.emission = Color(0.0, 0.7, 1.0) if mon_idx % 2 == 0 else Color(0.1, 0.9, 0.4)
+		mat_mon.emission_energy_multiplier = 1.8
+		monitor.material_override = mat_mon
+		lab_env.add_child(monitor)
+		monitor.owner = root
+
+	# Illuminated Facility Signage over Gallery: "HUMANOID ROBOTICS PROVING GROUNDS - BAY 01"
+	var fac_sign = MeshInstance3D.new()
+	fac_sign.name = "FacilitySignage"
+	var fs_box = BoxMesh.new()
+	fs_box.size = Vector3(32.0, 0.8, 0.15)
+	fac_sign.mesh = fs_box
+	fac_sign.position = Vector3(0, 10.2, -39.2)
+	var mat_sign = StandardMaterial3D.new()
+	mat_sign.albedo_color = Color(0.05, 0.08, 0.12)
+	mat_sign.emission_enabled = true
+	mat_sign.emission = Color(0.0, 0.75, 1.0)
+	mat_sign.emission_energy_multiplier = 1.2
+	fac_sign.material_override = mat_sign
+	lab_env.add_child(fac_sign)
+	fac_sign.owner = root
+
+	# Accent Cyan Neon Light Strips along all 4 walls
 	var strip_n = MeshInstance3D.new()
 	strip_n.name = "StripNorth"
 	var sn_mesh = BoxMesh.new()
-	sn_mesh.size = Vector3(34, 0.08, 0.1)
+	sn_mesh.size = Vector3(76.0, 0.12, 0.15)
 	strip_n.mesh = sn_mesh
-	strip_n.position = Vector3(0, 4.2, -17.7)
+	strip_n.position = Vector3(0, 6.2, -39.3)
 	strip_n.material_override = mat_visor
 	lab_env.add_child(strip_n)
 	strip_n.owner = root
@@ -307,9 +491,9 @@ func _init() -> void:
 	var strip_s = MeshInstance3D.new()
 	strip_s.name = "StripSouth"
 	var ss_mesh = BoxMesh.new()
-	ss_mesh.size = Vector3(34, 0.08, 0.1)
+	ss_mesh.size = Vector3(76.0, 0.12, 0.15)
 	strip_s.mesh = ss_mesh
-	strip_s.position = Vector3(0, 4.2, 13.7)
+	strip_s.position = Vector3(0, 6.2, 35.3)
 	strip_s.material_override = mat_visor
 	lab_env.add_child(strip_s)
 	strip_s.owner = root
@@ -317,9 +501,9 @@ func _init() -> void:
 	var strip_e = MeshInstance3D.new()
 	strip_e.name = "StripEast"
 	var se_mesh = BoxMesh.new()
-	se_mesh.size = Vector3(0.1, 0.08, 30)
+	se_mesh.size = Vector3(0.15, 0.12, 72.0)
 	strip_e.mesh = se_mesh
-	strip_e.position = Vector3(17.7, 4.2, -2)
+	strip_e.position = Vector3(39.3, 6.2, -2.0)
 	strip_e.material_override = mat_visor
 	lab_env.add_child(strip_e)
 	strip_e.owner = root
@@ -327,98 +511,262 @@ func _init() -> void:
 	var strip_w = MeshInstance3D.new()
 	strip_w.name = "StripWest"
 	var sw_mesh = BoxMesh.new()
-	sw_mesh.size = Vector3(0.1, 0.08, 30)
+	sw_mesh.size = Vector3(0.15, 0.12, 72.0)
 	strip_w.mesh = sw_mesh
-	strip_w.position = Vector3(-17.7, 4.2, -2)
+	strip_w.position = Vector3(-39.3, 6.2, -2.0)
 	strip_w.material_override = mat_visor
 	lab_env.add_child(strip_w)
 	strip_w.owner = root
 
-	# Ceiling Overhead Structural Trusses
-	var mat_truss = StandardMaterial3D.new()
-	mat_truss.albedo_color = Color(0.15, 0.18, 0.22)
-	mat_truss.metallic = 0.85
-	mat_truss.roughness = 0.25
-
-	for tz in [-12.0, -4.0, 4.0]:
+	# Massive Overhead Ceiling Roof Trusses spanning across the hangar at Y = 11.5m
+	for tz in [-28.0, -14.0, 0.0, 14.0, 28.0]:
 		var truss = MeshInstance3D.new()
 		truss.name = "CeilingTruss_Z%d" % int(tz)
 		var tr_mesh = BoxMesh.new()
-		tr_mesh.size = Vector3(35.5, 0.25, 0.25)
+		tr_mesh.size = Vector3(79.0, 0.45, 0.45)
 		truss.mesh = tr_mesh
-		truss.position = Vector3(0, 6.8, tz)
-		truss.material_override = mat_truss
+		truss.position = Vector3(0, 11.5, tz)
+		truss.material_override = mat_steel
 		lab_env.add_child(truss)
 		truss.owner = root
 
-	# Testing Zone Obstacles:
-	# 1. Zone C: Static Ramp with hazard borders
+	# Overhead Industrial Yellow Gantry Crane spanning at Y = 11.0m
+	var gantry_crane = MeshInstance3D.new()
+	gantry_crane.name = "OverheadGantryCrane"
+	var gc_mesh = BoxMesh.new()
+	gc_mesh.size = Vector3(78.0, 0.70, 1.4)
+	gantry_crane.mesh = gc_mesh
+	gantry_crane.position = Vector3(0, 11.0, -8.0)
+	var mat_crane = StandardMaterial3D.new()
+	mat_crane.albedo_color = Color(0.95, 0.75, 0.1)
+	mat_crane.metallic = 0.7
+	mat_crane.roughness = 0.3
+	gantry_crane.material_override = mat_crane
+	lab_env.add_child(gantry_crane)
+	gantry_crane.owner = root
+
+	# --- TESTING PROVING ZONES ---
+
+	# ZONE C (Left Side, X = -10m to -24m): Obstacle & Slalom Proving Ground
+	# Demarcated Zone C Floor Boundary Outline
+	var zone_c_box = MeshInstance3D.new()
+	zone_c_box.name = "ZoneC_FloorPerimeter"
+	var zc_mesh = PlaneMesh.new()
+	zc_mesh.size = Vector2(14.0, 22.0)
+	zone_c_box.mesh = zc_mesh
+	zone_c_box.position = Vector3(-16.0, 0.006, -8.0)
+	var mat_zc = StandardMaterial3D.new()
+	mat_zc.albedo_color = Color(0.12, 0.16, 0.22, 0.6)
+	mat_zc.roughness = 0.6
+	zone_c_box.material_override = mat_zc
+	lab_env.add_child(zone_c_box)
+	zone_c_box.owner = root
+
+	# Zone C Heavy Safety Crash Barrier with Hazard Chevrons
+	var barrier_mesh = MeshInstance3D.new()
+	barrier_mesh.name = "ZoneC_HeavyBarrier"
+	var bar_box = BoxMesh.new()
+	bar_box.size = Vector3(0.40, 0.85, 3.8)
+	barrier_mesh.mesh = bar_box
+	barrier_mesh.position = Vector3(-12.0, 0.425, -6.0)
+	barrier_mesh.material_override = mat_hazard
+	lab_env.add_child(barrier_mesh)
+	barrier_mesh.owner = root
+
+	# Zone C Static Test Pylons / Cylinders
+	for cyl_idx in [0, 1]:
+		var cyl_inst = MeshInstance3D.new()
+		cyl_inst.name = "ZoneC_TestPylon_%d" % cyl_idx
+		var cy_mesh = CylinderMesh.new()
+		cy_mesh.top_radius = 0.35
+		cy_mesh.bottom_radius = 0.35
+		cy_mesh.height = 1.10
+		cyl_inst.mesh = cy_mesh
+		cyl_inst.position = Vector3(-18.0, 0.55, -4.0 - float(cyl_idx) * 6.0)
+		var mat_pylon = StandardMaterial3D.new()
+		mat_pylon.albedo_color = Color(0.95, 0.45, 0.10)
+		mat_pylon.metallic = 0.4
+		mat_pylon.roughness = 0.3
+		cyl_inst.material_override = mat_pylon
+		lab_env.add_child(cyl_inst)
+		cyl_inst.owner = root
+
+	# ZONE D (Right Side, X = +10m to +24m): Terrain & Incline Proving Grounds
+	# Demarcated Zone D Floor Boundary Outline
+	var zone_d_box = MeshInstance3D.new()
+	zone_d_box.name = "ZoneD_FloorPerimeter"
+	var zd_mesh = PlaneMesh.new()
+	zd_mesh.size = Vector2(14.0, 22.0)
+	zone_d_box.mesh = zd_mesh
+	zone_d_box.position = Vector3(16.0, 0.006, -8.0)
+	var mat_zd = StandardMaterial3D.new()
+	mat_zd.albedo_color = Color(0.12, 0.16, 0.22, 0.6)
+	mat_zd.roughness = 0.6
+	zone_d_box.material_override = mat_zd
+	lab_env.add_child(zone_d_box)
+	zone_d_box.owner = root
+
+	# 1. Gentle 5° Terrain Incline Approach Ramp
 	var ramp_mesh = MeshInstance3D.new()
-	ramp_mesh.name = "ZoneC_StaticRamp"
+	ramp_mesh.name = "ZoneD_GentleRamp"
 	var r_box = BoxMesh.new()
-	r_box.size = Vector3(1.4, 0.25, 2.8)
+	r_box.size = Vector3(1.8, 0.22, 3.8)
 	ramp_mesh.mesh = r_box
-	ramp_mesh.position = Vector3(-5.2, 0.14, -4.0)
-	ramp_mesh.rotation_degrees = Vector3(8.0, 0, 0)
+	ramp_mesh.position = Vector3(12.0, 0.15, -4.0)
+	ramp_mesh.rotation_degrees = Vector3(5.0, 0, 0)
 	var mat_ramp = StandardMaterial3D.new()
-	mat_ramp.albedo_color = Color(0.2, 0.5, 0.7)
-	mat_ramp.roughness = 0.4
+	mat_ramp.albedo_color = Color(0.22, 0.55, 0.78)
+	mat_ramp.roughness = 0.35
 	ramp_mesh.material_override = mat_ramp
 	lab_env.add_child(ramp_mesh)
 	ramp_mesh.owner = root
 
 	# Ramp hazard stripe border
 	var ramp_stripe = MeshInstance3D.new()
-	ramp_stripe.name = "ZoneC_RampHazardBorder"
+	ramp_stripe.name = "ZoneD_RampHazardBorder"
 	var rs_box = BoxMesh.new()
-	rs_box.size = Vector3(1.45, 0.02, 2.85)
+	rs_box.size = Vector3(1.85, 0.02, 3.85)
 	ramp_stripe.mesh = rs_box
-	ramp_stripe.position = Vector3(-5.2, 0.01, -4.0)
-	ramp_stripe.rotation_degrees = Vector3(8.0, 0, 0)
+	ramp_stripe.position = Vector3(12.0, 0.015, -4.0)
+	ramp_stripe.rotation_degrees = Vector3(5.0, 0, 0)
 	ramp_stripe.material_override = mat_hazard
 	lab_env.add_child(ramp_stripe)
 	ramp_stripe.owner = root
 
-	# 2. Zone C: Static Stair Testing Platform (3 progressive steps)
-	for s_idx in range(3):
+	# 2. Steep 12° Incline Ramp
+	var steep_ramp = MeshInstance3D.new()
+	steep_ramp.name = "ZoneD_SteepRamp"
+	var sr_box = BoxMesh.new()
+	sr_box.size = Vector3(1.6, 0.25, 3.2)
+	steep_ramp.mesh = sr_box
+	steep_ramp.position = Vector3(18.0, 0.32, -4.0)
+	steep_ramp.rotation_degrees = Vector3(12.0, 0, 0)
+	steep_ramp.material_override = mat_platform
+	lab_env.add_child(steep_ramp)
+	steep_ramp.owner = root
+
+	# 3. Progressive 4-Step Industrial Staircase
+	for s_idx in range(4):
 		var step_inst = MeshInstance3D.new()
-		step_inst.name = "ZoneC_Stair_%d" % s_idx
+		step_inst.name = "ZoneD_Stair_%d" % s_idx
 		var step_box = BoxMesh.new()
-		var s_h = 0.06 * (s_idx + 1)
-		step_box.size = Vector3(1.3, s_h, 0.40)
+		var s_h = 0.08 * (s_idx + 1)
+		step_box.size = Vector3(1.6, s_h, 0.42)
 		step_inst.mesh = step_box
-		step_inst.position = Vector3(-5.2, s_h * 0.5, -7.5 - float(s_idx) * 0.40)
-		step_inst.material_override = mat_platform
+		step_inst.position = Vector3(15.0, s_h * 0.5, -9.0 - float(s_idx) * 0.42)
+		step_inst.material_override = mat_steel
 		lab_env.add_child(step_inst)
 		step_inst.owner = root
 
-	# 3. Zone D: Heavy Safety Crash Barrier with Hazard Striping
-	var barrier_mesh = MeshInstance3D.new()
-	barrier_mesh.name = "ZoneD_Barrier"
-	var bar_box = BoxMesh.new()
-	bar_box.size = Vector3(0.35, 0.70, 2.4)
-	barrier_mesh.mesh = bar_box
-	barrier_mesh.position = Vector3(5.2, 0.35, -4.0)
-	barrier_mesh.material_override = mat_hazard
-	lab_env.add_child(barrier_mesh)
-	barrier_mesh.owner = root
+	# 4. Elevated Proving Ground Observation Pad (3.5m x 3.5m, height 0.6m)
+	var elev_pad = MeshInstance3D.new()
+	elev_pad.name = "ZoneD_ElevatedPad"
+	var ep_box = BoxMesh.new()
+	ep_box.size = Vector3(3.5, 0.60, 3.5)
+	elev_pad.mesh = ep_box
+	elev_pad.position = Vector3(15.0, 0.30, -14.5)
+	elev_pad.material_override = mat_platform
+	lab_env.add_child(elev_pad)
+	elev_pad.owner = root
 
-	# 4. Zone D: Static Test Cylinder Pylon
-	var cyl_mesh = MeshInstance3D.new()
-	cyl_mesh.name = "ZoneD_TestCylinder"
-	var cy_mesh = CylinderMesh.new()
-	cy_mesh.top_radius = 0.30
-	cy_mesh.bottom_radius = 0.30
-	cy_mesh.height = 0.90
-	cyl_mesh.mesh = cy_mesh
-	cyl_mesh.position = Vector3(5.2, 0.45, -7.5)
-	var mat_cyl = StandardMaterial3D.new()
-	mat_cyl.albedo_color = Color(0.9, 0.4, 0.15)
-	mat_cyl.metallic = 0.4
-	mat_cyl.roughness = 0.3
-	cyl_mesh.material_override = mat_cyl
-	lab_env.add_child(cyl_mesh)
-	cyl_mesh.owner = root
+	# Telemetry Data Server Racks along East Wall with Status LEDs
+	for rk_idx in range(4):
+		var rack = MeshInstance3D.new()
+		rack.name = "ServerRack_%d" % rk_idx
+		var rk_box = BoxMesh.new()
+		rk_box.size = Vector3(0.9, 2.4, 0.9)
+		rack.mesh = rk_box
+		rack.position = Vector3(38.8, 1.2, -15.0 + float(rk_idx) * 3.0)
+		rack.material_override = mat_steel
+		lab_env.add_child(rack)
+		rack.owner = root
+
+		# Status LED bar
+		var led = MeshInstance3D.new()
+		led.name = "StatusLED"
+		var led_box = BoxMesh.new()
+		led_box.size = Vector3(0.05, 0.12, 0.6)
+		led.mesh = led_box
+		led.position = Vector3(-0.46, 0.6, 0)
+		var mat_led = StandardMaterial3D.new()
+		mat_led.albedo_color = Color(0.0, 0.9, 0.5)
+		mat_led.emission_enabled = true
+		mat_led.emission = Color(0.0, 0.9, 0.5) if rk_idx % 2 == 0 else Color(0.0, 0.8, 1.0)
+		mat_led.emission_energy_multiplier = 2.0
+		led.material_override = mat_led
+		rack.add_child(led)
+		led.owner = root
+
+	# Industrial Yellow Safety Guard Railings along perimeter
+	for rail_x in [-24.0, 24.0]:
+		var railing = MeshInstance3D.new()
+		railing.name = "SafetyRail_%s" % ("L" if rail_x < 0 else "R")
+		var rl_box = BoxMesh.new()
+		rl_box.size = Vector3(0.12, 1.0, 48.0)
+		railing.mesh = rl_box
+		railing.position = Vector3(rail_x, 0.50, -6.0)
+		var mat_rail = StandardMaterial3D.new()
+		mat_rail.albedo_color = Color(0.95, 0.80, 0.10)
+		mat_rail.metallic = 0.5
+		mat_rail.roughness = 0.3
+		railing.material_override = mat_rail
+		lab_env.add_child(railing)
+		railing.owner = root
+
+	# ZONE E (South-East Proving Grounds, X = +12m to +24m, Z = +8m to +20m):
+	# Robotic Manipulation & Pick-and-Place Testing Station
+	var zone_e_floor = MeshInstance3D.new()
+	zone_e_floor.name = "ZoneE_FloorPerimeter"
+	var ze_mesh = PlaneMesh.new()
+	ze_mesh.size = Vector2(12.0, 12.0)
+	zone_e_floor.mesh = ze_mesh
+	zone_e_floor.position = Vector3(16.0, 0.007, 12.0)
+	var mat_ze = StandardMaterial3D.new()
+	mat_ze.albedo_color = Color(0.10, 0.18, 0.22, 0.8)
+	mat_ze.roughness = 0.5
+	zone_e_floor.material_override = mat_ze
+	lab_env.add_child(zone_e_floor)
+	zone_e_floor.owner = root
+
+	# Heavy Steel Industrial Manipulation Table
+	var table_top = MeshInstance3D.new()
+	table_top.name = "ZoneE_WorkstationTable"
+	var tt_mesh = BoxMesh.new()
+	tt_mesh.size = Vector3(4.0, 0.15, 2.2)
+	table_top.mesh = tt_mesh
+	table_top.position = Vector3(16.0, 0.85, 12.0)
+	table_top.material_override = mat_platform
+	lab_env.add_child(table_top)
+	table_top.owner = root
+
+	# Workstation Legs
+	for leg_dx in [-1.8, 1.8]:
+		for leg_dz in [-0.9, 0.9]:
+			var leg = MeshInstance3D.new()
+			leg.name = "ZoneE_TableLeg_%d_%d" % [int(leg_dx * 10), int(leg_dz * 10)]
+			var leg_mesh = BoxMesh.new()
+			leg_mesh.size = Vector3(0.12, 0.85, 0.12)
+			leg.mesh = leg_mesh
+			leg.position = Vector3(16.0 + leg_dx, 0.425, 12.0 + leg_dz)
+			leg.material_override = mat_steel
+			lab_env.add_child(leg)
+			leg.owner = root
+
+	# Overhead Tool Gantry / Indicator Bar
+	var gantry_bar = MeshInstance3D.new()
+	gantry_bar.name = "ZoneE_ToolGantry"
+	var gb_mesh = BoxMesh.new()
+	gb_mesh.size = Vector3(3.6, 0.08, 0.08)
+	gantry_bar.mesh = gb_mesh
+	gantry_bar.position = Vector3(16.0, 2.2, 12.0)
+	var mat_gantry = StandardMaterial3D.new()
+	mat_gantry.albedo_color = Color(0.0, 0.85, 1.0)
+	mat_gantry.emission_enabled = true
+	mat_gantry.emission = Color(0.0, 0.85, 1.0)
+	mat_gantry.emission_energy_multiplier = 1.5
+	gantry_bar.material_override = mat_gantry
+	lab_env.add_child(gantry_bar)
+	gantry_bar.owner = root
 
 	# 5. CameraController
 	var cam_ctrl = Node3D.new()
@@ -430,7 +778,7 @@ func _init() -> void:
 	var cam3d = Camera3D.new()
 	cam3d.name = "Camera3D"
 	cam3d.current = true
-	cam3d.fov = 60.0
+	cam3d.fov = 52.0
 	cam3d.position = Vector3.ZERO
 	cam_ctrl.add_child(cam3d)
 	cam3d.owner = root
@@ -915,6 +1263,50 @@ func _init() -> void:
 	btn_r.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	hbox_qc2.add_child(btn_r)
 	btn_r.owner = root
+
+	# Arena Navigation D-Pad Controls
+	var lbl_steer = Label.new()
+	lbl_steer.text = "ARENA NAVIGATION [WASD]"
+	lbl_steer.add_theme_font_size_override("font_size", 11)
+	lbl_steer.add_theme_color_override("font_color", Color(0.0, 0.85, 1.0))
+	vbox_qc.add_child(lbl_steer)
+	lbl_steer.owner = root
+
+	var hbox_qnav1 = HBoxContainer.new()
+	vbox_qc.add_child(hbox_qnav1)
+	hbox_qnav1.owner = root
+
+	var btn_q_fwd = Button.new()
+	btn_q_fwd.name = "BtnQuickFwd"
+	btn_q_fwd.text = "▲ Forward [W]"
+	btn_q_fwd.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	hbox_qnav1.add_child(btn_q_fwd)
+	btn_q_fwd.owner = root
+
+	var btn_q_back = Button.new()
+	btn_q_back.name = "BtnQuickBack"
+	btn_q_back.text = "▼ Backward [S]"
+	btn_q_back.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	hbox_qnav1.add_child(btn_q_back)
+	btn_q_back.owner = root
+
+	var hbox_qnav2 = HBoxContainer.new()
+	vbox_qc.add_child(hbox_qnav2)
+	hbox_qnav2.owner = root
+
+	var btn_q_left = Button.new()
+	btn_q_left.name = "BtnQuickLeft"
+	btn_q_left.text = "◀ Turn Left [A]"
+	btn_q_left.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	hbox_qnav2.add_child(btn_q_left)
+	btn_q_left.owner = root
+
+	var btn_q_right = Button.new()
+	btn_q_right.name = "BtnQuickRight"
+	btn_q_right.text = "▶ Turn Right [D]"
+	btn_q_right.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	hbox_qnav2.add_child(btn_q_right)
+	btn_q_right.owner = root
 
 	# Disturbance Card
 	var card_dist = PanelContainer.new()
@@ -1693,7 +2085,7 @@ func _init() -> void:
 	vb_chk.add_child(lbl_chk_hdr)
 	lbl_chk_hdr.owner = root
 
-	var c_boxes = ["ChkExpC1", "ChkExpC2", "ChkExpC3", "ChkExpC4"]
+	var c_boxes = ["ChkExpC1", "ChkExpC2", "ChkExpC3", "ChkExpC4", "ChkExpC5"]
 	for cb_name in c_boxes:
 		var cb = CheckBox.new(); cb.name = cb_name; cb.text = "Criterion"; cb.disabled = true
 		vb_chk.add_child(cb); cb.owner = root

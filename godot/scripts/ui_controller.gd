@@ -103,6 +103,7 @@ var chk_exp_c1: CheckBox
 var chk_exp_c2: CheckBox
 var chk_exp_c3: CheckBox
 var chk_exp_c4: CheckBox
+var chk_exp_c5: CheckBox
 var lbl_exp_summary: Label
 
 # --- Settings Tab ---
@@ -178,10 +179,20 @@ const EXPERIMENT_INFO = {
 		"c2": "COM inside support polygon",
 		"c3": "Zero fall incidents",
 		"c4": "Ankle pitch compensation active"
+	},
+	6: {
+		"title": "Experiment 6: Pick & Place Manipulation Test",
+		"desc": "Autonomous approach, upper-limb arm reach, physical object grasp, 0.15m vertical lift, payload transport, and precision placement into destination receptacle.",
+		"c1": "Approach Pick Station",
+		"c2": "Arm Trajectory & Grasp",
+		"c3": "Vertical Lift Clearance",
+		"c4": "Transport to Place Zone",
+		"c5": "Precision Place & Release"
 	}
 }
 
 func _ready() -> void:
+	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_resolve_references()
 	_setup_top_bar()
 	_setup_collapsible_panels()
@@ -307,6 +318,7 @@ func _resolve_references() -> void:
 	chk_exp_c2 = find_child("ChkExpC2", true, false) as CheckBox
 	chk_exp_c3 = find_child("ChkExpC3", true, false) as CheckBox
 	chk_exp_c4 = find_child("ChkExpC4", true, false) as CheckBox
+	chk_exp_c5 = find_child("ChkExpC5", true, false) as CheckBox
 	lbl_exp_summary = find_child("LblExpSummary", true, false) as Label
 
 	# Settings
@@ -398,7 +410,9 @@ func _setup_collapsible_panels() -> void:
 		if network_client: network_client.send_command("walk")
 	)
 	_bind_button("BtnSimStop", func():
-		if network_client: network_client.send_command("stop")
+		if network_client:
+			network_client.send_command("stop")
+			network_client.cancel_navigation()
 	)
 	_bind_button("BtnSimStand", func():
 		_reset_sliders_to_defaults()
@@ -406,8 +420,61 @@ func _setup_collapsible_panels() -> void:
 	)
 	_bind_button("BtnSimReset", func():
 		_reset_sliders_to_defaults()
-		if network_client: network_client.send_command("reset")
+		if network_client:
+			network_client.send_command("reset")
+			network_client.cancel_navigation()
 	)
+
+	# Quick Arena Navigation D-Pad buttons on main simulation tab
+	_bind_button("BtnQuickFwd", func(): if network_client: network_client.set_direction("forward"))
+	_bind_button("BtnQuickBack", func(): if network_client: network_client.set_direction("backward"))
+	_bind_button("BtnQuickLeft", func(): if network_client: network_client.set_direction("turn_left"))
+	_bind_button("BtnQuickRight", func(): if network_client: network_client.set_direction("turn_right"))
+
+	# Goal Navigation section with click-to-floor guidance & preset destination buttons
+	var btn_fwd: Button = find_child("BtnQuickFwd", true, false) as Button
+	if btn_fwd:
+		var parent_vbox = btn_fwd.get_parent().get_parent()
+		if parent_vbox is VBoxContainer:
+			var lbl_goal_title = Label.new()
+			lbl_goal_title.text = "🎯 GOAL NAVIGATION [A* OPTIMAL]"
+			lbl_goal_title.add_theme_font_size_override("font_size", 11)
+			lbl_goal_title.add_theme_color_override("font_color", Color(0.0, 0.9, 1.0))
+			parent_vbox.add_child(lbl_goal_title)
+
+			var lbl_hint = Label.new()
+			lbl_hint.text = "💡 Left-Click on 3D floor (or Shift+Click)"
+			lbl_hint.add_theme_font_size_override("font_size", 10)
+			lbl_hint.add_theme_color_override("font_color", Color(0.7, 0.85, 0.95))
+			parent_vbox.add_child(lbl_hint)
+
+			var hbox_presets_1 = HBoxContainer.new()
+			var btn_goal_1 = Button.new()
+			btn_goal_1.text = "Goal [2.5, 1.0]"
+			btn_goal_1.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+			btn_goal_1.pressed.connect(func(): if network_client: network_client.navigate_to_goal(2.5, 1.0))
+			hbox_presets_1.add_child(btn_goal_1)
+
+			var btn_goal_2 = Button.new()
+			btn_goal_2.text = "Goal [3.5, -1.0]"
+			btn_goal_2.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+			btn_goal_2.pressed.connect(func(): if network_client: network_client.navigate_to_goal(3.5, -1.0))
+			hbox_presets_1.add_child(btn_goal_2)
+			parent_vbox.add_child(hbox_presets_1)
+
+			var hbox_presets_2 = HBoxContainer.new()
+			var btn_goal_3 = Button.new()
+			btn_goal_3.text = "Origin [0, 0]"
+			btn_goal_3.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+			btn_goal_3.pressed.connect(func(): if network_client: network_client.navigate_to_goal(0.0, 0.0))
+			hbox_presets_2.add_child(btn_goal_3)
+
+			var btn_cancel_nav = Button.new()
+			btn_cancel_nav.text = "❌ Cancel"
+			btn_cancel_nav.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+			btn_cancel_nav.pressed.connect(func(): if network_client: network_client.cancel_navigation())
+			hbox_presets_2.add_child(btn_cancel_nav)
+			parent_vbox.add_child(hbox_presets_2)
 
 	# Disturbance buttons
 	_bind_button("BtnSimSmallPush", func(): if network_client: network_client.send_push(60.0, "forward", 0.15))
@@ -515,7 +582,7 @@ func _setup_analytics_tab() -> void:
 func _setup_experiments_tab() -> void:
 	if opt_exp_scenario:
 		opt_exp_scenario.clear()
-		for id in range(1, 6):
+		for id in range(1, 7):
 			opt_exp_scenario.add_item(EXPERIMENT_INFO[id]["title"], id)
 		opt_exp_scenario.item_selected.connect(_on_experiment_selected)
 		_on_experiment_selected(0)
@@ -547,6 +614,20 @@ func _on_experiment_selected(index: int) -> void:
 		if chk_exp_c2: chk_exp_c2.text = info["c2"]; chk_exp_c2.button_pressed = false
 		if chk_exp_c3: chk_exp_c3.text = info["c3"]; chk_exp_c3.button_pressed = false
 		if chk_exp_c4: chk_exp_c4.text = info["c4"]; chk_exp_c4.button_pressed = false
+		if chk_exp_c5:
+			if "c5" in info:
+				chk_exp_c5.text = info["c5"]
+				chk_exp_c5.visible = true
+				chk_exp_c5.button_pressed = false
+			else:
+				chk_exp_c5.visible = false
+
+		# Frame the workstation with optimal camera perspective for manipulation
+		if exp_id == 6 and camera_controller:
+			camera_controller.target_yaw = deg_to_rad(-50.0)
+			camera_controller.target_pitch = deg_to_rad(-18.0)
+			camera_controller.target_distance = 2.2
+			camera_controller.transitioning = true
 
 func _setup_settings_tab() -> void:
 	if sld_set_gravity:
@@ -774,11 +855,31 @@ func _on_telemetry_received(data: Dictionary) -> void:
 			sensors.get("left_distance", 0.0),
 			sensors.get("right_distance", 0.0)
 		]
-	if lbl_sim_avoidance: lbl_sim_avoidance.text = "Avoidance: " + avoidance.get("action", "CLEAR")
+	var nav = data.get("navigation", {})
+	if lbl_sim_avoidance:
+		if nav.get("active", false):
+			var g = nav.get("goal", [0, 0])
+			var d = nav.get("distance_to_goal", 0.0)
+			lbl_sim_avoidance.text = "Goal: (%.1f, %.1f) | Dist: %.2fm" % [g[0], g[1], d]
+			lbl_sim_avoidance.add_theme_color_override("font_color", Color(0.0, 0.9, 1.0))
+		elif nav.get("status", "") == "REACHED":
+			var g = nav.get("goal", [0, 0])
+			lbl_sim_avoidance.text = "Goal REACHED! (%.1f, %.1f)" % [g[0], g[1]]
+			lbl_sim_avoidance.add_theme_color_override("font_color", Color(0.2, 1.0, 0.4))
+		else:
+			lbl_sim_avoidance.text = "Avoidance: " + avoidance.get("action", "CLEAR")
+			lbl_sim_avoidance.add_theme_color_override("font_color", Color(0.8, 0.85, 0.9))
 	if lbl_sim_collisions: lbl_sim_collisions.text = "Collisions: %d" % collisions
 
 	# 3. Robot Control Tab
-	if lbl_ctrl_dir: lbl_ctrl_dir.text = "Direction: " + walking.get("direction", "FORWARD")
+	if lbl_ctrl_dir:
+		if nav.get("active", false):
+			var g = nav.get("goal", [0, 0])
+			var wp_idx = nav.get("waypoint_index", 0) + 1
+			var wp_total = max(1, nav.get("path", []).size())
+			lbl_ctrl_dir.text = "Nav -> (%.1f, %.1f) | WP %d/%d" % [g[0], g[1], wp_idx, wp_total]
+		else:
+			lbl_ctrl_dir.text = "Direction: " + walking.get("direction", "FORWARD")
 	if lbl_ctrl_speed: lbl_ctrl_speed.text = "Speed: %.2f m/s" % walking.get("instantaneous_speed", 0.0)
 	if lbl_ctrl_dist: lbl_ctrl_dist.text = "Distance: %.2f m" % walking.get("walking_distance", 0.0)
 	if lbl_ctrl_support: lbl_ctrl_support.text = "Support: " + walking.get("support_leg", "DOUBLE")
@@ -853,17 +954,24 @@ func _on_telemetry_received(data: Dictionary) -> void:
 		if prog_exp: prog_exp.value = exp_prog * 100.0
 		if lbl_exp_status:
 			lbl_exp_status.text = "Status: %s (Time: %.1fs)" % [exp_status_str, exp_data.get("elapsed_time", 0.0)]
-			if exp_status_str == "COMPLETED_SUCCESS":
+			if exp_status_str in ["COMPLETED_SUCCESS", "PASSED"]:
 				lbl_exp_status.add_theme_color_override("font_color", Color(0.2, 0.9, 0.4))
 			elif exp_status_str == "RUNNING":
 				lbl_exp_status.add_theme_color_override("font_color", Color(0.0, 0.85, 1.0))
 			elif "FAILED" in exp_status_str:
 				lbl_exp_status.add_theme_color_override("font_color", Color(1.0, 0.25, 0.25))
 
-		var criteria = exp_data.get("criteria", {})
-		if chk_exp_c1 and criteria.has("distance_met"): chk_exp_c1.button_pressed = criteria["distance_met"]
-		if chk_exp_c2 and criteria.has("tilt_stable"): chk_exp_c2.button_pressed = criteria["tilt_stable"]
-		if chk_exp_c3 and criteria.has("zero_falls"): chk_exp_c3.button_pressed = criteria["zero_falls"]
+		var criteria = exp_data.get("criteria", [])
+		if criteria is Array:
+			if criteria.size() > 0 and chk_exp_c1: chk_exp_c1.button_pressed = criteria[0].get("met", false)
+			if criteria.size() > 1 and chk_exp_c2: chk_exp_c2.button_pressed = criteria[1].get("met", false)
+			if criteria.size() > 2 and chk_exp_c3: chk_exp_c3.button_pressed = criteria[2].get("met", false)
+			if criteria.size() > 3 and chk_exp_c4: chk_exp_c4.button_pressed = criteria[3].get("met", false)
+			if criteria.size() > 4 and chk_exp_c5: chk_exp_c5.button_pressed = criteria[4].get("met", false)
+		elif criteria is Dictionary:
+			if chk_exp_c1 and criteria.has("distance_met"): chk_exp_c1.button_pressed = criteria["distance_met"]
+			if chk_exp_c2 and criteria.has("tilt_stable"): chk_exp_c2.button_pressed = criteria["tilt_stable"]
+			if chk_exp_c3 and criteria.has("zero_falls"): chk_exp_c3.button_pressed = criteria["zero_falls"]
 
 	# 8. Update Joint Sliders from telemetry
 	var joints = data.get("joints", {})
@@ -894,3 +1002,19 @@ func _on_telemetry_received(data: Dictionary) -> void:
 				event_log_list.set_item_custom_fg_color(item_idx, Color(0.7, 0.85, 1.0))
 		last_event_count = events.size()
 		event_log_list.ensure_current_is_visible()
+
+func _unhandled_input(event: InputEvent) -> void:
+	if not network_client or not is_instance_valid(network_client):
+		return
+	if event is InputEventKey and event.is_pressed() and not event.is_echo():
+		match event.keycode:
+			KEY_W, KEY_UP:
+				network_client.set_direction("forward")
+			KEY_S, KEY_DOWN:
+				network_client.set_direction("backward")
+			KEY_A, KEY_LEFT:
+				network_client.set_direction("turn_left")
+			KEY_D, KEY_RIGHT:
+				network_client.set_direction("turn_right")
+			KEY_SPACE:
+				network_client.send_command("stop")

@@ -46,6 +46,7 @@ class PhysicsSimulation:
 
         # Structured event logger
         self.event_logger = EventLogger()
+        self.grasp_constraint_id: int = -1
 
         # Initialize simulation
         self.initialize()
@@ -84,7 +85,14 @@ class PhysicsSimulation:
             flags=p.URDF_USE_INERTIA_FROM_FILE | p.URDF_USE_SELF_COLLISION,
         )
 
-        # Configure foot friction
+        # Configure base stabilization damping and foot friction
+        p.changeDynamics(
+            self.robot_id,
+            -1,
+            linearDamping=0.08,
+            angularDamping=0.30,
+        )
+
         num_joints = p.getNumJoints(self.robot_id)
         for i in range(num_joints):
             info = p.getJointInfo(self.robot_id, i)
@@ -93,9 +101,9 @@ class PhysicsSimulation:
                 p.changeDynamics(
                     self.robot_id,
                     i,
-                    lateralFriction=1.2,
-                    spinningFriction=0.1,
-                    rollingFriction=0.1,
+                    lateralFriction=1.4,
+                    spinningFriction=0.05,
+                    rollingFriction=0.05,
                 )
 
         # Initialize robot coordinator
@@ -165,15 +173,23 @@ class PhysicsSimulation:
                 rgbaColor=[0.95, 0.55, 0.1, 1.0],
             )
         elif obs_type == "ramp":
-            half_extents = size if size and len(size) >= 3 else [0.8, 0.5, 0.12]
+            half_extents = size if size and len(size) >= 3 else [1.0, 0.6, 0.05]
             col_id = p.createCollisionShape(p.GEOM_BOX, halfExtents=half_extents)
             vis_id = p.createVisualShape(
                 p.GEOM_BOX,
                 halfExtents=half_extents,
                 rgbaColor=[0.25, 0.65, 0.85, 1.0],
             )
-            # 8 degree incline around Y axis
-            orientation = p.getQuaternionFromEuler([0.0, -0.14, 0.0])
+            # 3.5 degree gentle incline around Y axis
+            orientation = p.getQuaternionFromEuler([0.0, -0.06, 0.0])
+        elif obs_type == "receptacle":
+            half_extents = size if size and len(size) >= 3 else [0.09, 0.09, 0.20]
+            col_id = p.createCollisionShape(p.GEOM_BOX, halfExtents=half_extents)
+            vis_id = p.createVisualShape(
+                p.GEOM_BOX,
+                halfExtents=half_extents,
+                rgbaColor=[0.15, 0.75, 0.45, 1.0],
+            )
         else:  # default 'cube'
             half_extents = size if size and len(size) >= 3 else [0.25, 0.25, 0.4]
             col_id = p.createCollisionShape(p.GEOM_BOX, halfExtents=half_extents)
@@ -213,20 +229,66 @@ class PhysicsSimulation:
             del self.obstacles[obstacle_id]
 
     def clear_all_obstacles(self):
+        self.release_grasp_constraint()
         for obs_id in list(self.obstacles.keys()):
             p.removeBody(obs_id)
         self.obstacles.clear()
+        self.total_collisions = 0
+        self.active_collision = False
         if self.event_logger:
             self.event_logger.log("Environment", "Cleared all environment obstacles", "INFO")
 
+    def create_grasp_constraint(self, target_body_id: int) -> int:
+        """Attach object to robot right hand tip using PyBullet fixed joint constraint."""
+        self.release_grasp_constraint()
+        try:
+            self.grasp_constraint_id = p.createConstraint(
+                parentBodyUniqueId=self.robot_id,
+                parentLinkIndex=4,
+                childBodyUniqueId=target_body_id,
+                childLinkIndex=-1,
+                jointType=p.JOINT_FIXED,
+                jointAxis=[0.0, 0.0, 0.0],
+                parentFramePosition=[0.0, 0.0, -0.20],
+                childFramePosition=[0.0, 0.0, 0.0],
+            )
+            return self.grasp_constraint_id
+        except Exception as e:
+            print(f"[Simulation] Failed to create grasp constraint: {e}")
+            return -1
+
+    def release_grasp_constraint(self):
+        """Release grasped object and detach constraint."""
+        if self.grasp_constraint_id != -1:
+            try:
+                p.removeConstraint(self.grasp_constraint_id)
+            except Exception:
+                pass
+            self.grasp_constraint_id = -1
+
     def _check_collisions(self):
         """Evaluate physical contact points between robot links and spawned obstacles."""
+        # During manipulation scenario 6, arm/hand interaction with target object is intentional
+        if self.experiment_mgr and self.experiment_mgr.current_scenario_id == 6 and self.experiment_mgr.active:
+            self.active_collision = False
+            return
+
         had_collision = False
-        for obs_id in self.obstacles.keys():
+        for obs_id, info in self.obstacles.items():
+            obs_type = info.get("type", "cube").lower()
             contacts = p.getContactPoints(bodyA=self.robot_id, bodyB=obs_id)
             if contacts and len(contacts) > 0:
-                had_collision = True
-                break
+                # If obstacle is a ramp / terrain meant to be walked on:
+                # Contact on feet (link 8 or 12) is normal walking support contact.
+                # Only non-foot contact (e.g. torso, knees, arms) counts as a collision.
+                if obs_type == "ramp":
+                    non_foot_contacts = [c for c in contacts if c[3] not in (8, 12)]
+                    if non_foot_contacts:
+                        had_collision = True
+                        break
+                else:
+                    had_collision = True
+                    break
 
         if had_collision and not self.active_collision:
             self.total_collisions += 1
@@ -236,12 +298,12 @@ class PhysicsSimulation:
 
     def step(self) -> Dict[str, Any]:
         """Advance physics simulation by one time step and update robot telemetry."""
-        # 1. Update robot control
-        telemetry = self.robot.update(self.time_step)
+        # 1. Update robot control with live obstacle awareness
+        telemetry = self.robot.update(self.time_step, obstacles=list(self.obstacles.values()))
 
-        # 2. Update walking odometry
+        # 2. Update walking odometry (full 2D planar tracking)
         base_pos, _ = p.getBasePositionAndOrientation(self.robot_id)
-        self.robot.walking_ctrl.update_odometry(base_pos[0], self.time_step)
+        self.robot.walking_ctrl.update_odometry(base_pos[:2], self.time_step)
 
         # 3. Advance PyBullet physics
         p.stepSimulation()
@@ -254,8 +316,15 @@ class PhysicsSimulation:
             self.experiment_mgr.metrics["collisions"] = self.total_collisions
             self.experiment_mgr.update(self.time_step, telemetry)
 
-        # 6. Attach environment info, collision counts, event logs, and experiment state
-        telemetry["obstacles"] = list(self.obstacles.values())
+        # 6. Attach environment info with live dynamic obstacle positions & orientations
+        live_obstacles = []
+        for body_id, info in self.obstacles.items():
+            pos, orn = p.getBasePositionAndOrientation(body_id)
+            entry = dict(info)
+            entry["position"] = [round(float(x), 4) for x in pos]
+            entry["orientation"] = [round(float(x), 4) for x in orn]
+            live_obstacles.append(entry)
+        telemetry["obstacles"] = live_obstacles
         telemetry["collision_count"] = self.total_collisions
         telemetry["active_collision"] = self.active_collision
         telemetry["events"] = self.event_logger.get_recent(25) if self.event_logger else []
@@ -270,10 +339,25 @@ class PhysicsSimulation:
 
     def reset_robot(self):
         """Reset robot to initial posture without clearing obstacles."""
+        self.release_grasp_constraint()
         if self.robot:
             self.robot.reset()
+        p.changeDynamics(self.robot_id, -1, linearDamping=0.08, angularDamping=0.30)
+        self.total_collisions = 0
+        self.active_collision = False
         if self.event_logger:
             self.event_logger.log("Simulation", "Robot posture reset to initial nominal standing", "INFO")
+
+    def stand_robot_in_place(self):
+        """Restore robot upright at its current (X, Y) arena position without teleporting to start."""
+        self.release_grasp_constraint()
+        if self.robot:
+            self.robot.stand_in_place()
+        p.changeDynamics(self.robot_id, -1, linearDamping=0.08, angularDamping=0.30)
+        self.total_collisions = 0
+        self.active_collision = False
+        if self.event_logger:
+            self.event_logger.log("Simulation", "Robot stood upright at current position", "INFO")
 
     def close(self):
         """Disconnect PyBullet physics client."""

@@ -31,6 +31,10 @@ def normalize_angle(angle: float) -> float:
     return angle
 
 
+# Alias for angle wrapping
+wrap_to_pi = normalize_angle
+
+
 def compute_center_of_mass(
     masses: List[float], positions: List[Tuple[float, float, float]]
 ) -> Tuple[float, float, float]:

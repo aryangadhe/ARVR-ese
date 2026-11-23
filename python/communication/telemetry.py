@@ -34,6 +34,7 @@ class TelemetryBuilder:
             "pid_gains": simulation_data.get("pid_gains", {}),
             "walking": simulation_data.get("walking", {}),
             "obstacle_avoidance": simulation_data.get("obstacle_avoidance", {}),
+            "navigation": simulation_data.get("navigation", {}),
             "sensors": simulation_data.get("sensors", {}),
             "joints": simulation_data.get("joints", {}),
             "links": simulation_data.get("links", {}),

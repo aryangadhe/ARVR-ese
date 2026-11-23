@@ -22,7 +22,7 @@ class ObstacleAvoidanceController:
     def __init__(
         self,
         stop_threshold: float = 0.70,
-        warning_threshold: float = 1.40,
+        warning_threshold: float = 1.80,
     ):
         self.enabled = True
         self.stop_threshold = float(stop_threshold)
@@ -75,7 +75,7 @@ class ObstacleAvoidanceController:
         elif front < self.stop_threshold:
             # Immediate obstacle in front: sharp evasive turn
             self.status_level = self.STATUS_DETECTED
-            self.speed_factor = 0.25
+            self.speed_factor = 0.40
             if left >= right:
                 self.current_action = self.ACTION_AVOID_LEFT
                 self.turn_rate = -0.85
@@ -88,12 +88,12 @@ class ObstacleAvoidanceController:
             # Front obstructed at warning distance: slow down and steer toward clearer side
             self.status_level = self.STATUS_WARNING
             ratio = (front - self.stop_threshold) / max(0.1, (self.warning_threshold - self.stop_threshold))
-            self.speed_factor = max(0.35, min(1.0, ratio))
+            self.speed_factor = max(0.50, min(1.0, ratio))
 
-            if left > right and left > self.stop_threshold:
+            if left >= right and left > self.stop_threshold:
                 self.current_action = self.ACTION_AVOID_LEFT
                 self.turn_rate = -0.75
-                reason = f"Obstacle ahead ({front:.2f}m): steering left (L: {left:.2f}m > R: {right:.2f}m)"
+                reason = f"Obstacle ahead ({front:.2f}m): steering left (L: {left:.2f}m >= R: {right:.2f}m)"
             elif right > left and right > self.stop_threshold:
                 self.current_action = self.ACTION_AVOID_RIGHT
                 self.turn_rate = 0.75
@@ -103,6 +103,20 @@ class ObstacleAvoidanceController:
                 self.turn_rate = 0.0
                 self.speed_factor = 0.0
                 reason = "Front obstructed, no clear alternate path"
+        elif right < 0.45 and left > 0.60:
+            # Flank clearance: obstacle close on right side, steer left to maintain safe margin
+            self.status_level = self.STATUS_WARNING
+            self.current_action = self.ACTION_AVOID_LEFT
+            self.turn_rate = -0.55
+            self.speed_factor = 0.85
+            reason = f"Right flank clearance ({right:.2f}m < 0.45m): nudging left"
+        elif left < 0.45 and right > 0.60:
+            # Flank clearance: obstacle close on left side, steer right to maintain safe margin
+            self.status_level = self.STATUS_WARNING
+            self.current_action = self.ACTION_AVOID_RIGHT
+            self.turn_rate = 0.55
+            self.speed_factor = 0.85
+            reason = f"Left flank clearance ({left:.2f}m < 0.45m): nudging right"
         else:
             # Path clear
             self.current_action = self.ACTION_CLEAR

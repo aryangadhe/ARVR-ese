@@ -5,24 +5,24 @@ class_name CameraController
 @export var orbit_speed: float = 0.005
 @export var pan_speed: float = 0.005
 @export var zoom_speed: float = 0.5
-@export var min_distance: float = 0.8
-@export var max_distance: float = 12.0
+@export var min_distance: float = 0.6
+@export var max_distance: float = 35.0
 
-var distance: float = 2.8
-var pitch: float = -0.30
+var distance: float = 2.5
+var pitch: float = -0.28
 var yaw: float = 0.785  # ~45 deg
-var target_offset: Vector3 = Vector3(0, 0.85, 0)
+var target_offset: Vector3 = Vector3(0, 0.50, 0)
 
 var is_orbiting: bool = false
 var is_panning: bool = false
 var last_mouse_pos: Vector2 = Vector2.ZERO
 
 var current_mode: String = "ORBIT"
-var robot_pos_cached: Vector3 = Vector3(0, 0.85, 0)
+var robot_pos_cached: Vector3 = Vector3(0, 0.50, 0)
 
 # Target values for smooth preset transitions
-var target_distance: float = 2.8
-var target_pitch: float = -0.30
+var target_distance: float = 2.5
+var target_pitch: float = -0.28
 var target_yaw: float = 0.785
 var transitioning: bool = false
 
@@ -49,31 +49,31 @@ func set_mode(mode: String) -> void:
 	current_mode = mode
 	match mode:
 		"ORBIT":
-			target_distance = 3.2
-			target_pitch = -0.35
+			target_distance = 2.5
+			target_pitch = -0.28
 			target_yaw = 0.785
-			target_offset = robot_pos_cached + Vector3(0, 0.4, 0)
+			target_offset = robot_pos_cached + Vector3(0, 0.45, 0)
 			transitioning = true
 		"FOLLOW":
-			target_distance = 2.8
-			target_pitch = -0.25
-			target_yaw = 0.4
+			target_distance = 2.4
+			target_pitch = -0.20
+			target_yaw = 0.35
 			transitioning = true
 		"FRONT":
-			target_distance = 3.0
-			target_pitch = -0.10
+			target_distance = 2.4
+			target_pitch = -0.05
 			target_yaw = 3.14159  # Facing front
-			target_offset = robot_pos_cached + Vector3(0, 0.5, 0)
+			target_offset = robot_pos_cached + Vector3(0, 0.50, 0)
 			transitioning = true
 		"SIDE":
-			target_distance = 3.0
-			target_pitch = -0.10
+			target_distance = 2.5
+			target_pitch = -0.05
 			target_yaw = 1.5708  # Profile view
-			target_offset = robot_pos_cached + Vector3(0, 0.5, 0)
+			target_offset = robot_pos_cached + Vector3(0, 0.50, 0)
 			transitioning = true
 		"TOP":
-			target_distance = 4.5
-			target_pitch = -1.45  # Near 90 deg down
+			target_distance = 4.2
+			target_pitch = -1.50  # 90 deg top-down view
 			target_yaw = 0.0
 			target_offset = robot_pos_cached + Vector3(0, 0.0, 0)
 			transitioning = true
@@ -93,8 +93,11 @@ func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton:
 		var mb = event as InputEventMouseButton
 		if mb.button_index == MOUSE_BUTTON_LEFT:
-			is_orbiting = mb.pressed
-			last_mouse_pos = mb.position
+			if not mb.shift_pressed:
+				is_orbiting = mb.pressed
+				last_mouse_pos = mb.position
+			else:
+				is_orbiting = false
 		elif mb.button_index == MOUSE_BUTTON_RIGHT or mb.button_index == MOUSE_BUTTON_MIDDLE:
 			is_panning = mb.pressed
 			last_mouse_pos = mb.position

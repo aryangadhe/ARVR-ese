@@ -29,21 +29,21 @@ class BalanceController:
 
         # Pitch PID controller: corrects forward/backward tilt
         self.pitch_pid = PIDController(
-            kp=1.1,
+            kp=1.8,
             ki=0.0,
-            kd=0.20,
-            min_output=-0.30,
-            max_output=0.30,
+            kd=0.35,
+            min_output=-0.45,
+            max_output=0.45,
             integral_limit=0.0,
         )
 
         # Roll PID controller: corrects lateral tilt
         self.roll_pid = PIDController(
-            kp=0.8,
+            kp=1.2,
             ki=0.0,
-            kd=0.15,
-            min_output=-0.20,
-            max_output=0.20,
+            kd=0.25,
+            min_output=-0.30,
+            max_output=0.30,
             integral_limit=0.0,
         )
 
@@ -183,7 +183,7 @@ class BalanceController:
         # In walking mode, walking_controller handles active stance sole leveling and dynamic limit-cycle balance.
         hip_pitch_scale = 0.0 if walking_active else 0.90
         hip_roll_scale = 0.0 if walking_active else 0.40
-        ankle_pitch_scale = 0.0 if walking_active else 0.40
+        ankle_pitch_scale = 0.0 if walking_active else 0.70
 
         offsets = {
             "left_hip_pitch": -corrective_pitch * hip_pitch_scale,

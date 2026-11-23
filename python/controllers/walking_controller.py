@@ -69,6 +69,7 @@ class WalkingController:
         # Odometry tracking
         self.walking_distance = 0.0
         self.prev_pos_x: Optional[float] = None
+        self.prev_pos_y: Optional[float] = None
         self.instantaneous_speed = 0.0
         self.support_leg = "DOUBLE"
 
@@ -105,6 +106,8 @@ class WalkingController:
         elif dir_upper in (self.DIR_TURN_RIGHT, "RIGHT", "TURN_RIGHT"):
             self.direction = self.DIR_TURN_RIGHT
             self.turn_rate = 0.75
+        # Ensure walking gait is active when steering direction is commanded
+        self.is_walking = True
 
     def set_turn_rate(self, turn_rate: float):
         self.turn_rate = clamp(turn_rate, -1.0, 1.0)
@@ -120,21 +123,21 @@ class WalkingController:
     def set_step_duration(self, duration: float):
         self.step_duration = clamp(duration, 0.30, 0.80)
 
-    def update_odometry(self, current_pos_x: float, dt: float):
-        """Update integrated walking distance from physical base movement."""
+    def update_odometry(self, current_pos: Any, dt: float):
+        """Update integrated walking distance from physical base movement across full 2D arena."""
+        if isinstance(current_pos, (list, tuple)) and len(current_pos) >= 2:
+            cur_x, cur_y = float(current_pos[0]), float(current_pos[1])
+        else:
+            cur_x, cur_y = float(current_pos), 0.0
+
         if self.prev_pos_x is not None and self.is_walking and dt > 1e-6:
-            dx = current_pos_x - self.prev_pos_x
-            # Accumulate progress in walking direction
-            if self.direction == self.DIR_FORWARD:
-                if dx > 0:
-                    self.walking_distance += dx
-            elif self.direction == self.DIR_BACKWARD:
-                if dx < 0:
-                    self.walking_distance += abs(dx)
-            else:
-                self.walking_distance += abs(dx)
-            self.instantaneous_speed = abs(dx) / dt
-        self.prev_pos_x = current_pos_x
+            dx = cur_x - self.prev_pos_x
+            dy = cur_y - (self.prev_pos_y if self.prev_pos_y is not None else 0.0)
+            ds = math.hypot(dx, dy)
+            self.walking_distance += ds
+            self.instantaneous_speed = ds / dt
+        self.prev_pos_x = cur_x
+        self.prev_pos_y = cur_y
 
     def update(
         self,
@@ -162,8 +165,8 @@ class WalkingController:
                 "targets": dict(self.nominal_standing),
             }
 
-        # Adjust step progression by speed multiplier
-        effective_rate = (self.speed / 0.4)
+        # Adjust step progression by speed multiplier (bounded to preserve inverted pendulum resonance)
+        effective_rate = clamp(self.speed / 0.4, 0.95, 1.35)
         self.step_time += dt * effective_rate
 
         if self.step_time >= self.step_duration:
@@ -187,10 +190,10 @@ class WalkingController:
         # 3. Hip pitch stabilizer: subtle torso angle counter-torque
         hip_pitch_stab = clamp(0.7 * pitch + 0.04 * pitch_rate, -0.15, 0.15)
         # 4. Roll stabilizer: damp lateral oscillations
-        roll_corr = clamp(0.4 * roll + 0.03 * roll_rate, -0.04, 0.04)
+        roll_corr = clamp(0.4 * roll + 0.03 * roll_rate, -0.045, 0.045)
 
         # Steering bias applied to swing leg for yaw rotation
-        turn_bias = clamp(self.turn_rate * 0.02, -0.025, 0.025)
+        turn_bias = clamp(self.turn_rate * 0.035, -0.045, 0.045)
 
         nom = self.nominal_standing
         targets = dict(nom)
@@ -201,12 +204,12 @@ class WalkingController:
         if self.current_step_idx == 0:
             phase_idx = self.PHASE_LEFT_SWING if u < 0.75 else self.PHASE_WEIGHT_SHIFT_LEFT
             # Left leg: Swing (lifts foot, reaches in travel direction, sole parallel to floor for flat touchdown)
-            hip_l = nom["left_hip_pitch"] - (self.step_amp * f_fwd) - hip_pitch_stab * 0.5 - turn_bias
+            hip_l = nom["left_hip_pitch"] - (self.step_amp * f_fwd) + hip_pitch_stab * 0.5 - turn_bias
             knee_l = nom["left_knee_pitch"] + lift
             ankle_l = clamp(-hip_l - knee_l, -0.7, 0.7)
 
             # Right leg: Stance (pushes on ground with full sole leveling + active ankle/knee pitch stabilization)
-            hip_r = nom["right_hip_pitch"] - (self.push_amp * f_bwd) - hip_pitch_stab
+            hip_r = nom["right_hip_pitch"] - (self.push_amp * f_bwd) + hip_pitch_stab
             knee_r = nom["right_knee_pitch"] + knee_stab
             ankle_r = clamp(-hip_r - knee_r + ankle_pitch_stab, -0.7, 0.7)
 
@@ -216,12 +219,12 @@ class WalkingController:
         else:
             phase_idx = self.PHASE_RIGHT_SWING if u < 0.75 else self.PHASE_WEIGHT_SHIFT_RIGHT
             # Right leg: Swing (lifts foot, reaches in travel direction, sole parallel to floor for flat touchdown)
-            hip_r = nom["right_hip_pitch"] - (self.step_amp * f_fwd) - hip_pitch_stab * 0.5 + turn_bias
+            hip_r = nom["right_hip_pitch"] - (self.step_amp * f_fwd) + hip_pitch_stab * 0.5 + turn_bias
             knee_r = nom["right_knee_pitch"] + lift
             ankle_r = clamp(-hip_r - knee_r, -0.7, 0.7)
 
             # Left leg: Stance (pushes on ground with full sole leveling + active ankle/knee pitch stabilization)
-            hip_l = nom["left_hip_pitch"] - (self.push_amp * f_bwd) - hip_pitch_stab
+            hip_l = nom["left_hip_pitch"] - (self.push_amp * f_bwd) + hip_pitch_stab
             knee_l = nom["left_knee_pitch"] + knee_stab
             ankle_l = clamp(-hip_l - knee_l + ankle_pitch_stab, -0.7, 0.7)
 
@@ -260,12 +263,14 @@ class WalkingController:
             "targets": targets,
         }
 
-    def reset(self):
+    def reset(self, reset_odometry: bool = True):
         self.is_walking = False
         self.direction = self.DIR_FORWARD
         self.step_time = 0.0
         self.turn_rate = 0.0
         self.current_step_idx = 0
         self.prev_pos_x = None
+        self.prev_pos_y = None
         self.instantaneous_speed = 0.0
-        self.walking_distance = 0.0
+        if reset_odometry:
+            self.walking_distance = 0.0

@@ -13,8 +13,8 @@ class DistanceSensor:
         self,
         robot_id: int,
         max_range: float = 3.5,
-        left_angle_deg: float = 35.0,
-        right_angle_deg: float = -35.0,
+        left_angle_deg: float = 30.0,
+        right_angle_deg: float = -30.0,
     ):
         self.robot_id = robot_id
         self.max_range = float(max_range)
@@ -27,78 +27,109 @@ class DistanceSensor:
 
     def read(self) -> Dict[str, Any]:
         """
-        Cast three rays (front, left, right) from the torso forward into the environment.
-        Returns distance readings, ray start/end points, and hit points for Godot visualization.
+        Cast multi-ray forward sensory fan into the environment.
+        Uses a forward wedge (-14° to +14°) to prevent forward blind spots,
+        along with left and right flank rays for corridor clearance.
         """
         pos, orn = p.getBasePositionAndOrientation(self.robot_id)
         euler = p.getEulerFromQuaternion(orn)
         yaw = euler[2]
 
-        # Ray origin slightly forward from torso center
-        sensor_height = pos[2] + 0.10
+        # Ray origin at lower torso / pelvis height (~0.60m) to reliably intercept obstacles
+        sensor_height = pos[2] - 0.22
         origin_x = pos[0] + 0.15 * math.cos(yaw)
         origin_y = pos[1] + 0.15 * math.sin(yaw)
         ray_from = [origin_x, origin_y, sensor_height]
 
-        angles = {
-            "front": yaw,
-            "left": yaw + self.left_angle_rad,
-            "right": yaw + self.right_angle_rad,
-        }
+        angles_map = [
+            ("front_c", yaw),
+            ("front_l", yaw + math.radians(14.0)),
+            ("front_r", yaw - math.radians(14.0)),
+            ("left", yaw + self.left_angle_rad),
+            ("right", yaw + self.right_angle_rad),
+        ]
 
         ray_from_list = []
         ray_to_list = []
-
-        for key in ["front", "left", "right"]:
-            theta = angles[key]
+        for _, theta in angles_map:
             to_x = origin_x + self.max_range * math.cos(theta)
             to_y = origin_y + self.max_range * math.sin(theta)
-            to_z = sensor_height
             ray_from_list.append(ray_from)
-            ray_to_list.append([to_x, to_y, to_z])
+            ray_to_list.append([to_x, to_y, sensor_height])
 
-        # Execute batch ray cast in PyBullet
         results = p.rayTestBatch(ray_from_list, ray_to_list)
 
-        readings = {}
-        rays_visualization = []
-        names = ["front", "left", "right"]
+        raw_distances = {}
+        hit_positions = {}
+        has_hits = {}
 
-        for idx, res in enumerate(results):
-            name = names[idx]
-            hit_object_id = res[0]
-            hit_fraction = res[2]
-            hit_position = res[3]
-
-            # If hit self or ground (z < 0.05), ignore as obstacle
-            if hit_object_id == self.robot_id or (hit_fraction < 1.0 and hit_position[2] < 0.05):
-                distance = self.max_range
-                hit_pos = ray_to_list[idx]
-                has_hit = False
-            elif hit_fraction < 1.0:
-                distance = hit_fraction * self.max_range
-                hit_pos = list(hit_position)
-                has_hit = True
+        for idx, (name, _) in enumerate(angles_map):
+            res = results[idx]
+            hit_id, _, hit_frac, hit_pos, _ = res
+            if hit_id == self.robot_id or (hit_frac < 1.0 and hit_pos[2] < 0.05):
+                dist = self.max_range
+                h_pos = ray_to_list[idx]
+                hit = False
+            elif hit_frac < 1.0:
+                dist = hit_frac * self.max_range
+                h_pos = list(hit_pos)
+                hit = True
             else:
-                distance = self.max_range
-                hit_pos = ray_to_list[idx]
-                has_hit = False
+                dist = self.max_range
+                h_pos = ray_to_list[idx]
+                hit = False
 
-            readings[f"{name}_distance"] = round(distance, 3)
-            readings[f"{name}_hit"] = has_hit
+            raw_distances[name] = dist
+            hit_positions[name] = h_pos
+            has_hits[name] = hit
 
-            rays_visualization.append({
-                "name": name,
+        # Forward reading synthesizes the forward wedge
+        f_dist = min(raw_distances["front_c"], raw_distances["front_l"], raw_distances["front_r"])
+        l_dist = raw_distances["left"]
+        r_dist = raw_distances["right"]
+
+        # Choose the representative hit point for the front ray visualization
+        front_key = min(["front_c", "front_l", "front_r"], key=lambda k: raw_distances[k])
+        front_hit = has_hits[front_key]
+        front_pos = hit_positions[front_key]
+
+        min_dist = min(f_dist, l_dist, r_dist)
+
+        rays_visualization = [
+            {
+                "name": "front",
                 "from": ray_from,
-                "to": ray_to_list[idx],
-                "hit_position": hit_pos,
-                "has_hit": has_hit,
-                "distance": round(distance, 3),
-            })
+                "to": ray_to_list[0],
+                "hit_position": front_pos,
+                "has_hit": front_hit,
+                "distance": round(f_dist, 3),
+            },
+            {
+                "name": "left",
+                "from": ray_from,
+                "to": ray_to_list[3],
+                "hit_position": hit_positions["left"],
+                "has_hit": has_hits["left"],
+                "distance": round(l_dist, 3),
+            },
+            {
+                "name": "right",
+                "from": ray_from,
+                "to": ray_to_list[4],
+                "hit_position": hit_positions["right"],
+                "has_hit": has_hits["right"],
+                "distance": round(r_dist, 3),
+            },
+        ]
 
-        readings["rays"] = rays_visualization
-        readings["min_distance"] = min(
-            readings["front_distance"], readings["left_distance"], readings["right_distance"]
-        )
-        return readings
+        return {
+            "front_distance": round(f_dist, 3),
+            "left_distance": round(l_dist, 3),
+            "right_distance": round(r_dist, 3),
+            "min_distance": round(min_dist, 3),
+            "front_hit": front_hit,
+            "left_hit": has_hits["left"],
+            "right_hit": has_hits["right"],
+            "rays": rays_visualization,
+        }
 

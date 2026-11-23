@@ -211,4 +211,17 @@ func clear_events() -> void:
 		"type": "clear_events"
 	})
 
+func navigate_to_goal(x: float, y: float, speed: float = 0.40) -> void:
+	send_json({
+		"type": "navigate_to_goal",
+		"x": x,
+		"y": y,
+		"speed": speed
+	})
+
+func cancel_navigation() -> void:
+	send_json({
+		"type": "cancel_navigation"
+	})
+
 

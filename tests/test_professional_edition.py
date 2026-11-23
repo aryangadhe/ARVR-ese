@@ -89,12 +89,12 @@ def test_balance_com_and_support_polygon(headless_sim):
     assert bal_error >= 0.0
 
 
-def test_all_five_robotics_experiments(headless_sim):
+def test_all_six_robotics_experiments(headless_sim):
     exp_mgr = headless_sim.experiment_mgr
     assert exp_mgr is not None
 
-    # Test each of the 5 scenarios
-    for exp_id in range(1, 6):
+    # Test each of the 6 scenarios
+    for exp_id in range(1, 7):
         exp_mgr.start_experiment(exp_id)
         state = exp_mgr.get_state()
         assert state["active"] is True

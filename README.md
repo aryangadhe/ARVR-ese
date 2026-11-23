@@ -6,9 +6,10 @@
 
 [![Python](https://img.shields.io/badge/Python-3.13-3776AB?logo=python&logoColor=white)](https://www.python.org/)
 [![PyBullet](https://img.shields.io/badge/Physics-PyBullet-FF6F00)](https://pybullet.org/)
-[![Godot](https://img.shields.io/badge/Visualization-Godot%204.7-478CBF?logo=godotengine&logoColor=white)](https://godotengine.org/)
+[![Godot](https://img.shields.io/badge/Visualization-Godot%204.x-478CBF?logo=godotengine&logoColor=white)](https://godotengine.org/)
 [![Blender](https://img.shields.io/badge/3D%20Assets-Blender%204.2-E87D0D?logo=blender&logoColor=white)](https://www.blender.org/)
-[![Tests](https://img.shields.io/badge/Tests-13%2F13%20Passed-brightgreen)](tests/)
+[![Tests](https://img.shields.io/badge/Unit%20Tests-26%2F26%20Passed-brightgreen)](tests/)
+[![Scenarios](https://img.shields.io/badge/Physics%20Scenarios-6%2F6%20Passed-brightgreen)](tests/run_scenarios.py)
 [![VR Standard](https://img.shields.io/badge/VR-OpenXR%20Ready-000000)](https://www.khronos.org/openxr/)
 
 ---
@@ -49,6 +50,21 @@ The system uses a strictly decoupled client-server architecture:
    - Planar 2D LiDAR fan simulation (16 rays over $120^\circ$).
    - Autonomous steering logic that turns toward the clearer path or halts if trapped.
    - Dynamic 3D in-engine obstacle placement (cubes, cylinders, walls) with visible raycast lines.
+6. **A* Optimal 2D Path Planning & Navigation:**
+   - 8-connected $A^*$ grid path planner with $0.52\text{ m}$ obstacle dilation and line-of-sight shortcut smoothing.
+   - Interactive 3D click-to-floor target selection (`_unhandled_input` raycasting with horizontal plane intersection).
+   - Visual 3D pulsing goal beacon (vertical cyan pillar + torus) and real-time optimal path ribbon (`ImmediateMesh`).
+   - Closed-loop waypoint tracking and arrival detection.
+7. **Stand-in-Place Recovery Mechanism:**
+   - Restores the fallen robot upright at its **exact current $(X, Y)$ arena position and heading**, without teleporting back to the origin.
+   - Resets base velocities and motor PIDs for stable standing.
+8. **Automated Robotics Experiments Suite (6 Benchmarks):**
+   - Scenario 1: Basic Walking Test (1.0m traversal with pitch stability).
+   - Scenario 2: Balance & Disturbance Recovery ($80\text{ N}$ impulse push absorption).
+   - Scenario 3: Push & Fall Dynamics ($60\text{ N}, 160\text{ N}, 350\text{ N}$ multi-stage impact).
+   - Scenario 4: Reactive Obstacle Course Bypass (zero collisions).
+   - Scenario 5: Uneven Terrain Incline Ramp Traversal.
+   - Scenario 6: Upper-Limb Pick & Place Manipulation with physical object grasping constraint.
 
 ---
 
@@ -135,7 +151,9 @@ VR-Humanoid-Robot-Simulator/
 │   │   ├── walking_controller.py    # 4-phase walking gait generator
 │   │   ├── balance_controller.py    # Feedback balance and dual PID
 │   │   ├── fall_controller.py       # Fall detection and state machine
-│   │   └── obstacle_avoidance.py    # Reactive steering avoidance
+│   │   ├── obstacle_avoidance.py    # Reactive steering avoidance
+│   │   ├── navigation_controller.py # A* optimal path planning and waypoint tracking
+│   │   └── experiment_manager.py    # 6 automated benchmark robotics scenarios
 │   │
 │   ├── sensors/
 │   │   ├── imu_sensor.py            # Simulated IMU (roll, pitch, yaw)
@@ -182,12 +200,15 @@ VR-Humanoid-Robot-Simulator/
 │   ├── algorithms.md          # Walking, PID, and avoidance algorithms
 │   └── testing.md             # Validation report and test results
 │
-└── tests/                     # Automated Test Suite (pytest)
+└── tests/                     # Automated Test Suite (pytest) & Scenarios
     ├── test_joints.py         # Joint limits and actuation tests
-    ├── test_physics.py        # Dynamics, gravity, and push tests
+    ├── test_physics.py        # Dynamics, gravity, push tests, and stand-in-place
     ├── test_balance.py        # PID, gait, and avoidance logic tests
+    ├── test_navigation.py     # A* optimal path planning & steering direction
+    ├── test_professional_edition.py # Multi-directional gait, CoM, & 6 experiments
     ├── test_communication.py  # JSON protocol and telemetry tests
-    └── test_integration.py    # Live TCP socket handshake tests
+    ├── test_integration.py    # Live TCP socket handshake tests
+    └── run_scenarios.py       # Physics scenario benchmark execution runner
 ```
 
 ---
@@ -214,11 +235,15 @@ python python/main.py
 godot --path godot
 ```
 
-### 3. Running Unit and Integration Tests
+### 3. Running Unit Tests and Physics Verification Scenarios
 ```bash
+# Run full unit and integration test suite (26 tests)
 pytest tests/ -v
+
+# Run the 6 automated robotics physics scenarios
+python tests/run_scenarios.py
 ```
-All 13 test suites pass deterministically.
+All 26 unit tests and all 6 physical scenario benchmarks pass deterministically.
 
 ---
 
@@ -226,7 +251,7 @@ All 13 test suites pass deterministically.
 
 | Phase | Description | Status |
 |---|---|---|
-| **Phase 0** | Environment Setup (Python 3.13, PyBullet 3.2.7, Godot 4.7.2, Blender 4.2 LTS) | **COMPLETE** |
+| **Phase 0** | Environment Setup (Python 3.13, PyBullet 3.2.7, Godot 4.x, Blender 4.2 LTS) | **COMPLETE** |
 | **Phase 1** | Humanoid URDF Model (13 Controllable Joints, Realistic Mass & Inertia) | **COMPLETE** |
 | **Phase 2** | Individual Joint Movement Controller (Position/Velocity Motor Control) | **COMPLETE** |
 | **Phase 3** | 4-Phase Bipedal Walking Controller with Arm Synchronization & Speed Tuning | **COMPLETE** |
@@ -236,11 +261,15 @@ All 13 test suites pass deterministically.
 | **Phase 7** | Godot 3D Robotics Laboratory & Orbital Camera System | **COMPLETE** |
 | **Phase 8** | Bidirectional TCP Socket Server & Real-time Telemetry Synchronization | **COMPLETE** |
 | **Phase 9** | OpenXR VR Subsystem with Graceful Desktop Fallback | **COMPLETE** |
-| **Phase 10** | Automated Test Suites (13/13 Passed), Documentation & Blender Assets | **COMPLETE** |
+| **Phase 10** | Automated Test Suites (pytest), Technical Documentation & Blender Assets | **COMPLETE** |
+| **Phase 11** | Professional Edition: 6 Robotics Experiments Suite & Live Analytics Telemetry | **COMPLETE** |
+| **Phase 12** | A* Optimal Path Planning & 3D Interactive Click-to-Floor Goal Navigation | **COMPLETE** |
+| **Phase 13** | Stand-In-Place Recovery & Closed-Loop Turning Stabilization | **COMPLETE** |
 
 ---
 
 ## 7. License & Academic Attribution
 Developed as an End Semester Examination engineering project by **Aryan & Vilas**.  
+Repository: [https://github.com/aryangadhe/ARVR-ese](https://github.com/aryangadhe/ARVR-ese)  
 All technologies used (Python, PyBullet, Godot, Blender, NumPy) are open-source and free for academic and research use.
 

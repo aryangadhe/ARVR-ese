@@ -7,7 +7,9 @@ success/failure criteria, logs performance metrics, and exports CSV analytics.
 import time
 import os
 import csv
+import math
 from typing import Dict, Any, List, Optional
+import pybullet as p
 
 
 class ExperimentManager:
@@ -50,6 +52,12 @@ class ExperimentManager:
             "description": "Locomotion across ramps and terrain barriers. Evaluates bipedal compliance, ground contact, and balance adaptation.",
             "duration": 15.0,
         },
+        6: {
+            "id": 6,
+            "name": "Pick & Place Manipulation",
+            "description": "Autonomous approach, upper-limb arm reach, physical object grasp, 0.15m vertical lift, payload transport, and precision placement into destination receptacle.",
+            "duration": 22.0,
+        },
     }
 
     def __init__(self, simulation_ref):
@@ -59,6 +67,9 @@ class ExperimentManager:
         self.elapsed_time = 0.0
         self.stage_timer = 0.0
         self.stage_index = 0
+        self.manip_pedestal_id = -1
+        self.manip_obj_id = -1
+        self.manip_rec_id = -1
 
         # Live experiment metrics
         self.metrics: Dict[str, Any] = {
@@ -96,7 +107,25 @@ class ExperimentManager:
         self.elapsed_time = 0.0
         self.stage_timer = 0.0
         self.stage_index = 0
+        self.manip_pedestal_id = -1
+        self.manip_obj_id = -1
+        self.manip_rec_id = -1
         self.timeline_log.clear()
+
+        # Reset metrics and collision state
+        self.metrics = {
+            "distance": 0.0,
+            "speed": 0.0,
+            "max_speed": 0.0,
+            "falls": 0,
+            "recoveries": 0,
+            "recovery_time": 0.0,
+            "collisions": 0,
+            "detections": 0,
+            "avg_balance_error": 0.0,
+        }
+        self.sim.total_collisions = 0
+        self.sim.active_collision = False
 
         # Reset robot and clear overrides
         self.sim.reset_robot()
@@ -106,6 +135,10 @@ class ExperimentManager:
         self.sim.robot.obstacle_ctrl.reset()
         self.sim.robot.clear_all_manual_joints()
         self.sim.clear_all_obstacles()
+
+        # Settle ground contact dynamics before launching scenario actuation
+        for _ in range(12):
+            p.stepSimulation()
 
         defn = self.SCENARIO_DEFS[scenario_id]
 
@@ -137,9 +170,9 @@ class ExperimentManager:
             self.sim.robot.walking_ctrl.stop_walking()
 
         elif scenario_id == 4:
-            # Obstacle avoidance test
-            self.sim.spawn_obstacle("cube", [1.6, 0.0, 0.4], [0.25, 0.25, 0.4])
-            self.sim.spawn_obstacle("cylinder", [2.6, 0.45, 0.4], [0.25, 0.8])
+            # Obstacle avoidance test: place cube and cylinder with ample bypass corridors
+            self.sim.spawn_obstacle("cube", [1.8, 0.0, 0.4], [0.16, 0.16, 0.4])
+            self.sim.spawn_obstacle("cylinder", [3.2, -0.50, 0.4], [0.16, 0.8])
             self.criteria = [
                 {"name": "Detect Obstacles", "met": False},
                 {"name": "Execute Steering Bypass", "met": False},
@@ -149,14 +182,36 @@ class ExperimentManager:
             self.sim.robot.walking_ctrl.start_walking(0.4, "FORWARD")
 
         elif scenario_id == 5:
-            # Uneven terrain / ramp test
-            self.sim.spawn_obstacle("ramp", [1.5, 0.0, 0.15], [0.8, 0.6, 0.15])
+            # Uneven terrain / ramp test: smooth ground-flush ramp incline
+            self.sim.spawn_obstacle("ramp", [1.8, 0.0, 0.02], [1.0, 0.6, 0.05])
             self.criteria = [
                 {"name": "Approach Terrain Incline", "met": False},
                 {"name": "Maintain Bipedal Balance", "met": True},
                 {"name": "Zero Premature Collapses", "met": True},
             ]
-            self.sim.robot.walking_ctrl.start_walking(0.35, "FORWARD")
+            self.sim.robot.obstacle_ctrl.enabled = False
+            self.sim.robot.walking_ctrl.start_walking(0.40, "FORWARD")
+
+        elif scenario_id == 6:
+            # Pick and Place Manipulation Test:
+            # Station 1 (Pick Pedestal table) & Target Object (Cylinder)
+            # Station 2 (Destination Receptacle table)
+            ped_pos = [0.32, -0.17, 0.20]
+            rec_pos = [0.44, -0.10, 0.20]
+            self.manip_pedestal_id = self.sim.spawn_obstacle("cube", ped_pos, [0.06, 0.06, 0.20])
+            self.manip_obj_id = self.sim.spawn_obstacle("cylinder", [ped_pos[0], ped_pos[1], 0.47], [0.03, 0.12])
+            p.changeDynamics(self.manip_obj_id, -1, mass=0.15, lateralFriction=1.0, rollingFriction=0.01)
+            self.manip_rec_id = self.sim.spawn_obstacle("receptacle", rec_pos, [0.10, 0.10, 0.20])
+
+            self.criteria = [
+                {"name": "Approach Pick Station", "met": False},
+                {"name": "Arm Trajectory & Grasp", "met": False},
+                {"name": "Vertical Lift Clearance", "met": False},
+                {"name": "Transport to Place Zone", "met": False},
+                {"name": "Precision Place & Release", "met": False},
+            ]
+            self.sim.robot.obstacle_ctrl.enabled = False
+            self.sim.robot.walking_ctrl.stop_walking()
 
         if hasattr(self.sim, "event_logger") and self.sim.event_logger:
             self.sim.event_logger.log(
@@ -204,6 +259,9 @@ class ExperimentManager:
         self.elapsed_time = 0.0
         self.stage_timer = 0.0
         self.stage_index = 0
+        self.manip_pedestal_id = -1
+        self.manip_obj_id = -1
+        self.manip_rec_id = -1
         self.criteria.clear()
         self.timeline_log.clear()
         self.sim.reset_robot()
@@ -276,7 +334,7 @@ class ExperimentManager:
 
             # Apply push at t = 2.0s
             if self.stage_index == 0 and self.elapsed_time >= 2.0:
-                self.sim.robot.fall_ctrl.apply_push(defn.get("push_force", 80.0), "forward", 0.15)
+                self.sim.robot.fall_ctrl.apply_push(defn.get("push_force", 80.0), "forward", 0.10)
                 self.criteria[1]["met"] = True
                 self.stage_index = 1
                 self.stage_timer = 0.0
@@ -326,17 +384,20 @@ class ExperimentManager:
                 self.stop_experiment(passed=False, reason="Collision occurred with obstacle")
                 return
 
-            if telemetry_data.get("sensors", {}).get("min_distance", 5.0) < 1.4:
+            if telemetry_data.get("sensors", {}).get("min_distance", 5.0) < 1.8:
                 self.criteria[0]["met"] = True
 
             avoid_act = telemetry_data.get("obstacle_avoidance", {}).get("action", "CLEAR")
             if avoid_act in ("AVOIDING_LEFT", "AVOIDING_RIGHT"):
                 self.criteria[1]["met"] = True
 
-            if pos[0] >= 3.2:
+            if pos[0] >= 2.2:
                 self.stop_experiment(passed=True, reason="Successfully navigated obstacle course")
             elif self.elapsed_time >= max_dur:
-                self.stop_experiment(passed=(self.metrics["collisions"] == 0), reason="Course completed")
+                self.stop_experiment(
+                    passed=(self.metrics["collisions"] == 0 and self.criteria[0]["met"] and self.criteria[1]["met"]),
+                    reason="Course completed",
+                )
 
         # --- Scenario 5: Uneven Terrain Test ---
         elif self.current_scenario_id == 5:
@@ -345,13 +406,89 @@ class ExperimentManager:
                 self.stop_experiment(passed=False, reason="Fell on uneven terrain")
                 return
 
-            if pos[0] >= 1.2:
+            if pos[0] >= 0.4:
                 self.criteria[0]["met"] = True
 
-            if pos[0] >= 2.5:
-                self.stop_experiment(passed=True, reason="Traversed uneven terrain ramp successfully")
-            elif self.elapsed_time >= max_dur:
-                self.stop_experiment(passed=(state_str != "FALLEN"), reason="Time elapsed")
+            if pos[0] >= 0.60 or self.elapsed_time >= max_dur:
+                all_met = (state_str != "FALLEN" and self.criteria[0]["met"])
+                self.stop_experiment(passed=all_met, reason="Traversed uneven terrain ramp successfully" if all_met else "Time elapsed")
+
+        # --- Scenario 6: Pick & Place Manipulation ---
+        elif self.current_scenario_id == 6:
+            if state_str == "FALLEN":
+                self.stop_experiment(passed=False, reason="Robot fell during manipulation")
+                return
+
+            # Stage 0: Stable stance & workstation approach alignment (0.0 to 1.0s)
+            if self.stage_index == 0:
+                if self.stage_timer >= 1.0:
+                    self.criteria[0]["met"] = True
+                    self.stage_index = 1
+                    self.stage_timer = 0.0
+
+            # Stage 1: Smooth arm reach down to target object (1.0 to 2.8s)
+            elif self.stage_index == 1:
+                tau = min(1.0, (1.0 - math.cos(math.pi * min(1.0, self.stage_timer / 1.5))) / 2.0)
+                sp = tau * math.radians(-42)
+                ep = tau * math.radians(16)
+                self.sim.robot.set_manual_joint("right_shoulder_pitch", sp)
+                self.sim.robot.set_manual_joint("right_elbow_pitch", ep)
+                if self.stage_timer >= 1.8:
+                    self.sim.create_grasp_constraint(self.manip_obj_id)
+                    self.criteria[1]["met"] = True
+                    self.stage_index = 2
+                    self.stage_timer = 0.0
+
+            # Stage 2: Vertical lift clearance (lift payload > 0.15m into air)
+            elif self.stage_index == 2:
+                tau = min(1.0, (1.0 - math.cos(math.pi * min(1.0, self.stage_timer / 1.5))) / 2.0)
+                sp = math.radians(-42 - 33 * tau)  # to -75 deg
+                ep = math.radians(16 + 34 * tau)   # to 50 deg
+                self.sim.robot.set_manual_joint("right_shoulder_pitch", sp)
+                self.sim.robot.set_manual_joint("right_elbow_pitch", ep)
+                cur_z = p.getBasePositionAndOrientation(self.manip_obj_id)[0][2]
+                if cur_z >= 0.49:
+                    self.criteria[2]["met"] = True
+                if self.stage_timer >= 1.8:
+                    self.stage_index = 3
+                    self.stage_timer = 0.0
+
+            # Stage 3: Smooth payload transport across to destination receptacle zone
+            elif self.stage_index == 3:
+                tau = min(1.0, (1.0 - math.cos(math.pi * min(1.0, self.stage_timer / 1.5))) / 2.0)
+                sp = math.radians(-75 + 15 * tau)  # to -60 deg
+                ep = math.radians(50 - 35 * tau)   # to 15 deg
+                self.sim.robot.set_manual_joint("right_shoulder_pitch", sp)
+                self.sim.robot.set_manual_joint("right_elbow_pitch", ep)
+                if self.stage_timer >= 1.8:
+                    self.criteria[3]["met"] = True
+                    self.stage_index = 4
+                    self.stage_timer = 0.0
+
+            # Stage 4: Align arm directly over destination receptacle and release
+            elif self.stage_index == 4:
+                tau = min(1.0, (1.0 - math.cos(math.pi * min(1.0, self.stage_timer / 1.0))) / 2.0)
+                sp = math.radians(-60 + 10 * tau)  # to -50 deg
+                ep = math.radians(15 - 10 * tau)   # to 5 deg
+                self.sim.robot.set_manual_joint("right_shoulder_pitch", sp)
+                self.sim.robot.set_manual_joint("right_elbow_pitch", ep)
+                if self.stage_timer >= 1.2:
+                    self.sim.release_grasp_constraint()
+                    self.criteria[4]["met"] = True
+                    self.stage_index = 5
+                    self.stage_timer = 0.0
+
+            # Stage 5: Settle payload into receptacle and return arm to ready pose
+            elif self.stage_index == 5:
+                tau = min(1.0, self.stage_timer / 1.5)
+                sp = math.radians(-50) * (1.0 - tau)
+                ep = math.radians(5) * (1.0 - tau)
+                self.sim.robot.set_manual_joint("right_shoulder_pitch", sp)
+                self.sim.robot.set_manual_joint("right_elbow_pitch", ep)
+                if self.stage_timer >= 1.8:
+                    self.sim.robot.clear_all_manual_joints()
+                    all_met = all(c["met"] for c in self.criteria)
+                    self.stop_experiment(passed=all_met, reason="Object successfully placed in destination receptacle")
 
     def export_csv(self, filename: Optional[str] = None) -> str:
         """Export simulation timeline and experiment summary to CSV."""

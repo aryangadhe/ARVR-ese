@@ -27,6 +27,8 @@ class MessageType:
     SET_SENSOR_RANGE = "set_sensor_range"
     SET_GRAVITY = "set_gravity"
     SET_TIME_STEP = "set_time_step"
+    NAVIGATE_TO_GOAL = "navigate_to_goal"
+    CANCEL_NAVIGATION = "cancel_navigation"
     CLEAR_EVENTS = "clear_events"
     TELEMETRY = "telemetry"
     ERROR = "error"

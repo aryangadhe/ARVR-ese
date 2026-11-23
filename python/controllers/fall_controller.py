@@ -91,7 +91,7 @@ class FallController:
                 objectUniqueId=self.robot_id,
                 linkIndex=-1,  # torso base link
                 forceObj=self.push_force,
-                posObj=[pos[0], pos[1], pos[2] + 0.15],
+                posObj=[pos[0], pos[1], pos[2]],
                 flags=p.WORLD_FRAME,
             )
             self.push_timer += dt

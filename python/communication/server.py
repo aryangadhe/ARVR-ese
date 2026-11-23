@@ -123,9 +123,9 @@ class SimulationServer:
                 if msg_type == MessageType.COMMAND:
                     action = cmd.get("action", "").lower()
                     if action == "walk":
-                        # If robot is fallen or falling, reset upright first before starting gait
+                        # If robot is fallen or falling, stand upright in place first before starting gait
                         if self.sim.robot.fall_ctrl.state in (self.sim.robot.fall_ctrl.STATE_FALLEN, self.sim.robot.fall_ctrl.STATE_FALLING):
-                            self.sim.reset_robot()
+                            self.sim.stand_robot_in_place()
                         self.sim.robot.clear_all_manual_joints()
                         speed = float(cmd.get("speed", 0.4))
                         self.sim.robot.walking_ctrl.start_walking(speed)
@@ -134,11 +134,8 @@ class SimulationServer:
                         self.sim.robot.walking_ctrl.stop_walking()
                         print("[Command] Walk stopped")
                     elif action == "stand":
-                        self.sim.robot.walking_ctrl.stop_walking()
-                        self.sim.robot.clear_all_manual_joints()
-                        if self.sim.robot.fall_ctrl.state in (self.sim.robot.fall_ctrl.STATE_FALLEN, self.sim.robot.fall_ctrl.STATE_FALLING):
-                            self.sim.reset_robot()
-                        print("[Command] Returned to standing")
+                        self.sim.stand_robot_in_place()
+                        print("[Command] Returned to standing at current position")
                     elif action == "reset":
                         self.sim.reset_robot()
                         print("[Command] Simulation reset executed")
@@ -251,6 +248,20 @@ class SimulationServer:
                 elif msg_type in (MessageType.SET_GRAVITY, "set_gravity"):
                     gravity = float(cmd.get("gravity", -9.81))
                     self.sim.set_gravity(gravity)
+
+                elif msg_type in (MessageType.NAVIGATE_TO_GOAL, "navigate_to_goal"):
+                    gx = float(cmd.get("x", cmd.get("goal_x", 0.0)))
+                    gy = float(cmd.get("y", cmd.get("goal_y", 0.0)))
+                    spd = float(cmd.get("speed", 0.40))
+                    obs_list = list(self.sim.obstacles.values())
+                    self.sim.robot.nav_ctrl.set_goal(gx, gy, obs_list, speed=spd)
+                    if self.sim.event_logger:
+                        self.sim.event_logger.log("Navigation", f"Navigation target set to ({gx:.2f}, {gy:.2f})", "INFO")
+
+                elif msg_type in (MessageType.CANCEL_NAVIGATION, "cancel_navigation"):
+                    self.sim.robot.nav_ctrl.cancel()
+                    if self.sim.event_logger:
+                        self.sim.event_logger.log("Navigation", "Navigation cancelled", "INFO")
 
                 elif msg_type in (MessageType.SET_TIME_STEP, "set_time_step"):
                     time_step = float(cmd.get("time_step", 1.0 / 60.0))

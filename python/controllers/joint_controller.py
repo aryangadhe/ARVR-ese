@@ -73,15 +73,31 @@ class JointController:
         """Send target position commands to PyBullet joint motors."""
         for name, j in self.joints.items():
             is_leg = "hip" in name or "knee" in name or "ankle" in name
+            is_arm = "shoulder" in name or "elbow" in name
+            
+            # High-torque calibrated gains for biped stance and upper-limb manipulation
+            if is_leg:
+                max_force = 350.0
+                p_gain = 0.75
+                v_gain = 1.0
+            elif is_arm:
+                max_force = 250.0
+                p_gain = 0.95
+                v_gain = 1.0
+            else:
+                max_force = j["max_force"]
+                p_gain = 0.45
+                v_gain = 1.2
+
             p.setJointMotorControl2(
                 bodyIndex=self.robot_id,
                 jointIndex=j["index"],
                 controlMode=p.POSITION_CONTROL,
                 targetPosition=j["target_angle"],
                 maxVelocity=j["max_velocity"],
-                force=350.0 if is_leg else j["max_force"],
-                positionGain=0.75 if is_leg else 0.45,
-                velocityGain=1.0 if is_leg else 1.2,
+                force=max_force,
+                positionGain=p_gain,
+                velocityGain=v_gain,
             )
 
     def update_states(self) -> Dict[str, Any]:

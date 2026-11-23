@@ -26,7 +26,7 @@ class LidarSensor:
         euler = p.getEulerFromQuaternion(orn)
         yaw = euler[2]
 
-        sensor_height = pos[2] + 0.12
+        sensor_height = pos[2] - 0.22
         origin_x = pos[0] + 0.15 * math.cos(yaw)
         origin_y = pos[1] + 0.15 * math.sin(yaw)
         ray_from = [origin_x, origin_y, sensor_height]
